@@ -40,6 +40,6 @@ class UsersTable extends Seeder
     }
 
     public function createGravatarUrl(string $email): string {
-        return 'https://www.gravatar.com/avatar/'.md5($email).'?s=200&d=mp';
+        return 'https://www.gravatar.com/avatar/'.md5($email).'?s=60&d=mp';
     }
 }

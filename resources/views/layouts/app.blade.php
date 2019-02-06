@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Laravel') }} - @yield('title')</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -22,7 +22,7 @@
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-            <div class="container">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
@@ -72,9 +72,25 @@
             </div>
         </nav>
 
+        <aside class="">
+            @section('sidebar')
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item" aria-current="page">
+                    Checkers
+                </li>
+                @show
+              </ol>
+            </nav>
+        </aside>
+
         <main class="py-4">
             @yield('content')
         </main>
+
+        <footer>
+            <p>Mano footeris</p>
+        </footer>
     </div>
 </body>
 </html>
