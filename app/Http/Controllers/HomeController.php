@@ -36,17 +36,9 @@ class HomeController extends Controller
         return view('pages/home', compact('users'));// ['users' => $users]
     }
 
-    public function user($id) {
-
-        // $user = User::where('id', $id)->first(); // first() grazina viena objekta, tinkamas naudoti gaunant tik viena duomenį
-        $user = User::find($id); // gali grazinti vieną objektą arba collection
-
-        if($user) {
-            return view('pages/user', compact('user'));
-        } else {
-            return redirect()->route('home');
-        }
-
+    public function kazkas() {
+        // echo "sdf";
+        // return view('pages/home', compact('users'));
     }
 
     // public function user(User $user) {

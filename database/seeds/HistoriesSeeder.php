@@ -19,7 +19,7 @@ class HistoriesSeeder extends Seeder
         $userCount = User::count();
         $gameCount = Game::count();
 
-        foreach (range(0,50) as $number) {
+        foreach (range(0,350) as $number) {
             $history = new History();
             $history->game_id = $faker->numberBetween(1, $gameCount);
             $history->user_id = $faker->numberBetween(1, $userCount);

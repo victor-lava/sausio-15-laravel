@@ -5,7 +5,7 @@
 @section('sidebar')
     @parent
     <li class="breadcrumb-item" aria-current="page">
-        <a href="{{ route('user', ['id', $user->id]) }}">  {{ $user->name . ' #' . $user->id }} </a>
+        <a href="{{ route('user', $user->id) }}">  {{ $user->name . ' #' . $user->id }} </a>
     </li>
 @endsection
 
@@ -16,11 +16,25 @@
             <div class="card">
                 <div class="card-header flex">
                     <span>{{ $user->name }}</span>
-                    <img class="ml-auto" src="{{ $user->gravatar_url }}" alt="">
+                    <img class="ml-auto float-right" src="{{ $user->gravatar_url }}" alt="">
                 </div>
 
                 <div class="card-body">
 
+                    <ul>
+                        <li>E-mail: {{ $user->email }}</li>
+                        <li>Registered: {{ $user->created_at }}</li>
+                        <li>Online: {{ $user->online === 1 ? 'Yes' : 'No' }}</li>
+                        <li>Location: {{ $user->location }}</li>
+                    </ul>
+
+                    <h3>Total: {{ $user->statistic->getPlayed() }}</h3>
+                    <ul>
+                        <li>Wins: {{ $user->statistic->wins }}</li>
+                        <li>Losses: {{ $user->statistic->losses }}</li>
+                        <li>Draws: {{ $user->statistic->draws }}</li>
+                        <li>Abandoned: {{ $user->statistic->abandoned }}</li>
+                    </ul>
 
                 </div>
             </div>

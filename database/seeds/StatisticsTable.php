@@ -18,10 +18,10 @@ class StatisticsTable extends Seeder
         $count = User::count();
         // $countUsers = count($users);
 
-        foreach (range(0,50) as $number) {
+        foreach (range(0,50) as $key => $number) {
 
             $statistic = new Statistic();
-            $statistic->user_id = $faker->numberBetween(1, $count);
+            $statistic->user_id = $key + 1;
             $statistic->wins = $faker->numberBetween(1,100);
             $statistic->losses = $faker->numberBetween(1,100);
             $statistic->draws = $faker->numberBetween(1,100);
