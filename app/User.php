@@ -35,4 +35,5 @@ class User extends Authenticatable
     public function histories() {
         return $this->hasMany('App\History');
     }
+
 }

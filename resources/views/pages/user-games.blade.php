@@ -14,9 +14,9 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header flex">
+                <div class="card-header d-flex align-items-center justify-content-between">
                     <span>{{ $user->name }}</span>
-                    <img class="ml-auto float-right" src="{{ $user->gravatar_url }}" alt="">
+                    <img class="rounded-circle" src="{{ $user->gravatar_url }}" alt="">
                 </div>
 
                 <div class="card-body">

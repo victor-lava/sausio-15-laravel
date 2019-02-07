@@ -4,9 +4,6 @@
 
 @section('sidebar')
     @parent
-    <li class="breadcrumb-item" aria-current="page">
-        <a href="{{ route('home') }}">Home</a>
-    </li>
 @endsection
 
 @section('content')
@@ -23,12 +20,21 @@
                             <!-- Users -->
                             <ul class="list-group">
                             @foreach($users as $user)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <a href="{{ route('user', ['id' => $user->id]) }}">
-                                        {{ $user->name }}
-                                        <span class="badge badge-primary badge-pill">
-                                            <img height="30" src="{{ $user->gravatar_url }}" alt="Gravatar {{$user->username}}">
-                                    </span>
+                                <li class="list-group-item">
+                                    <a class="w-100 d-flex justify-content-between align-items-center" href="{{ route('user', ['id' => $user->id]) }}">
+
+                                        <span>
+                                            <img height="30" class="rounded-circle" src="{{ $user->gravatar_url }}" alt="Gravatar {{$user->username}}">
+                                            {{ $user->name }}
+                                        </span>
+                                        <div>
+                                            <span class="badge badge-pill badge-secondary">
+                                                {{ $user->statistic->getPlayed() }}
+                                            </span>
+                                            @component('components/badge', ['className' => $user->online === 1 ? 'badge-success' : 'badge-danger' ,
+                                                                            'text' => $user->online === 1 ? 'Online' : 'Offline'])
+                                            @endcomponent
+                                        </div>
                                     </a>
                                 </li>
                             @endforeach

@@ -51,14 +51,29 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    <img height="30" class="rounded-circle" src="{{ $user->gravatar_url }}" alt="">
                                     {{ Auth::user()->name }} <span class="caret"></span>
+
                                 </a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                @component('components/button', ['size' => 'lg',
-                                                                 'text' => 'Logout',
-                                                                 'type' => 'logout'])
-                                @endcomponent
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-item">
+                                        <a href="{{ route('user', $user->id) }}">Profile</a>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <a href="{{ route('user.games', $user->id) }}">Games</a>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <a href="{{ route('logout') }}"
+                                           onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
+                                    </li>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                </ul>
                             </li>
                         @endguest
                     </ul>
@@ -71,7 +86,7 @@
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
                 <li class="breadcrumb-item" aria-current="page">
-                    Checkers
+                    <a href="{{ route('home') }}">Home</a>
                 </li>
                 @show
               </ol>
