@@ -26,9 +26,9 @@
                         <li>Registered: {{ $user->created_at }}</li>
                         <li>
                             Online:
-                            @component('components/badge', ['className' => $user->online === 1 ? 'badge-success' : 'badge-danger' ,
-                                                            'text' => $user->online === 1 ? 'Online' : 'Offline'])
-                            @endcomponent
+                            @badge(['type' => $user->isOnline() ? 'success' : 'danger' ,
+                                    'text' => $user->getOnline()])
+                            @endbadge
                         </li>
                         <li>Location: {{ $user->location }}</li>
                     </ul>

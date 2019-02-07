@@ -39,13 +39,4 @@ class HomeController extends Controller
         return view('pages/home', compact('users', 'tables'));// ['users' => $users]
     }
 
-    public function kazkas() {
-        // echo "sdf";
-        // return view('pages/home', compact('users'));
-    }
-
-    // public function user(User $user) {
-    //     dd($user->name);
-    // }
-
 }

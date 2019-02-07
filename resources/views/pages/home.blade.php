@@ -38,11 +38,17 @@
                                           </span>
                                       </br>
 
+                                          @if($table->secondPlayer)
                                           {{ $table->secondPlayer->name }}
                                           <span class="badge badge-pill badge-secondary">
                                               {{ $table->secondPlayer->statistic->getPlayed() }}
                                           </span>
-
+                                          @else
+                                            @button([   'href'=> route('game.index', $table->id),
+                                                        'size' => 'sm'])
+                                                Join table
+                                            @endbutton
+                                          @endif
                                   </td>
                                   <td>{{ $table->duration }}</td>
                                   <td>

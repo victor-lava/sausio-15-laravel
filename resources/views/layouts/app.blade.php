@@ -33,7 +33,14 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        @guest
+                        @else
+                        <li class="nav-item">
+                            @button(['href' => route('game.create')])
+                                Create Table
+                            @endbutton
+                        </li>
+                        @endguest
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -51,16 +58,16 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    <img height="30" class="rounded-circle" src="{{ $user->gravatar_url }}" alt="">
+                                    <img height="30" class="rounded-circle" src="{{ Auth::user()->gravatar_url }}" alt="">
                                     {{ Auth::user()->name }} <span class="caret"></span>
 
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="dropdown-item">
-                                        <a href="{{ route('user', $user->id) }}">Profile</a>
+                                        <a href="{{ route('user', Auth::user()->id) }}">Profile</a>
                                     </li>
                                     <li class="dropdown-item">
-                                        <a href="{{ route('user.games', $user->id) }}">Games</a>
+                                        <a href="{{ route('user.games', Auth::user()->id) }}">Games</a>
                                     </li>
                                     <li class="dropdown-item">
                                         <a href="{{ route('logout') }}"
