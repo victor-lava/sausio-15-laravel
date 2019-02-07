@@ -1,1 +1,1 @@
-<span class="badge {{ $className }}">{{ $text }}</span>
+<span class="badge badge-{{ $type }}">{{ $text }}</span>

@@ -36,4 +36,11 @@ class User extends Authenticatable
         return $this->hasMany('App\History');
     }
 
+    public function isOnline() {
+        return $this->online === 1 ? true : false;
+    }
+
+    public function getOnline() {
+        return $this->online === 1 ? 'Online' : 'Offline';
+    }
 }
