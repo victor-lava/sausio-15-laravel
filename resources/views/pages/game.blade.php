@@ -14,9 +14,15 @@
                         @foreach($table as $row)
                             <div class="row-checker">
                                 @foreach($row as $col)
-                                <div id="{{ $col['position'] }}" class="col-checker col-{{ $col['color'] === 1 ? 'white' : 'black' }}">
+                                <div id="{{ $col['position'] }}" class="col-checker col-{{ $col['color'] === 0 ? 'white' : 'black' }}">
                                     <span>{{ $col['position'] }}</span>
-                                    
+                                    @if($col['checker'])
+                                        @php $color = $col['checker']->color === 0 ? 'white' : 'black'  @endphp
+                                        <img    data-x="{{ $col['checker']->x }}"
+                                                data-y="{{ $col['checker']->y }}"
+                                                class="checker"
+                                                src="{{ asset("img/$color-checker.png") }}">
+                                    @endif
                                 </div>
                                 @endforeach
                             </div class="row-checker">

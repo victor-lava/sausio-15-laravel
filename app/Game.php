@@ -40,8 +40,24 @@ class Game extends Model
         return $status;
     }
 
-    public function createGame() {
+    public function findChecker(object $checkers, int $x, int $y) {
+        $result = false;
 
+        foreach ($checkers as $checker) {
+            if($checker->x === $x && $checker->y === $y) { $result = $checker; break; }
+        }
+
+        return $result;
+    }
+
+    public function getGameTable($checkers) {
+        $this->createTable();
+        for ($y = 0; $y < count($this->gameTable); $y++) { // y
+            for ($x = 0; $x < count($this->gameTable); $x++) {
+                $this->gameTable[$y][$x]['checker'] = $this->findChecker($checkers, $x, $y);
+            }
+        }
+        return $this->gameTable;
     }
 
     public function createTable() {
@@ -103,7 +119,7 @@ class Game extends Model
                     $checker = new Checker();
                     $checker->game_id = $this->id;
                     $checker->user_id = null;
-                    $checker->position_name = $this->gameTable[$x][$y]['position'];
+                    $checker->position_name = $this->gameTable[$y][$x]['position'];
                     $checker->x = $x;
                     $checker->y = $y;
                     if($y <= 2) { $checker->color = 1; } // Black checker
@@ -116,7 +132,7 @@ class Game extends Model
         return $this->gameTable;
     }
 
-    public function start() {
+    public function create() {
         $this->createTable();
         $this->createCheckers();
     }
