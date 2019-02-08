@@ -14,8 +14,9 @@
                         @foreach($table as $row)
                             <div class="row-checker">
                                 @foreach($row as $col)
-                                <div id="{{ $col['position'] }}" class="col-checker col-{{ $col['color'] }}">
+                                <div id="{{ $col['position'] }}" class="col-checker col-{{ $col['color'] === 1 ? 'white' : 'black' }}">
                                     <span>{{ $col['position'] }}</span>
+                                    
                                 </div>
                                 @endforeach
                             </div class="row-checker">

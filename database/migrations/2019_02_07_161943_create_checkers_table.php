@@ -16,7 +16,7 @@ class CreateCheckersTable extends Migration
         Schema::create('checkers', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('game_id');
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->nullable();
             $table->string('position_name');
             $table->integer('x');
             $table->integer('y');
