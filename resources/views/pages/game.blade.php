@@ -10,11 +10,13 @@
                 <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
-                    <div class="table">
+                    <div id="game-window">
                         @foreach($table as $row)
                             <div class="row-checker">
                                 @foreach($row as $col)
-                                <div id="{{ $col['position'] }}" class="col-checker col-{{ $col['color'] === 0 ? 'white' : 'black' }}">
+                                <div    id="{{ $col['position'] }}"
+                                        class="col-checker col-{{ $col['color'] === 0 ? 'white' : 'black' }}"
+                                        onclick="selectChecker(this)">
                                     <span>{{ $col['position'] }}</span>
                                     @if($col['checker'])
                                         @php $color = $col['checker']->color === 0 ? 'white' : 'black'  @endphp

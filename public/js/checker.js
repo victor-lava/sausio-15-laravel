@@ -1,114 +1,69 @@
 'use strict';
 
 /** global */
-var tableSelector = document.querySelector('.table'),
+var tableSelector = document.querySelector('#game-window'),
     saskiuMatrica = []; // globalus lenteles selektorius
 
-/**
- * Sugeneruoja HTML lentelę į kurią vėliau generuojamos šaškės
- * @function generate_table
- * @param {number} size - lentelės dydis, pvz. 8x8
- * @returns {array} lentelės duomenų masyvą
- */
-function generate_table(size) {
 
-    let alphabet = 'abcdefghijklmnopqrstuvwxyz',
-        lentele = [];
+function selectChecker(element) {
+    let checkerFound = element.querySelector('img');
 
-    for(let i = 0; i < size; i++) { // Einame per eilutes
-      let row = document.createElement('div'),
-          rowNumber = size - i, // eilutes numeris pradeda skaiciuotis nuo apacios
-          yLyginis = true;
-
-          row.classList.add('row-checker');
-
-          lentele.push([]);
-          saskiuMatrica.push([]);
-
-          if(i % 2) { yLyginis = false } // Jei lieka liekana tai nelyginis
-
-      for(let a = 0; a < size; a++) { // Einame per stulpelius
-         let col = document.createElement('div'),
-             colLetterElement = document.createElement('span'),
-             colLetter = alphabet[a],
-             colID = colLetter + rowNumber, // pvz. a1, c6
-             xLyginis = true,
-             stulpelis = {};
-
-             col.id = colID; // Priskiriame stulpeliui ID
-             col.classList.add('col-checker');
-             saskiuMatrica[i].push(0);
-
-        if(a % 2) { xLyginis = false; } // Jei lieka liekana tai nelyginis
-
-        if((yLyginis == true && xLyginis == true) ||
-           (yLyginis == false && xLyginis == false)) {
-          col.classList.add('col-white');
-          stulpelis.type = 'white';
+    if(!element.classList.contains('col-active')) { // Jei elementas neturi klasės active tai ją uždedame, ji suteikia stilių, jog šaškė pazymeta. Taip pat jei stulpelis turi klasę col-filled, vadinasi jis turi šaške ir stulpelį galime pažymėti, taip pat tada galime skaičiuoti galimus ėjimus.
+        unselectAllCheckers();
+        // (checkerFound !== null) ? element.classList.add('col-active') : false;
+        if(checkerFound !== null) {
+            // get possible moves
+            element.classList.add('col-active');
         }
-        else if((yLyginis == true && xLyginis == false) ||
-                (yLyginis == false && xLyginis == true )) {
-
-          col.classList.add('col-black');
-          stulpelis.type = 'black';
-
-          col.addEventListener('click',column_click); // uždedame click įvykį ant visų juodų langelių (ant baltų nededame, nes ten eiti negalime), iškviečiame column_click funkcija, kuri atsakinga už tai kas vyksta paspaudus ant stulpelio
-      }
-
-        stulpelis.id = colID;
-        stulpelis.x = a;
-        stulpelis.y = i;
-
-        lentele[i].push(stulpelis);
-
-        colLetterElement.innerHTML = colID;
-        col.appendChild(colLetterElement);
-        row.appendChild(col);
-      }
-
-      tableSelector.appendChild(row);
-
+    
     }
-
-    return lentele;
 }
 
+function unselectAllCheckers() {
+    let activeColumns = document.querySelectorAll('#game-window .col-active');
+
+    if(activeColumns.length > 0) { // jei randa pazymetas saskes
+        activeColumns.forEach(function(activeElement) { // vykdo ciklą
+            activeElement.classList.remove('col-active'); // nuima col active klases
+        })
+    }
+}
 
 /**
  * Valdo procesus, kurie įvyksta paspaudus ant lentelės stulpelio
  * @function column_click
- */
-function column_click() {
-
-    let activeColumns = tableSelector.querySelectorAll('.col-active'),
-        checker = find_checker_by_id(this.id);
-
-    if(!this.classList.contains('col-active')
-        && this.classList.contains('col-filled')) { // Jei elementas neturi klasės active tai ją uždedame, ji suteikia stilių, jog šaškė pazymeta. Taip pat jei stulpelis turi klasę col-filled, vadinasi jis turi šaške ir stulpelį galime pažymėti, taip pat tada galime skaičiuoti galimus ėjimus.
-
-        remove_possible_moves();
-        this.classList.add('col-active');
-
-        // remove_possible_moves();
-        calculate_scope(checker.x,
-                        checker.y,
-                        checker.color,
-                        checker.type);
-
-    }
-
-    if(this.classList.contains('col-possible')) { // Jei šaške turi šitą klasę, vadinasi galima čia ateiti
-        let col = find_col_by_id(this.id);
-        move_checker(col);
-    }
-
-    if(activeColumns.length > 0) { // jei randa pazymetas saskes
-        activeColumns.forEach(function(element) { // vykdo ciklą
-            element.classList.remove('col-active'); // nuima col active klases
-        })
-    }
-
-}
+//  */
+// function column_click(event) {
+//     // console.log(e);
+//     let activeColumns = tableSelector.querySelectorAll('.col-active'),
+//         checker = find_checker_by_id(event.id);
+//
+//     if(!event.classList.contains('col-active')
+//         && event.classList.contains('col-filled')) { // Jei elementas neturi klasės active tai ją uždedame, ji suteikia stilių, jog šaškė pazymeta. Taip pat jei stulpelis turi klasę col-filled, vadinasi jis turi šaške ir stulpelį galime pažymėti, taip pat tada galime skaičiuoti galimus ėjimus.
+//
+//         remove_possible_moves();
+//         event.classList.add('col-active');
+//
+//         // remove_possible_moves();
+//         calculate_scope(checker.x,
+//                         checker.y,
+//                         checker.color,
+//                         checker.type);
+//
+//     }
+//
+//     if(this.classList.contains('col-possible')) { // Jei šaške turi šitą klasę, vadinasi galima čia ateiti
+//         let col = find_col_by_id(this.id);
+//         move_checker(col);
+//     }
+//
+//     if(activeColumns.length > 0) { // jei randa pazymetas saskes
+//         activeColumns.forEach(function(element) { // vykdo ciklą
+//             element.classList.remove('col-active'); // nuima col active klases
+//         })
+//     }
+//
+// }
 
 /**
  * Ištrina galimų ėjimų atvaizdavimą iš HTML lentelės
