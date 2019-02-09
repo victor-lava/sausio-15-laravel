@@ -47,8 +47,10 @@ class CheckerController extends Controller
 
     public function moves(Request $request) {
 
-        $checkers = Checker::where('game_id', $request->game_id)
-                            ->get();
+        // $checkers = Checker::where('game_id', $request->game_id)
+        //                     ->where('x', $request->x)
+        //                     ->where('y', $request->y)
+        //                     ->get();
 
         $checker = Checker::where('game_id', $request->game_id)
                         ->where('x', $request->x)
@@ -56,18 +58,46 @@ class CheckerController extends Controller
                         ->first();
         $moves = [];
 
-        for ($i = 0; $i < count($checkers); $i++) {
-            if($checkers[$i]->color == 0) { // white
-                if($checkers[$i]->x !== $checker->x + 1 &&
-                   $checkers[$i]->y !== $checker->y + 1) {
-                       $moves[] = [$checker->x + 1, $checker->y + 1];
-                   }
-                elseif ($checkers[$i]->x !== $checker->x - 1 &&
-                        $checkers[$i]->y !== $checker->y + 1) {
-                      $moves[] = [$checker->x - 1, $checker->y + 1];
+        if($checker->color == 0) { // white
+
+            $xtl = $request->x - 1;
+            $ytl = $request->y - 1;
+
+            $xtr = $request->x + 1;
+            $ytr = $request->y - 1;
+
+            $checkers = Checker::where('game_id', $request->game_id)
+                                ->where('x', $xtl)
+                                ->where('y', $ytl)
+                                ->orWhere(function($query) use ($xtr, $ytr)
+                                {
+                                    $query->where('x', $xtr)
+                                          ->where('y', $ytr);
+                                })
+                                ->get();
+
+
+            if(count($checkers) >= 1) {
+                // dd($checkers);
+                if($checkers[0]->x !== $xtl && $checkers[0]->y !== $ytl) {
+                    $moves[] = [$xtr, $ytr];
+                } else {
+                    $moves[] = [$xtl, $ytl];
                 }
+            } else {
+                $moves[] = [$xtl, $ytl];
+                $moves[] = [$xtr, $ytr];
             }
+            // if($checkers[$i]->x !== $checker->x + 1 &&
+            //    $checkers[$i]->y !== $checker->y + 1) {
+            //        $moves[] = [$checker->x + 1, $checker->y + 1];
+            //    }
+            // elseif ($checkers[$i]->x !== $checker->x - 1 &&
+            //         $checkers[$i]->y !== $checker->y + 1) {
+            //       $moves[] = [$checker->x - 1, $checker->y + 1];
+            // }
         }
+
 
         dd($moves);
 
