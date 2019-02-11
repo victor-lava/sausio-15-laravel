@@ -15,12 +15,14 @@ class CreateStatisticsTable extends Migration
     {
         Schema::create('statistics', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
-            $table->integer('user_id');
+            $table->unsignedInteger('user_id');
             $table->integer('wins');
             $table->integer('losses');
             $table->integer('draws');
             $table->integer('abandoned');
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

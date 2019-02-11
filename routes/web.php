@@ -11,11 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    // echo "sdf";
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/user/{id}', 'UserController@index')->name('user');
+Route::get('/user/{id}/games', 'UserController@games')->name('user.games');

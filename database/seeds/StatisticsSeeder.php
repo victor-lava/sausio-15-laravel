@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Seeder;
 use App\Statistic;
+use App\User;
 
-class StatisticsTable extends Seeder
+class StatisticsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,16 +15,17 @@ class StatisticsTable extends Seeder
     {
         $faker = Faker\Factory::create();
 
-        foreach (range(0,50) as $number) {
+        $count = User::count();
+
+        foreach (range(0,50) as $key => $number) {
 
             $statistic = new Statistic();
-            $statistic->user_id = $faker->numberBetween(1,100);
+            $statistic->user_id = $key + 1;
             $statistic->wins = $faker->numberBetween(1,100);
             $statistic->losses = $faker->numberBetween(1,100);
             $statistic->draws = $faker->numberBetween(1,100);
             $statistic->abandoned = $faker->numberBetween(1,100);
             $statistic->save();
         }
-        
     }
 }
