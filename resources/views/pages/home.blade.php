@@ -19,16 +19,68 @@
                 <div class="card-body">
 
                     <div class="row">
+                        <div class="col-md-8">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">Players</th>
+                                  <th scope="col">Duration</th>
+                                  <th scope="col">Status</th>
+                                  <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($games as $game)
+                                <tr>
+                                  <th scope="row">{{ $loop->iteration }}</th>
+                                  <td>
+                                      <a href="{{ route('user', $game->firstPlayer->id) }}">
+                                          {{ $game->firstPlayer->name }}
+                                      </a>
+                                      @component('components/badge',
+                                                ['className' => 'light' ])
+                                            {{ $game->firstPlayer->statistic->getPlayed() }}
+                                      @endcomponent
+                                     </br>
+                                     <a href="{{ route('user', $game->secondPlayer->id) }}">
+                                         {{ $game->secondPlayer->name }}
+                                     </a>
+                                     @component('components/badge',
+                                               ['className' => 'light' ])
+                                               {{ $game->secondPlayer->statistic->getPlayed() }}
+                                     @endcomponent
+                                  </td>
+                                  <td>{{ $game->getDuration() }}</td>
+                                  <td>
+
+                                      @component('components/badge',
+                                                ['className' => $game->badgeStatus()->className ])
+                                                {{ $game->badgeStatus()->name }}
+                                      @endcomponent
+                                  </td>
+                                  <td>
+                                      @component('components/button',
+                                                ['size' => 'lg',
+                                                'className' => $game->buttonStatus()->className])
+                                                {{ $game->buttonStatus()->name }}
+                                      @endcomponent
+                                  </td>
+                                </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="col-md-4 ml-auto">
                             <!-- Users -->
                             <ul class="list-group">
                             @foreach($users as $user)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <a href="{{ route('user', ['id' => $user->id]) }}">
-                                        {{ $user->name }}
                                         <span class="badge badge-primary badge-pill">
-                                            <img height="30" src="{{ $user->gravatar_url }}" alt="Gravatar {{$user->username}}">
+                                            <img height="30" src="{{ $user->gravatar_url }}" alt="Gravatar {{$user->name}}">
                                     </span>
+                                    {{ $user->name }}
                                     </a>
                                 </li>
                             @endforeach

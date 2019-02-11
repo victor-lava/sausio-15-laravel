@@ -33,7 +33,11 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        @component('components/button', [
+                        'className' => 'success',
+                        'size' => 'lg'])
+                            Create Game
+                        @endcomponent
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -56,8 +60,8 @@
                             </li>
                             <li class="nav-item dropdown">
                                 @component('components/button', ['size' => 'lg',
-                                                                 'text' => 'Logout',
                                                                  'type' => 'logout'])
+                                                                 Logout
                                 @endcomponent
                             </li>
                         @endguest
