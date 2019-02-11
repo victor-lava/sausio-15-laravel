@@ -47,10 +47,10 @@ class CheckerController extends Controller
 
     public function moves(Request $request) {
 
-        // $checkers = Checker::where('game_id', $request->game_id)
-        //                     ->where('x', $request->x)
-        //                     ->where('y', $request->y)
-        //                     ->get();
+        $checkers = Checker::where('game_id', $request->game_id)
+                            ->get();
+
+        dd($checkers);
 
         $checker = Checker::where('game_id', $request->game_id)
                         ->where('x', $request->x)
