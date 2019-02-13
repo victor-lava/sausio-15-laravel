@@ -35,7 +35,8 @@
                     <ul class="navbar-nav mr-auto">
                         @component('components/button', [
                         'className' => 'success',
-                        'size' => 'lg'])
+                        'size' => 'lg',
+                        'href' => route('game.create')])
                             Create Game
                         @endcomponent
                     </ul>

@@ -43,13 +43,17 @@
                                             {{ $game->firstPlayer->statistic->getPlayed() }}
                                       @endcomponent
                                      </br>
-                                     <a href="{{ route('user', $game->secondPlayer->id) }}">
-                                         {{ $game->secondPlayer->name }}
-                                     </a>
-                                     @component('components/badge',
-                                               ['className' => 'light' ])
-                                               {{ $game->secondPlayer->statistic->getPlayed() }}
-                                     @endcomponent
+                                     @if($game->secondPlayer)
+                                         <a href="{{ route('user', $game->secondPlayer->id) }}">
+                                             {{ $game->secondPlayer->name }}
+                                         </a>
+                                         @component('components/badge',
+                                                   ['className' => 'light' ])
+                                                   {{ $game->secondPlayer->statistic->getPlayed() }}
+                                         @endcomponent
+                                     @else
+                                     --------------------
+                                     @endif
                                   </td>
                                   <td>{{ $game->getDuration() }}</td>
                                   <td>
@@ -62,6 +66,7 @@
                                   <td>
                                       @component('components/button',
                                                 ['size' => 'lg',
+                                                 'href' => route('game.show', $game->hash),
                                                 'className' => $game->buttonStatus()->className])
                                                 {{ $game->buttonStatus()->name }}
                                       @endcomponent
