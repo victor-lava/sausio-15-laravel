@@ -10,14 +10,15 @@ class Game extends Model
     public $name;
 
     public function getDuration() {
-        $durationArray = explode(':', $this->duration);
-        $minutes  = $durationArray[1];
 
-        if($durationArray[0] != '00') {
-            $minutes = ($durationArray[0] * 60) + $durationArray[1];
-        }
-        
-        return $minutes . ' min. ' . $durationArray[2] . ' s.';
+        $gameStarted = new \DateTime($this->started_at);
+        $now = new \DateTime();
+
+        $diff = $gameStarted->diff($now);
+        $minutes = ($diff->h * 60) + $diff->i;
+
+        return $minutes . ' min. ' . $diff->s. ' s.';
+
     }
 
     public function firstPlayer() {

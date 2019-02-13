@@ -18,7 +18,7 @@ class StatisticsTable extends Seeder
         $count = User::count();
         // $countUsers = count($users);
 
-        foreach (range(0,50) as $key => $number) {
+        foreach (range(0,51) as $key => $number) {
 
             $statistic = new Statistic();
             $statistic->user_id = $key + 1;
