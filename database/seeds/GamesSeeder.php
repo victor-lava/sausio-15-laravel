@@ -17,7 +17,7 @@ class GamesSeeder extends Seeder
 
         $count = User::count();
 
-        foreach (range(0,10) as $number) {
+        foreach (range(0,5) as $number) {
 
             $first_id = $faker->numberBetween(1, $count);
             $second_id = $faker->numberBetween(1, $count);
