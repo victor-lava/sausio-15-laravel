@@ -14,19 +14,18 @@ class CheckerSeeder extends Seeder
     public function run()
     {
         $count = Game::count();
-        $iterator = 0;
 
         for ($b = 1; $b <= $count; $b++) {
 
             for ($y = 0; $y <= 2; $y++) { // black
                 for ($x = 0; $x <= 7; $x++) {
-                    if(!$this->createChecker($b, $y, $x, 1, 1)) { continue; }
+                    $this->createChecker($b, $y, $x, 1, 1);
                 }
             }
 
             for ($y = 7; $y >= 5; $y--) { // white
                 for ($x = 7; $x >= 0; $x--) {
-                    if(!$this->createChecker($b, $y, $x, 0, 2)) { continue; }
+                    $this->createChecker($b, $y, $x, 0, 2);
                 }
             }
 
@@ -46,17 +45,15 @@ class CheckerSeeder extends Seeder
         $yLyginis = ($y % 2 === 0) ? true : false;
         $xLyginis = ($x % 2 === 0) ? true : false;
 
-        // jei y yra lyginis ir x yra nelyginis
-        // jei y yra nelyginis ir x yra lyginis
-        if(  ($yLyginis && !$xLyginis) ||
-             (!$yLyginis && $xLyginis)) {
+        if(  ($yLyginis && !$xLyginis) || // jei y yra lyginis ir x yra nelyginis
+             (!$yLyginis && $xLyginis)) { // jei y yra nelyginis ir x yra lyginis
             $checker->x = $x;
+            $checker->y = $y;
+            $checker->color = $color;
+            $checker->save();
         } else { // jei y yra lyginis ir x yra lyginis, arba jei y yra nelyginis ir x yra nelyginis nespausdinu
             return false;
             // return continue;
         }
-        $checker->y = $y;
-        $checker->color = $color;
-        $checker->save();
     }
 }

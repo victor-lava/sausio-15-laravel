@@ -45,4 +45,55 @@ class Game extends Model
         return $this;
     }
 
+    public function checkers() {
+        return $this->hasMany('App\Checker');
+    }
+
+    public function findCheckerByCoordinates($x, $y) {
+        $result = false;
+
+        foreach ($this->checkers as $checker) {
+            if( $checker->x === $x &&
+                $checker->y === $y) {
+                    $result = $checker;
+                    break;
+            }
+        }
+
+        return $result;
+    }
+
+    public function createGameTable() {
+        $table = [];
+        // $checkers = $this->checkers;
+
+        for ($y = 0; $y <= 7; $y++) {
+            $table[$y] = [];
+            for ($x = 0; $x <= 7; $x++) {
+                $yLyginis = ($y % 2 === 0) ? true : false;
+                $xLyginis = ($x % 2 === 0) ? true : false;
+                $checker = false;
+
+                $table[$y][$x]['id'] = 'nezinau';
+
+                if(  ($yLyginis && !$xLyginis) || // jei y yra lyginis ir x yra nelyginis
+                     (!$yLyginis && $xLyginis)) { // jei y yra nelyginis ir x yra lyginis
+                    $color = 'black';
+                    // echo $x;
+                    $isChecker = $this->findCheckerByCoordinates($x, $y);
+
+                    if($isChecker) {
+                        $checker = $isChecker;
+                    }
+
+                } else { // jei y yra lyginis ir x yra lyginis, arba jei y yra nelyginis ir x yra nelyginis nespausdinu
+                    $color = 'white';
+                }
+                $table[$y][$x]['color'] = $color;
+                $table[$y][$x]['checker'] = $checker;
+            }
+        }
+
+        return $table;
+    }
 }
