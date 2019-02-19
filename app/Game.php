@@ -65,16 +65,19 @@ class Game extends Model
 
     public function createGameTable() {
         $table = [];
-        // $checkers = $this->checkers;
+        $alphabet = 'abcdefgh';
 
+        $idNumber = 8;
         for ($y = 0; $y <= 7; $y++) {
             $table[$y] = [];
+
             for ($x = 0; $x <= 7; $x++) {
                 $yLyginis = ($y % 2 === 0) ? true : false;
                 $xLyginis = ($x % 2 === 0) ? true : false;
                 $checker = false;
+                $idLetter = $alphabet[$x];
 
-                $table[$y][$x]['id'] = 'nezinau';
+                $table[$y][$x]['id'] = $idLetter . $idNumber;
 
                 if(  ($yLyginis && !$xLyginis) || // jei y yra lyginis ir x yra nelyginis
                      (!$yLyginis && $xLyginis)) { // jei y yra nelyginis ir x yra lyginis
@@ -92,6 +95,7 @@ class Game extends Model
                 $table[$y][$x]['color'] = $color;
                 $table[$y][$x]['checker'] = $checker;
             }
+            $idNumber--;
         }
 
         return $table;
