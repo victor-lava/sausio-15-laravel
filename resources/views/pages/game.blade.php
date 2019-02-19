@@ -1,6 +1,6 @@
 @extends('layouts/app')
 
-@section('title', 'Welcome to Home')
+@section('title', 'Game')
 
 @section('sidebar')
     @parent
@@ -18,7 +18,24 @@
 
                 <div class="card-body">
 
-                
+                  <div class="table">
+                    @foreach($squares as $squareLine)
+                    <div class="checker-row">
+                      @foreach($squareLine as $squareColumn)
+                      <div id="{{ $squareColumn['id'] }}"
+                           class="checker-col checker-col-{{ $squareColumn['color'] }}">
+                           <span>{{ $squareColumn['id'] }}</span>
+                           @if($squareColumn['checker'] !== false)
+                           <img class="checker"
+                                data-x="{{ $squareColumn['checker']->x }}"
+                                data-y="{{ $squareColumn['checker']->y }}"
+                                src="{{ asset('/img/'. $squareColumn['checker']->colorName().'-checker.png') }}">
+                          @endif
+                      </div>
+                      @endforeach
+                    </div>
+                    @endforeach
+                  </div>
                 </div>
             </div>
         </div>
