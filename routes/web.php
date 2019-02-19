@@ -20,3 +20,5 @@ Route::get('/user/{id}/games', 'UserController@games')->name('user.games');
 
 Route::get('/game/create', 'GameController@create')->name('game.create');
 Route::get('/game/{hash}', 'GameController@show')->name('game.show');
+
+Route::get('/api/checker/move', 'API\CheckerController@move')->name('api.checker.move');

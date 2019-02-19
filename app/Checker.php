@@ -11,4 +11,13 @@ class Checker extends Model
     public function colorName() {
       return $this->color === 1 ? 'black' : 'white';
     }
+
+    // public function game() {
+    //   $game = App\Game::where('id', $this->game_id)->first();
+    //   if($game) {
+    //     return $game;
+    //   } else {
+    //     return false;
+    //   }
+    // }
 }
