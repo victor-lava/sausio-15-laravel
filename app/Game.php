@@ -97,17 +97,7 @@ class Game extends Model
       return $isCoordinates;
     }
 
-    /**
-     * Gets checker moves
-     *
-     * Check around the checker and returns it's possible movements
-     *
-     * @param Checker $checker Instance of Checker
-     *
-     * @return array
-     */
-    public function getMoves(Checker $checker): array {
-      $moves = [];
+    public function getAround(Checker $checker): array {
       $vectors = $this->createVectors();
 
       foreach ($vectors as $vector) {
@@ -125,13 +115,10 @@ class Game extends Model
           if(!$foundChecker) { $isEmpty = true; } // if we find checker, then it's nt
           elseif($foundChecker->color !== $checker->color) { $isEnemy = $foundChecker; }
 
-
           if($isEnemy instanceof Checker) {
             $enemyX = $isEnemy->x + $vector['x'];
             $enemyY = $isEnemy->y + $vector['y'];
 
-
-            // dd($enemyX);
             if($this->isCoordinatesInRange($enemyX, $enemyY)) {
               $isEmptySpace = $this->findCheckerByCoordinates($enemyX, $enemyY);
               if($isEmptySpace === false) { $isFight = true; }
@@ -149,7 +136,21 @@ class Game extends Model
          }
       }
 
-      $moves = $this->filterPossibleMoves(  $moves,
+      return $moves;
+    }
+
+    /**
+     * Gets checker possible moves
+     *
+     *
+     * @param Checker $checker Instance of Checker
+     *
+     * @return array
+     */
+    public function getMoves(Checker $checker): array {
+      $around = $this->getAround($checker);
+
+      $moves = $this->filterPossibleMoves(  $around,
                                             $checker);
       return $moves;
     }
