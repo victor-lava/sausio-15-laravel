@@ -115,6 +115,23 @@ window.makeCheckerActive = function (element) {
   element.classList.add('checker-col-active');
 };
 
+window.removeActiveSquares = function () {
+  var activeSquares = window.table.querySelectorAll('.checker-col-possible');
+
+  if (activeSquares.length > 0) {
+    activeSquares.forEach(function (square) {
+      square.classList.remove('checker-col-possible');
+    });
+  }
+};
+
+window.makeSquareActive = function (coordinates) {
+  coordinates.x += 1;
+  coordinates.y += 1;
+  var square = window.table.querySelector('.checker-row:nth-child(' + coordinates.y + ') .checker-col:nth-child(' + coordinates.x + ')');
+  square.classList.add('checker-col-possible');
+};
+
 window.moveChecker = function (element) {
   var activeChecker = window.table.querySelector('.checker-col-active'),
       activeImg = activeChecker.querySelector('img');
@@ -128,6 +145,29 @@ window.moveChecker = function (element) {
 
 window.getPossibleMoves = function (x, y) {
   var moves = [];
+  fetch('http://talents.test/api/checker/moves?game_hash=7290cae1b164dde41cd2ec108f043d25&x=' + x + '&y=' + y, {
+    method: 'GET',
+    headers: new Headers()
+  }).then(function (res) {
+    return res.json();
+  }).then(function (response) {
+    removeActiveSquares();
+
+    if (response.data.length > 0) {
+      response.data.map(function (coordinates) {
+        makeSquareActive(coordinates);
+      });
+    }
+  }).catch(function (err) {
+    return console.log(err);
+  }); // fetch('http://talents.test/api/checker/moves?game_hash=7290cae1b164dde41cd2ec108f043d25&x=1&y=4')
+  // .then(function(response) {
+  //   return response.json();
+  // })
+  // .then(function(myJson) {
+  //   console.log(JSON.stringify(myJson));
+  // });
+
   alert('x: ' + x + ' y: ' + y);
   return moves;
 };

@@ -38,9 +38,10 @@ class CheckerController extends Controller
                           ->first();
         if($checker) {
           $moves = $game->getMoves($checker);
-          dd($moves);
-
           $data['status'] = 200;
+          $data['data'] = $moves;
+
+          $data['message'] = count($moves) > 0 ? 'Found some possible movements' : 'No possible movements found';
 
         }
       }

@@ -105,7 +105,6 @@ class Game extends Model
       }
       $moves = $this->filterPossibleMoves(  $moves,
                                             $checker);
-
       return $moves;
     }
 
@@ -115,12 +114,18 @@ class Game extends Model
       $fightMoves = [];
 
       foreach ($moves as $move) {
+        $coordinates = ['x' => $move['x'],
+                        'y' => $move['y']];
+
         if( $move['fight'] === true) { // fight is happening, add to fightMoves array
-          $fightMoves[] = $move;
+          $coordinates['x'] += $move['vectors']['x'];
+          $coordinates['y'] += $move['vectors']['y'];
+
+          $fightMoves[] = $coordinates;
         } elseif ($move['empty'] === true) { // if empty true
 
           if(($move['vectors']['y'] > 0 && $checker->color === 1) || ($move['vectors']['y'] < 0 && $checker->color === 0)) {
-                $emptyMoves[] = $move;
+                $emptyMoves[] = $coordinates;
           }
         }
       }
