@@ -38,7 +38,8 @@ class CheckerController extends Controller
                           ->where('y', $request->y1)
                           ->update([  'x' => $request->x2,
                                       'y' => $request->y2]);
-                                      dd($checker);
+        dd($checker);
+        // dd(Checker::update());
         if($checker > 0) {
 
           $data['status'] = 200;

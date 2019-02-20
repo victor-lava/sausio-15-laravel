@@ -23,7 +23,10 @@
                     <div class="checker-row">
                       @foreach($squareLine as $squareColumn)
                       <div id="{{ $squareColumn['id'] }}"
-                           class="checker-col checker-col-{{ $squareColumn['color'] }}">
+                           class="checker-col checker-col-{{ $squareColumn['color'] }}"
+                           @if($squareColumn['color'] === 'black')
+                           onclick="selectChecker(this)"
+                           @endif>
                            <span>{{ $squareColumn['id'] }}</span>
                            @if($squareColumn['checker'] !== false)
                            <img class="checker"

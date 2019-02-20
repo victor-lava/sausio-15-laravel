@@ -5,29 +5,66 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+// require('./bootstrap');
+window.table = document.querySelector('.table');
 
-window.Vue = require('vue');
+window.isSquareFilled = function (el) {
+  return el.querySelector('img') ? true : false;
+}
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+window.makeCheckerActive = function (element) {
+  let activeChecker = window.table.querySelector('.checker-col-active');
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+  if(activeChecker) {
+    activeChecker.classList.remove('checker-col-active');
+  }
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+  element.classList.add('checker-col-active');
+}
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+window.moveChecker = function(element) {
+  let activeChecker = window.table.querySelector('.checker-col-active'),
+      activeImg = activeChecker.querySelector('img');
 
-const app = new Vue({
-    el: '#app'
-});
+      img = document.createElement('img');
+
+      img.className = "checker";
+      img.src = activeImg.src;
+
+  activeChecker.classList.remove('checker-col-active');
+  activeImg.remove();
+
+  element.appendChild(img);
+}
+
+window.getPossibleMoves = function(x, y) {
+  let moves = [];
+
+  alert('x: ' + x + ' y: ' + y);
+
+  return moves;
+}
+
+window.selectChecker = function(element) {
+
+  let activeChecker = window.table.querySelector('.checker-col-active'),
+      checker = element.querySelector('img');
+
+  if(isSquareFilled(element)) { // square filled
+    makeCheckerActive(element); // makes selected checker active and removes active class from the rest of the checker
+    
+    moves = getPossibleMoves( checker.dataset.x,
+                              checker.dataset.y);
+    console.log(moves);
+    // 1. zingsnis, saskes paselektinimas
+    // 2. turi vykti fetchas ir turi grazinti possible ejimus
+    // 3 kai grazina possible ejimus uzdeda klases checker-col-possible
+
+
+
+  } else { // square empty
+    // 2. saskes permetimas, taciau permetam tik ten kur yra checker-col-possible
+
+    moveChecker(element);
+  }
+}
