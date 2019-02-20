@@ -100,6 +100,7 @@
  */
 // require('./bootstrap');
 window.table = document.querySelector('.table');
+window.possibleMoves = false;
 
 window.isSquareFilled = function (el) {
   return el.querySelector('img') ? true : false;
@@ -145,13 +146,13 @@ window.moveChecker = function (element) {
 };
 
 window.getPossibleMoves = function (x, y) {
-  var moves = [];
   fetch('http://talents.test/api/checker/moves?game_hash=7290cae1b164dde41cd2ec108f043d25&x=' + x + '&y=' + y, {
     method: 'GET',
     headers: new Headers()
   }).then(function (res) {
     return res.json();
   }).then(function (response) {
+    window.possibleMoves = response;
     removeActiveSquares();
 
     if (response.data.length > 0) {
@@ -161,16 +162,11 @@ window.getPossibleMoves = function (x, y) {
     }
   }).catch(function (err) {
     return console.log(err);
-  }); // fetch('http://talents.test/api/checker/moves?game_hash=7290cae1b164dde41cd2ec108f043d25&x=1&y=4')
-  // .then(function(response) {
-  //   return response.json();
-  // })
-  // .then(function(myJson) {
-  //   console.log(JSON.stringify(myJson));
-  // });
-  // alert('x: ' + x + ' y: ' + y);
+  });
+};
 
-  return moves;
+window.canMove = function (element) {
+  return element.classList.contains('checker-col-possible') ? true : false;
 };
 
 window.selectChecker = function (element) {
@@ -181,14 +177,16 @@ window.selectChecker = function (element) {
     // square filled
     makeCheckerActive(element); // makes selected checker active and removes active class from the rest of the checker
 
-    moves = getPossibleMoves(checker.dataset.x, checker.dataset.y);
-    console.log(moves); // 1. zingsnis, saskes paselektinimas
+    getPossibleMoves(checker.dataset.x, checker.dataset.y); // 1. zingsnis, saskes paselektinimas
     // 2. turi vykti fetchas ir turi grazinti possible ejimus
     // 3 kai grazina possible ejimus uzdeda klases checker-col-possible
   } else {
     // square empty
     // 2. saskes permetimas, taciau permetam tik ten kur yra checker-col-possible
-    moveChecker(element);
+    // console.log(element);
+    if (canMove(element)) {
+      moveChecker(element);
+    }
   }
 };
 

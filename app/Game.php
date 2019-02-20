@@ -172,11 +172,13 @@ class Game extends Model
 
       foreach ($moves as $move) {
         $coordinates = ['x' => $move['x'],
-                        'y' => $move['y']];
+                        'y' => $move['y'],
+                        'fight' => false];
 
         if( $move['fight'] === true) { // fight is happening, add to fightMoves array
           $coordinates['x'] += $move['vectors']['x'];
           $coordinates['y'] += $move['vectors']['y'];
+          $coordinates['fight'] = true;
 
           $fightMoves[] = $coordinates;
         } elseif ($move['empty'] === true) { // if empty true
