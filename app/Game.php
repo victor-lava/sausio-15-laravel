@@ -49,6 +49,64 @@ class Game extends Model
         return $this->hasMany('App\Checker');
     }
 
+    public function getMoves($checker) {
+      $moves = [];
+
+      if($checker->color === 1) { // black
+
+        $moves[] = $this->isMovePossible( $checker->x - 1,
+                                          $checker->y + 1,
+                                          $checker->color);
+
+        $moves[] = $this->isMovePossible( $checker->x + 1,
+                                          $checker->y + 1,
+                                          $checker->color);
+
+        $moves[] = $this->isMovePossible( $checker->x - 1,
+                                          $checker->y - 1,
+                                          $checker->color);
+
+        $moves[] = $this->isMovePossible( $checker->x + 1,
+                                          $checker->y - 1,
+                                          $checker->color);
+
+
+        foreach ($moves as $key => $value) {
+          if($value['possible'] instanceof Checker) {
+            $moves[$key]['possible'] = $this->isMovePossible(
+                                              $moves[$key]['possible']->x + 1,
+                                              $moves[$key]['possible']->y + 1,
+                                              $moves[$key]['possible']->color);
+            // echo "enemy found";
+          }
+        }
+
+
+      } else  { // white
+        $moves[] = $this->isMovePossible($checker->x - 1, $checker->y - 1);
+        $moves[] = $this->isMovePossible($checker->x + 1, $checker->y - 1);
+      }
+
+      return $moves;
+    }
+
+    public function isMovePossible($x, $y, $color) {
+      $checker = $this->findCheckerByCoordinates($x, $y);
+      $coordinates = ['x' => $x,
+                      'y' => $y,
+                      'possible' => false];
+
+      if($checker == false) {
+        $coordinates['possible'] = true;
+      } elseif ($checker !== false && $checker->color === $color) {
+        $coordinates['possible'] = false;
+      } elseif($checker !== false && $checker->color !== $color) {
+        $coordinates['possible'] = $checker;
+      }
+
+      return $coordinates;
+    }
+
     public function findCheckerByCoordinates($x, $y) {
         $result = false;
 
