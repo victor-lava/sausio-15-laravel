@@ -51,9 +51,11 @@ window.moveChecker = function(element) {
       img.src = activeImg.src;
 
   activeChecker.classList.remove('checker-col-active');
+
   activeImg.remove();
 
   element.appendChild(img);
+  removeActiveSquares();
 }
 
 window.getPossibleMoves = function(x, y) {
@@ -82,7 +84,7 @@ window.getPossibleMoves = function(x, y) {
   //   console.log(JSON.stringify(myJson));
   // });
 
-  alert('x: ' + x + ' y: ' + y);
+  // alert('x: ' + x + ' y: ' + y);
 
   return moves;
 }

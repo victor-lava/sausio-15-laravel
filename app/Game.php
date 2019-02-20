@@ -65,6 +65,17 @@ class Game extends Model
       return $vectors;
     }
 
+    private function isCoordinatesInRange($x, $y) {
+      $isCoordinates = false;
+
+      if(($x >= 0 && $y >= 0) &&
+         ($x <= 7 && $y <= 7)) {
+            $isCoordinates = true;
+      }
+
+      return $isCoordinates;
+    }
+
     public function getMoves($checker) {
       $moves = [];
       $vectors = $this->createVectors();
@@ -72,37 +83,42 @@ class Game extends Model
       foreach ($vectors as $vector) {
         $x = $checker->x + $vector['x'];
         $y = $checker->y + $vector['y'];
-        $isEmpty = false;
-        $isEnemy = false;
-        $isFight = false;
 
-        $foundChecker = $this->findCheckerByCoordinates($x, $y);
+        if($this->isCoordinatesInRange($x, $y)) {
 
-        if(!$foundChecker) { $isEmpty = true; } // if we find checker, then it's nt
-        elseif($foundChecker->color !== $checker->color) { $isEnemy = $foundChecker; }
+          $isEmpty = false;
+          $isEnemy = false;
+          $isFight = false;
 
+          $foundChecker = $this->findCheckerByCoordinates($x, $y);
 
-        if($isEnemy instanceof Checker) {
-          $enemyX = $isEnemy->x + $vector['x'];
-          $enemyY = $isEnemy->y + $vector['y'];
+          if(!$foundChecker) { $isEmpty = true; } // if we find checker, then it's nt
+          elseif($foundChecker->color !== $checker->color) { $isEnemy = $foundChecker; }
 
 
-          if($enemyX >= 0 && $enemyY >= 0) {
-            $isEmptySpace = $this->findCheckerByCoordinates($enemyX, $enemyY);
-            if($isEmptySpace === false) { $isFight = true; }
+          if($isEnemy instanceof Checker) {
+            $enemyX = $isEnemy->x + $vector['x'];
+            $enemyY = $isEnemy->y + $vector['y'];
+
+
+            // dd($enemyX);
+            if($this->isCoordinatesInRange($enemyX, $enemyY)) {
+              $isEmptySpace = $this->findCheckerByCoordinates($enemyX, $enemyY);
+              if($isEmptySpace === false) { $isFight = true; }
+            }
+
           }
 
-        }
-
-        $moves[] = ['x' => $x,
-                    'y' => $y,
-                    'vectors' => ['x' => $vector['x'],
-                                  'y' => $vector['y']],
-                    'empty' => $isEmpty,
-                    'enemy' => $isEnemy,
-                    'fight' => $isFight];
-
+          $moves[] = ['x' => $x,
+                      'y' => $y,
+                      'vectors' => ['x' => $vector['x'],
+                                    'y' => $vector['y']],
+                      'empty' => $isEmpty,
+                      'enemy' => $isEnemy,
+                      'fight' => $isFight];
+         }
       }
+      
       $moves = $this->filterPossibleMoves(  $moves,
                                             $checker);
       return $moves;
@@ -124,6 +140,7 @@ class Game extends Model
           $fightMoves[] = $coordinates;
         } elseif ($move['empty'] === true) { // if empty true
 
+          // if moving forward or moving backwards
           if(($move['vectors']['y'] > 0 && $checker->color === 1) || ($move['vectors']['y'] < 0 && $checker->color === 0)) {
                 $emptyMoves[] = $coordinates;
           }

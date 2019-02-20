@@ -38,6 +38,7 @@ class CheckerController extends Controller
                           ->first();
         if($checker) {
           $moves = $game->getMoves($checker);
+    
           $data['status'] = 200;
           $data['data'] = $moves;
 
