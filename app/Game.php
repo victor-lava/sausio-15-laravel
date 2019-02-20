@@ -65,8 +65,8 @@ class Game extends Model
       return $vectors;
     }
 
-    public function getPossibleMoves($checker) {
-      $coordinates = [];
+    public function getMoves($checker) {
+      $moves = [];
       $vectors = $this->createVectors();
 
       foreach ($vectors as $vector) {
@@ -94,85 +94,24 @@ class Game extends Model
 
         }
 
-        $coordinates[] = ['x' => $x,
-                          'y' => $y,
-                          'vectors' => ['x' => $vector['x'],
-                                        'y' => $vector['y']],
-                          'empty' => $isEmpty,
-                          'enemy' => $isEnemy,
-                          'fight' => $isFight];
+        $moves[] = ['x' => $x,
+                    'y' => $y,
+                    'vectors' => ['x' => $vector['x'],
+                                  'y' => $vector['y']],
+                    'empty' => $isEmpty,
+                    'enemy' => $isEnemy,
+                    'fight' => $isFight];
 
       }
 
-      return $coordinates;
-      // $checker = $this->findCheckerByCoordinates($x, $y);
-      // $coordinates = ['x' => $x,
-      //                 'y' => $y,
-      //                 'empty' => false,
-      //                 'enemy' => false,
-      //                 'fight' => false];
-      //
-      // if($checker == false) { // no checker found
-      //   $coordinates['empty'] = true;
-      // }
-      // elseif($checker->color !== $color) { // enemy found, because different colors
-      //   $coordinates['enemy'] = $checker;
-      // }
-      //
-      // return $coordinates;
-    }
-
-    public function getMoves($checker) {
-      $moves = [];
-
-      if($checker->color === 1) { // black
-        //
-        // foreach ($this->createVectors() as $vector) {
-        //   $moves[] = $this->isMovePossible( $checker->x - $vector['x'],
-        //                                     $checker->y - $vector['y'],
-        //                                     $checker->color);
-        // }
-        //
-        // dd($moves);
-
-
-        // foreach ($moves as $key => $value) {
-        //   if($value['enemy'] instanceof Checker) {
-        //     $isMovePossible = $this->isMovePossible(
-        //                                       $moves[$key]['enemy']->x + 1,
-        //                                       $moves[$key]['enemy']->y + 1,
-        //                                       $moves[$key]['enemy']->color);
-        //     if($isMovePossible['empty']) {
-        //       $moves[$key]['fight'] = true;
-        //     }
-        //   }
-        // }
-
-
-      } else  { // white
-        $moves[] = $this->isMovePossible($checker->x - 1, $checker->y - 1);
-        $moves[] = $this->isMovePossible($checker->x + 1, $checker->y - 1);
-      }
+      $moves = $this->filterToPossibleMoves(  $moves,
+                                              $checker);
 
       return $moves;
     }
 
-    public function isMovePossible($x, $y, $color) {
-      $checker = $this->findCheckerByCoordinates($x, $y);
-      $coordinates = ['x' => $x,
-                      'y' => $y,
-                      'empty' => false,
-                      'enemy' => false,
-                      'fight' => false];
+    public function filterPossibleMoves($checker) {
 
-      if($checker == false) { // no checker found
-        $coordinates['empty'] = true;
-      }
-      elseif($checker->color !== $color) { // enemy found, because different colors
-        $coordinates['enemy'] = $checker;
-      }
-
-      return $coordinates;
     }
 
     public function findCheckerByCoordinates($x, $y) {

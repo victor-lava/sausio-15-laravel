@@ -39,7 +39,8 @@ class CheckerController extends Controller
         if($checker) {
           $moves = [];
 
-          $moves = $game->getPossibleMoves($checker);
+          $moves = $game->getMoves($checker);
+          dd($moves);
           // possible moves
           if($checker->color === 1) { // black
 
@@ -63,7 +64,6 @@ class CheckerController extends Controller
 
           }
 
-          dd($moves);
 
           $data['status'] = 200;
 
