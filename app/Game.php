@@ -103,15 +103,30 @@ class Game extends Model
                     'fight' => $isFight];
 
       }
-
-      $moves = $this->filterToPossibleMoves(  $moves,
-                                              $checker);
+      $moves = $this->filterPossibleMoves(  $moves,
+                                            $checker);
 
       return $moves;
     }
 
-    public function filterPossibleMoves($checker) {
+    public function filterPossibleMoves($moves,
+                                        $checker) {
+      $emptyMoves = [];
+      $fightMoves = [];
 
+      foreach ($moves as $move) {
+        if( $move['fight'] === true) { // fight is happening, add to fightMoves array
+          $fightMoves[] = $move;
+        } elseif ($move['empty'] === true) { // if empty true
+
+          if(($move['vectors']['y'] > 0 && $checker->color === 1) || ($move['vectors']['y'] < 0 && $checker->color === 0)) {
+                $emptyMoves[] = $move;
+          }
+        }
+      }
+
+      // if there are any fight moves, then return them (need to fight!)
+      return count($fightMoves) === 0 ? $emptyMoves : $fightMoves;
     }
 
     public function findCheckerByCoordinates($x, $y) {

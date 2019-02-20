@@ -37,33 +37,8 @@ class CheckerController extends Controller
                           ->where('y', $request->y)
                           ->first();
         if($checker) {
-          $moves = [];
-
           $moves = $game->getMoves($checker);
           dd($moves);
-          // possible moves
-          if($checker->color === 1) { // black
-
-            // dd($checker);
-            // $game->findCheckerByCoordinates($request->x - 1, $request->y - 1);
-
-            // $moves = [
-            //   $game->isMovePossible($request->x - 1, $request->y + 1),
-            //   $game->isMovePossible($request->x + 1, $request->y + 1),
-            //   // $game->findCheckerByCoordinates($request->x - 1, $request->y - 1),
-            //   // $game->findCheckerByCoordinates($request->x - 1, $request->y - 1)
-            // ];
-
-            // foreach ($moves as $move) {
-            //   if($move->color !== 1) {
-            //     // $game->findCheckerByCoordinates($request->x - 1, $request->y - 1)
-            //   }
-            // }
-
-          } else { // white
-
-          }
-
 
           $data['status'] = 200;
 
