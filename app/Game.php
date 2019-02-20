@@ -49,6 +49,18 @@ class Game extends Model
         return $this->hasMany('App\Checker');
     }
 
+    /**
+     * Creates a vector movement array
+     *
+     * Vector movement array defines in which direction checker is moving.
+     * Possible movements are:
+     * x: +1, -1 (top-left),
+     * x: -1, -1 (top-right),
+     * x: +1, +1 (bottom-left),
+     * x: -1, +1 (bottom-right)
+     *
+     * @return array
+     */
     private function createVectors() {
       $y = 1;
       $x = 1;
@@ -65,7 +77,16 @@ class Game extends Model
       return $vectors;
     }
 
-    private function isCoordinatesInRange($x, $y) {
+
+    /**
+     * Checks if the supplied coordinates are in the checker table range
+     *
+     * @param int $x horizontal axis coordinate for the checker/square
+     * @param int $y vertical axis coordinate for the checker/square
+     *
+     * @return bool
+     */
+    private function isCoordinatesInRange(int $x, int $y): bool {
       $isCoordinates = false;
 
       if(($x >= 0 && $y >= 0) &&
@@ -76,7 +97,16 @@ class Game extends Model
       return $isCoordinates;
     }
 
-    public function getMoves($checker) {
+    /**
+     * Gets checker moves
+     *
+     * Check around the checker and returns it's possible movements
+     *
+     * @param Checker $checker Instance of Checker
+     *
+     * @return array
+     */
+    public function getMoves(Checker $checker): array {
       $moves = [];
       $vectors = $this->createVectors();
 
@@ -118,12 +148,22 @@ class Game extends Model
                       'fight' => $isFight];
          }
       }
-      
+
       $moves = $this->filterPossibleMoves(  $moves,
                                             $checker);
       return $moves;
     }
 
+    /**
+     * Filters the possible movements
+     *
+     * Removes the movements that are not possible, for ex. if we must to cut the checker, then we don't need to return the squares that are empty
+     *
+     * @param array $moves Instance of Checker
+     * @param Checker $checker Instance of Checker
+     *
+     * @return array
+     */
     public function filterPossibleMoves($moves,
                                         $checker) {
       $emptyMoves = [];
@@ -147,10 +187,20 @@ class Game extends Model
         }
       }
 
-      // if there are any fight moves, then return them (need to fight!)
+      // if there are any fight moves, then return them (need to fight!) don't return empty
       return count($fightMoves) === 0 ? $emptyMoves : $fightMoves;
     }
 
+    /**
+     * Finds checker by coordinates
+     *
+     * Finds checker by coordinates from the checker model
+     *
+     * @param int $x checker horizontal axis
+     * @param int $y checker vertical axis
+     *
+     * @return Checker
+     */
     public function findCheckerByCoordinates($x, $y) {
         $result = false;
 
