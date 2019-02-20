@@ -22,3 +22,5 @@ Route::get('/game/create', 'GameController@create')->name('game.create');
 Route::get('/game/{hash}', 'GameController@show')->name('game.show');
 
 Route::get('/api/checker/move', 'API\CheckerController@move')->name('api.checker.move');
+
+Route::get('/api/checker/moves', 'API\CheckerController@moves')->name('api.checker.moves');

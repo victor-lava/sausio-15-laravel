@@ -24,8 +24,35 @@ class CheckerController extends Controller
 
     }
 
-    public function move(Request $request) {
+    public function moves(Request $request) {
 
+      $data = [ 'status' => 404,
+                'message' => 'Not found',
+                'data' => null ];
+
+      $game = Game::where('hash', $request->game_hash)->first();
+
+      if($game) {
+        $checker = Checker::where('x', $request->x)
+                          ->where('y', $request->y)
+                          ->first();
+        if($checker) {
+
+          // possible moves
+          $possible = $game->findCheckerByCoordinates(2,1);
+
+          // $possible1 = $game->findCheckerByCoordinates($request->x - 1, $request->y + 1);
+          dd($possible);
+
+          $data['status'] = 200;
+
+        }
+      }
+
+      return response()->json($data);
+    }
+
+    public function move(Request $request) {
 
       $data = [ 'status' => 404,
                 'message' => 'Not found',
@@ -38,7 +65,7 @@ class CheckerController extends Controller
                           ->where('y', $request->y1)
                           ->update([  'x' => $request->x2,
                                       'y' => $request->y2]);
-        dd($checker);
+        // dd($checker);
         // dd(Checker::update());
         if($checker > 0) {
 

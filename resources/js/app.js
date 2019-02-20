@@ -52,7 +52,7 @@ window.selectChecker = function(element) {
 
   if(isSquareFilled(element)) { // square filled
     makeCheckerActive(element); // makes selected checker active and removes active class from the rest of the checker
-    
+
     moves = getPossibleMoves( checker.dataset.x,
                               checker.dataset.y);
     console.log(moves);

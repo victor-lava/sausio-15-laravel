@@ -19,15 +19,24 @@
                 <div class="card-body">
 
                   <div class="table">
+
                     @foreach($squares as $squareLine)
+                      @php $y = $loop->index @endphp
                     <div class="checker-row">
                       @foreach($squareLine as $squareColumn)
+                        @php $x = $loop->index @endphp
                       <div id="{{ $squareColumn['id'] }}"
                            class="checker-col checker-col-{{ $squareColumn['color'] }}"
                            @if($squareColumn['color'] === 'black')
                            onclick="selectChecker(this)"
                            @endif>
-                           <span>{{ $squareColumn['id'] }}</span>
+                           <!-- <span>{{ $squareColumn['id'] }}</span> -->
+                           @if($squareColumn['color'] === 'black')
+                           <span>
+                            {{ $x }} : {{ $y }}
+                           </span>
+                           @endif
+
                            @if($squareColumn['checker'] !== false)
                            <img class="checker"
                                 data-x="{{ $squareColumn['checker']->x }}"
