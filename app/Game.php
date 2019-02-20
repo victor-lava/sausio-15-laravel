@@ -49,37 +49,47 @@ class Game extends Model
         return $this->hasMany('App\Checker');
     }
 
+    private function createVectors() {
+      $y = 1;
+      $x = 1;
+      $vectors = [];
+
+      for ($i = 0; $i < 4; $i++) {
+
+        if($i % 2) { $y *= -1; $x *= -1; }
+        else { $y *= -1; $x *= 1; }
+
+        $vectors[] = ['x' => $x, 'y' => $y];
+      }
+
+      return $vectors;
+    }
+
     public function getMoves($checker) {
       $moves = [];
 
       if($checker->color === 1) { // black
 
-        $moves[] = $this->isMovePossible( $checker->x - 1,
-                                          $checker->y + 1,
-                                          $checker->color);
-
-        $moves[] = $this->isMovePossible( $checker->x + 1,
-                                          $checker->y + 1,
-                                          $checker->color);
-
-        $moves[] = $this->isMovePossible( $checker->x - 1,
-                                          $checker->y - 1,
-                                          $checker->color);
-
-        $moves[] = $this->isMovePossible( $checker->x + 1,
-                                          $checker->y - 1,
-                                          $checker->color);
-
-
-        foreach ($moves as $key => $value) {
-          if($value['possible'] instanceof Checker) {
-            $moves[$key]['possible'] = $this->isMovePossible(
-                                              $moves[$key]['possible']->x + 1,
-                                              $moves[$key]['possible']->y + 1,
-                                              $moves[$key]['possible']->color);
-            // echo "enemy found";
-          }
+        foreach ($this->createVectors() as $vector) {
+          $moves[] = $this->isMovePossible( $checker->x - $vector['x'],
+                                            $checker->y - $vector['y'],
+                                            $checker->color);
         }
+        
+        dd($moves);
+
+
+        // foreach ($moves as $key => $value) {
+        //   if($value['enemy'] instanceof Checker) {
+        //     $isMovePossible = $this->isMovePossible(
+        //                                       $moves[$key]['enemy']->x + 1,
+        //                                       $moves[$key]['enemy']->y + 1,
+        //                                       $moves[$key]['enemy']->color);
+        //     if($isMovePossible['empty']) {
+        //       $moves[$key]['fight'] = true;
+        //     }
+        //   }
+        // }
 
 
       } else  { // white
@@ -94,14 +104,15 @@ class Game extends Model
       $checker = $this->findCheckerByCoordinates($x, $y);
       $coordinates = ['x' => $x,
                       'y' => $y,
-                      'possible' => false];
+                      'empty' => false,
+                      'enemy' => false,
+                      'fight' => false];
 
-      if($checker == false) {
-        $coordinates['possible'] = true;
-      } elseif ($checker !== false && $checker->color === $color) {
-        $coordinates['possible'] = false;
-      } elseif($checker !== false && $checker->color !== $color) {
-        $coordinates['possible'] = $checker;
+      if($checker == false) { // no checker found
+        $coordinates['empty'] = true;
+      }
+      elseif($checker->color !== $color) { // enemy found, because different colors
+        $coordinates['enemy'] = $checker;
       }
 
       return $coordinates;
