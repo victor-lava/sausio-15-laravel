@@ -152,6 +152,7 @@ class Game extends Model
 
       $moves = $this->filterPossibleMoves(  $around,
                                             $checker);
+
       return $moves;
     }
 
