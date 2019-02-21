@@ -8,6 +8,7 @@
 // require('./bootstrap');
 window.table = document.querySelector('.table');
 window.possibleMoves = false;
+window.selectedChecker = false;
 
 window.isSquareFilled = function (el) {
   return el.querySelector('img') ? true : false;
@@ -42,7 +43,28 @@ window.makeSquareActive = function(coordinates) {
   square.classList.add('checker-col-possible');
 }
 
+window.isFightHappening = function(x, y) {
+  let isFightHappening = false;
+  window.possibleMoves.data.forEach((item) => {
+    console.log(item.x);
+    if(item.x == x && item.y == y) { isFightHappening = true; }
+  })
+  return isFightHappening;
+}
+
 window.moveChecker = function(element) {
+
+    let from = {
+              x: window.selectedChecker.dataset.x,
+              y: window.selectedChecker.dataset.y
+           },
+           to = {
+              x: element.dataset.x,
+              y: element.dataset.y
+            };
+            console.log(isFightHappening(from.x,from.y));
+            // console.log(window.p)
+  APImoveChecker(from, to);
 
   let activeChecker = window.table.querySelector('.checker-col-active'),
       activeImg = activeChecker.querySelector('img');
@@ -61,6 +83,18 @@ window.moveChecker = function(element) {
   removeActiveSquares();
 }
 
+window.APImoveChecker = function(from, to, fight) {
+  fetch('http://talents.test/api/checker/move?game_hash=7290cae1b164dde41cd2ec108f043d25&x1=' + from.x + '&y1=' + from.y + '&x2=' + to.x + '&y2=' + to.y, {
+       method: 'GET',
+       headers : new Headers()
+   }).then((res) => res.json())
+   .then((response) => {
+
+     console.log(response);
+   })
+   .catch((err)=>console.log(err))
+}
+
 window.getPossibleMoves = function(x, y) {
   fetch('http://talents.test/api/checker/moves?game_hash=7290cae1b164dde41cd2ec108f043d25&x=' + x + '&y=' + y, {
        method: 'GET',
@@ -68,9 +102,12 @@ window.getPossibleMoves = function(x, y) {
    }).then((res) => res.json())
    .then((response) => {
      window.possibleMoves = response;
+
      removeActiveSquares();
+
      if(response.data.length > 0) {
        response.data.map((coordinates) => {
+         // console.log(coordinates);
          makeSquareActive(coordinates);
        });
      }
@@ -79,19 +116,24 @@ window.getPossibleMoves = function(x, y) {
 }
 
 window.canMove = function(element) {
-  return element.classList.contains('checker-col-possible') ? true : false;
+  let isColPossible = element.classList.contains('checker-col-possible');
+  return isColPossible ? true : false;
 }
 
 window.selectChecker = function(element) {
 
-  let activeChecker = window.table.querySelector('.checker-col-active'),
-      checker = element.querySelector('img');
+  let activeChecker = window.table.querySelector('.checker-col-active');
+
 
   if(isSquareFilled(element)) { // square filled
+    // window.selectedChecker = activeChecker.querySelector('img');
     makeCheckerActive(element); // makes selected checker active and removes active class from the rest of the checker
+    // console.log(element);
+    window.selectedChecker = element.querySelector('img');
+    // console.log(window.selectedChecker.dataset.x);
 
-    getPossibleMoves( checker.dataset.x,
-                      checker.dataset.y);
+    getPossibleMoves( window.selectedChecker.dataset.x,
+                      window.selectedChecker.dataset.y);
     // 1. zingsnis, saskes paselektinimas
     // 2. turi vykti fetchas ir turi grazinti possible ejimus
     // 3 kai grazina possible ejimus uzdeda klases checker-col-possible

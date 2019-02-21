@@ -27,6 +27,8 @@
                         @php $x = $loop->index @endphp
                       <div id="{{ $squareColumn['id'] }}"
                            class="checker-col checker-col-{{ $squareColumn['color'] }}"
+                           data-x="{{ $x }}"
+                           data-y="{{ $y }}"
                            @if($squareColumn['color'] === 'black')
                            onclick="selectChecker(this)"
                            @endif>

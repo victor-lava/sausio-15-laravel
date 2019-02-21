@@ -38,7 +38,7 @@ class CheckerController extends Controller
                           ->first();
         if($checker) {
           $moves = $game->getMoves($checker);
-    
+          // dd($moves);
           $data['status'] = 200;
           $data['data'] = $moves;
 
@@ -58,7 +58,7 @@ class CheckerController extends Controller
 
       $game = Game::where('hash', $request->game_hash)->first();
 
-      if($game) { // create issue in laravel
+      if($game) {
         $checker = Checker::where('x', $request->x1)
                           ->where('y', $request->y1)
                           ->update([  'x' => $request->x2,
@@ -69,6 +69,7 @@ class CheckerController extends Controller
 
           $data['status'] = 200;
           $data['message'] = 'Checker succesfully moved';
+          $data['data'] = $checker;
 
         }
       }

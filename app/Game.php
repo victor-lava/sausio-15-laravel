@@ -132,8 +132,9 @@ class Game extends Model
                       'enemy' => $isEnemy,
                       'fight' => $isFight];
          }
-      }
 
+      }
+      // dd($moves);
       return $moves;
     }
 
@@ -150,7 +151,7 @@ class Game extends Model
 
       $moves = $this->filterPossibleMoves(  $around,
                                             $checker);
-
+// dd($moves);
       return $moves;
     }
 
@@ -172,6 +173,7 @@ class Game extends Model
       foreach ($moves as $move) {
         $coordinates = ['x' => $move['x'],
                         'y' => $move['y'],
+                        'enemy' => $move['enemy'],
                         'fight' => false];
 
         if( $move['fight'] === true) { // fight is happening, add to fightMoves array
@@ -189,6 +191,7 @@ class Game extends Model
         }
       }
 
+      // dd($emptyMoves);
       // if there are any fight moves, then return them (need to fight!) don't return empty
       return count($fightMoves) === 0 ? $emptyMoves : $fightMoves;
     }
