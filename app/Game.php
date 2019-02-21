@@ -49,6 +49,77 @@ class Game extends Model
         return $this->hasMany('App\Checker');
     }
 
+    public function createVectors() {
+
+      $vectors = [];
+      $x = 1;
+      $y = 1;
+
+      for ($i = 0; $i < 4; $i++) {
+        if($i % 2) {
+          $x *= -1;
+          $y *= 1;
+        } else {
+          $x *= 1;
+          $y *= -1;
+        }
+
+        $vectors[] = ['x' => $x, 'y' => $y];
+      }
+
+      return $vectors;
+    }
+
+    public function isCoordinatesInRange($x, $y) {
+      $boolean = false;
+      if(($x >= 0 && $y >= 0) && ($x <= 7 && $y <= 7)) { $boolean = true; }
+      return $boolean;
+    }
+
+    public function getAround(Checker $checker) {
+
+      // dd($this->checkers);
+
+      $moves = [];
+      $vectors = $this->createVectors();
+      foreach ($vectors as $vector) {
+        $x = $checker->x + $vector['x'];
+        $y = $checker->y + $vector['y'];
+
+        if($this->isCoordinatesInRange($x, $y)) {
+
+          $foundChecker = $this->findCheckerByCoordinates($x, $y);
+          $isEnemy = false;
+          $isEmpty = false;
+          $isFight = false;
+
+          if(!$foundChecker) { $isEmpty = true; }
+          elseif($checker->color !== $foundChecker->color) {
+            $isEnemy = $foundChecker;
+            $enemyX = $isEnemy->x + $vector['x'];
+            $enemyY = $isEnemy->y + $vector['y'];
+
+            if($this->isCoordinatesInRange($enemyX, $enemyY) &&
+              !$this->findCheckerByCoordinates($enemyX, $enemyY)) {
+                $isFight = true;
+              }
+          }
+
+
+
+          $moves[] = ['x' => $x,
+                      'y' => $y,
+                      'vector' => $vector,
+                      'empty' => $isEmpty,
+                      'enemy' => $isEnemy,
+                      'fight' => $isFight];
+
+        }
+      }
+
+      dd($moves);
+    }
+
     public function findCheckerByCoordinates($x, $y) {
         $result = false;
 
