@@ -113,9 +113,8 @@ class Game extends Model
           $foundChecker = $this->findCheckerByCoordinates($x, $y);
 
           if(!$foundChecker) { $isEmpty = true; } // if we find checker, then it's nt
-          elseif($foundChecker->color !== $checker->color) { $isEnemy = $foundChecker; }
-
-          if($isEnemy instanceof Checker) {
+          elseif($foundChecker->color !== $checker->color) {
+            $isEnemy = $foundChecker;
             $enemyX = $isEnemy->x + $vector['x'];
             $enemyY = $isEnemy->y + $vector['y'];
 
@@ -123,7 +122,6 @@ class Game extends Model
               $isEmptySpace = $this->findCheckerByCoordinates($enemyX, $enemyY);
               if($isEmptySpace === false) { $isFight = true; }
             }
-
           }
 
           $moves[] = ['x' => $x,
