@@ -48,25 +48,25 @@ window.makeSquareActive = function(coordinates) {
 window.isFightHappening = function(x, y) {
   let isFightHappening = false;
   window.possibleMoves.data.forEach((item) => {
-    console.log(item.x);
-    if(item.x == x && item.y == y) { isFightHappening = true; }
+    // console.log(item.x);
+    if(item.x == x && item.y == y && item.fight === true) { isFightHappening = true; }
   })
   return isFightHappening;
 }
 
-window.moveChecker = function(element) {
+window.moveChecker = function(from, to) {
 
-    let from = {
-              x: window.selectedChecker.dataset.x,
-              y: window.selectedChecker.dataset.y
+    let fromCoordinates = {
+              x: from.dataset.x,
+              y: from.dataset.y
            },
-           to = {
-              x: element.dataset.x,
-              y: element.dataset.y
-            };
-            console.log(isFightHappening(from.x,from.y));
-            // console.log(window.p)
-  APImoveChecker(from, to);
+           toCoordinates = {
+              x: to.dataset.x,
+              y: to.dataset.y
+            },
+            isFight = isFightHappening(fromCoordinates.x, fromCoordinates.y);
+            // console.log(isFight);
+  APImoveChecker(fromCoordinates, toCoordinates, isFight);
 
   let activeChecker = window.table.querySelector('.checker-col-active'),
       activeImg = activeChecker.querySelector('img');
@@ -75,20 +75,20 @@ window.moveChecker = function(element) {
 
       img.className = "checker";
       img.src = activeImg.src;
-      img.dataset.x = to.x;
-      img.dataset.y = to.y;
+      img.dataset.x = toCoordinates.x;
+      img.dataset.y = toCoordinates.y;
 
   activeChecker.classList.remove('checker-col-active');
 
   activeImg.remove();
 
-  element.appendChild(img);
+  to.appendChild(img);
 
   removeActiveSquares();
 }
 
 window.APImoveChecker = function(from, to, fight) {
-  fetch('http://talents.test/api/checker/move?game_hash=b13daaf7427cdb741d58349c9212c599&x1=' + from.x + '&y1=' + from.y + '&x2=' + to.x + '&y2=' + to.y, {
+  fetch('http://talents.test/api/checker/move?game_hash=b13daaf7427cdb741d58349c9212c599&x1=' + from.x + '&y1=' + from.y + '&x2=' + to.x + '&y2=' + to.y + '&fight=' + fight, {
        method: 'GET',
        headers : new Headers()
    }).then((res) => res.json())
@@ -100,14 +100,16 @@ window.APImoveChecker = function(from, to, fight) {
 }
 
 window.getPossibleMoves = function(x, y) {
-  console.log('x:' + x + ' y:' + y);
+  // console.log('x:' + x + ' y:' + y);
   fetch('http://talents.test/api/checker/moves?game_hash=b13daaf7427cdb741d58349c9212c599&x=' + x + '&y=' + y, {
        method: 'GET',
        headers : new Headers()
    }).then((res) => res.json())
    .then((response) => {
-     window.possibleMoves = response;
+     response.data = JSON.stringify(response.data); // solves the mutating x, y values
 
+     window.possibleMoves = response;
+     
      removeActiveSquares();
 
      if(response.data.length > 0) {
@@ -129,17 +131,18 @@ window.selectChecker = function(element) {
 
   let activeChecker = window.table.querySelector('.checker-col-active'),
       checkerImg = element.querySelector('img');
-      // console.log(checkerImg);
-  if(checkerImg) {   window.selectedChecker = checkerImg; }
+      // console.log(window.selectedChecker);
 
   if(isSquareFilled(element)) { // square filled
     // window.selectedChecker = activeChecker.querySelector('img');
     makeCheckerActive(element); // makes selected checker active and removes active class from the rest of the checker
     // console.log(element);
     // console.log(window.selectedChecker.dataset.x);
+    getPossibleMoves( element.dataset.x,
+                      element.dataset.y);
 
-    getPossibleMoves( window.selectedChecker.dataset.x,
-                      window.selectedChecker.dataset.y);
+    if(checkerImg) { window.selectedChecker = checkerImg; }
+    // console.log(window.selectedChecker);
     // 1. zingsnis, saskes paselektinimas
     // 2. turi vykti fetchas ir turi grazinti possible ejimus
     // 3 kai grazina possible ejimus uzdeda klases checker-col-possible
@@ -149,8 +152,16 @@ window.selectChecker = function(element) {
   } else { // square empty
     // 2. saskes permetimas, taciau permetam tik ten kur yra checker-col-possible
     // console.log(element);
+    // console.log(window.selectedChecker);
+    // console.log(canMove(window.selectedChecker));
     if(canMove(element)) {
-      moveChecker(element);
+      // console.log(element);
+      console.log('selected x: ' + window.selectedChecker.dataset.x);
+      console.log('selected y: ' + window.selectedChecker.dataset.y);
+      var isFight = isFightHappening(window.selectedChecker.dataset.x, window.selectedChecker.dataset.y);
+      console.log('isFight: ' + isFight);
+      console.log(window.possibleMoves.data[0].x);
+      moveChecker(window.selectedChecker, element);
     }
 
   }

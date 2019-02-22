@@ -59,10 +59,15 @@ class CheckerController extends Controller
       $game = Game::where('hash', $request->game_hash)->first();
 
       if($game) {
+        if($request->fight === 'true') {
+          dd($request->fight);
+        }
         $checker = Checker::where('x', $request->x1)
                           ->where('y', $request->y1)
                           ->update([  'x' => $request->x2,
                                       'y' => $request->y2]);
+
+
         // dd($checker);
         // dd(Checker::update());
         if($checker > 0) {
