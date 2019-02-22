@@ -16,7 +16,7 @@ class GameController extends Controller
         $game = Game::where('hash', $hash)->first();
         $squares = $game->createGameTable();
 
-        return view('pages/game', compact('squares'));
+        return view('pages/game', compact('hash', 'squares'));
 
     }
 

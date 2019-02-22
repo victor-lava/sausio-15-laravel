@@ -18,7 +18,9 @@
 
                 <div class="card-body">
 
-                  <div class="table">
+                  <div  class="table"
+                        data-api="{{ url('/api/') }}"
+                        data-hash="{{ $hash }}">
 
                     @foreach($squares as $squareLine)
                       @php $y = $loop->index @endphp
