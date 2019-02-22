@@ -5,15 +5,12 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
-require('./api');
+// require('./bootstrap');
+// require('./api');
 
 window.table = document.querySelector('.table');
 window.possibleMoves = false;
 window.selectedChecker = false;
-
-var api = new API(window.table);
-// console.log(api.getMoves(5,));
 
 window.isSquareFilled = function (el) {
   return el.querySelector('img') ? true : false;
@@ -78,6 +75,8 @@ window.moveChecker = function(element) {
 
       img.className = "checker";
       img.src = activeImg.src;
+      img.dataset.x = to.x;
+      img.dataset.y = to.y;
 
   activeChecker.classList.remove('checker-col-active');
 
@@ -89,7 +88,7 @@ window.moveChecker = function(element) {
 }
 
 window.APImoveChecker = function(from, to, fight) {
-  fetch('http://talents.test/api/checker/move?game_hash=7290cae1b164dde41cd2ec108f043d25&x1=' + from.x + '&y1=' + from.y + '&x2=' + to.x + '&y2=' + to.y, {
+  fetch('http://talents.test/api/checker/move?game_hash=b13daaf7427cdb741d58349c9212c599&x1=' + from.x + '&y1=' + from.y + '&x2=' + to.x + '&y2=' + to.y, {
        method: 'GET',
        headers : new Headers()
    }).then((res) => res.json())
@@ -101,7 +100,8 @@ window.APImoveChecker = function(from, to, fight) {
 }
 
 window.getPossibleMoves = function(x, y) {
-  fetch('http://talents.test/api/checker/moves?game_hash=7290cae1b164dde41cd2ec108f043d25&x=' + x + '&y=' + y, {
+  console.log('x:' + x + ' y:' + y);
+  fetch('http://talents.test/api/checker/moves?game_hash=b13daaf7427cdb741d58349c9212c599&x=' + x + '&y=' + y, {
        method: 'GET',
        headers : new Headers()
    }).then((res) => res.json())
@@ -127,14 +127,15 @@ window.canMove = function(element) {
 
 window.selectChecker = function(element) {
 
-  let activeChecker = window.table.querySelector('.checker-col-active');
-
+  let activeChecker = window.table.querySelector('.checker-col-active'),
+      checkerImg = element.querySelector('img');
+      // console.log(checkerImg);
+  if(checkerImg) {   window.selectedChecker = checkerImg; }
 
   if(isSquareFilled(element)) { // square filled
     // window.selectedChecker = activeChecker.querySelector('img');
     makeCheckerActive(element); // makes selected checker active and removes active class from the rest of the checker
     // console.log(element);
-    window.selectedChecker = element.querySelector('img');
     // console.log(window.selectedChecker.dataset.x);
 
     getPossibleMoves( window.selectedChecker.dataset.x,
