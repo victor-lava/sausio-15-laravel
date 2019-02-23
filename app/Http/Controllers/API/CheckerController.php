@@ -35,6 +35,7 @@ class CheckerController extends Controller
       if($game) {
         $checker = Checker::where('x', $request->x)
                           ->where('y', $request->y)
+                          ->where('dead', 0)
                           ->first();
         if($checker) {
           $moves = $game->getMoves($checker);
@@ -62,6 +63,7 @@ class CheckerController extends Controller
 
         $checker = Checker::where('x', $request->x1)
                           ->where('y', $request->y1)
+                          ->where('dead', 0)
                           ->update([  'x' => $request->x2,
                                       'y' => $request->y2]);
 
@@ -89,13 +91,14 @@ class CheckerController extends Controller
                'y' => $request->y1],
                $movementVector);
 
-            $removeChecker = Checker::where('x', $enemyCoords['x'])
-                                    ->where('y', $enemyCoords['y'])
-                                    ->update(['dead' => 1]);
-            // dd($enemyCoords);
+            Checker::where('x', $enemyCoords['x'])
+                    ->where('y', $enemyCoords['y'])
+                    ->update(['dead' => 1]);
+
           }
 
         }
+
       }
 
       return response()->json($data);
