@@ -5,13 +5,16 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-// require('./bootstrap');
-// require('./api');
+ // require('./bootstrap');
+ window.table = document.querySelector('.table');
 
-window.table = document.querySelector('.table');
+const API = require('./api'),
+      DB = new API(window.table);
+
+// console.log(DB.getMoves(6,1));
+
 window.possibleMoves = false;
 window.selectedChecker = false;
-
 window.isSquareFilled = function (el) {
   return el.querySelector('img') ? true : false;
 }

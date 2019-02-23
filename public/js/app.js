@@ -86,12 +86,70 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./resources/js/api.js":
+/*!*****************************!*\
+  !*** ./resources/js/api.js ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+  return (
+    /*#__PURE__*/
+    function () {
+      function API(table) {
+        _classCallCheck(this, API);
+
+        this.table = table;
+        this.game_hash = table.dataset.hash;
+        this.url = table.dataset.api;
+      }
+
+      _createClass(API, [{
+        key: "getMoves",
+        value: function getMoves(x, y) {
+          var url = 'checker/' + this.url;
+          fetch('http://talents.test/api/checker/moves?game_hash=' + url + '&x=' + x + '&y=' + y, {
+            method: 'GET',
+            headers: new Headers()
+          }).then(function (res) {
+            return res.json();
+          }).then(function (response) {
+            window.possibleMoves = response;
+            removeActiveSquares();
+
+            if (response.data.length > 0) {
+              response.data.map(function (coordinates) {
+                // console.log(coordinates);
+                makeSquareActive(coordinates);
+              });
+            }
+          }).catch(function (err) {
+            return console.log(err);
+          });
+        }
+      }]);
+
+      return API;
+    }()
+  );
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -99,8 +157,12 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 // require('./bootstrap');
-// require('./api');
 window.table = document.querySelector('.table');
+
+var API = __webpack_require__(/*! ./api */ "./resources/js/api.js"),
+    DB = new API(window.table); // console.log(DB.getMoves(6,1));
+
+
 window.possibleMoves = false;
 window.selectedChecker = false;
 
