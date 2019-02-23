@@ -46,7 +46,7 @@ class Game extends Model
     }
 
     public function checkers() {
-        return $this->hasMany('App\Checker');
+        return $this->hasMany('App\Checker')->where('dead', '=', 0);
     }
 
     /**
@@ -75,6 +75,26 @@ class Game extends Model
       }
 
       return $vectors;
+    }
+
+    public function calcEnemyCoordinatesBetween(array $startingCoordinates,
+                                                array $movementVector) {
+      $enemy = [];
+
+      $enemy['x'] = $startingCoordinates['x'] + $movementVector['x'];
+      $enemy['y'] = $startingCoordinates['y'] + $movementVector['y'];
+
+      return $enemy;
+    }
+
+    public function calcVector(array $from, array $to, $steps = 1) {
+
+      $vector = [];
+
+      $vector['x'] = ($from['x'] - $to['x']) / -$steps;
+      $vector['y'] = ($from['y'] - $to['y']) / -$steps;
+
+      return $vector;
     }
 
 

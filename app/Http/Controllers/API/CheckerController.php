@@ -59,9 +59,7 @@ class CheckerController extends Controller
       $game = Game::where('hash', $request->game_hash)->first();
 
       if($game) {
-        if($request->fight === 'true') {
-          dd($request->fight);
-        }
+
         $checker = Checker::where('x', $request->x1)
                           ->where('y', $request->y1)
                           ->update([  'x' => $request->x2,
@@ -75,6 +73,27 @@ class CheckerController extends Controller
           $data['status'] = 200;
           $data['message'] = 'Checker succesfully moved';
           $data['data'] = $checker;
+
+          if($request->fight === 'true') {
+            $movementVector = $game->calcVector(
+                                                ['x' => $request->x1,
+                                                 'y' => $request->y1
+                                                ],
+                                                ['x' => $request->x2,
+                                                 'y' => $request->y2
+                                                ],
+                                                2);
+
+            $enemyCoords = $game->calcEnemyCoordinatesBetween(
+              ['x' => $request->x1,
+               'y' => $request->y1],
+               $movementVector);
+
+            $removeChecker = Checker::where('x', $enemyCoords['x'])
+                                    ->where('y', $enemyCoords['y'])
+                                    ->update(['dead' => 1]);
+            // dd($enemyCoords);
+          }
 
         }
       }

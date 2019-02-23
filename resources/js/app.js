@@ -47,11 +47,15 @@ window.makeSquarePossible = function(coordinates) {
 
 window.isFightHappening = function(x, y) {
   let isFightHappening = false,
-      data = JSON.parse(window.possibleMoves.data);5
-      console.log(data);
+      data = JSON.parse(window.possibleMoves.data);
+
   data.forEach((item) => {
-    // console.log(item.x);
-    if(item.x == x && item.y == y && item.fight === true) { isFightHappening = true; }
+    if( item.x == x &&
+        item.y == y &&
+        item.fight === true) {
+      isFightHappening = true;
+      removeChecker(item.enemy.x, item.enemy.y);
+    }
   })
   return isFightHappening;
 }
@@ -66,8 +70,9 @@ window.moveChecker = function(from, to) {
               x: to.dataset.x,
               y: to.dataset.y
             },
-            isFight = isFightHappening(fromCoordinates.x, fromCoordinates.y);
-            // console.log(isFight);
+            isFight = isFightHappening(toCoordinates.x, toCoordinates.y);
+
+
   APImoveChecker(fromCoordinates, toCoordinates, isFight);
 
   let activeChecker = window.table.querySelector('.checker-col-active'),
@@ -89,21 +94,27 @@ window.moveChecker = function(from, to) {
   removeActiveSquares();
 }
 
+window.removeChecker = function(x, y) {
+
+  window.table.querySelector('img[data-x="' + x +'"][data-y="' + y + '"]').remove();
+
+}
+
 window.APImoveChecker = function(from, to, fight) {
-  fetch('http://talents.test/api/checker/move?game_hash=b13daaf7427cdb741d58349c9212c599&x1=' + from.x + '&y1=' + from.y + '&x2=' + to.x + '&y2=' + to.y + '&fight=' + fight, {
+  fetch('http://talents.test/api/checker/move?game_hash=f7d296315d57c3f7b56832a046f937f8&x1=' + from.x + '&y1=' + from.y + '&x2=' + to.x + '&y2=' + to.y + '&fight=' + fight, {
        method: 'GET',
        headers : new Headers()
    }).then((res) => res.json())
    .then((response) => {
 
-     console.log(response);
+     // console.log(response);
    })
    .catch((err)=>console.log(err))
 }
 
 window.getPossibleMoves = function(x, y) {
   // console.log('x:' + x + ' y:' + y);
-  fetch('http://talents.test/api/checker/moves?game_hash=b13daaf7427cdb741d58349c9212c599&x=' + x + '&y=' + y, {
+  fetch('http://talents.test/api/checker/moves?game_hash=f7d296315d57c3f7b56832a046f937f8&x=' + x + '&y=' + y, {
        method: 'GET',
        headers : new Headers()
    }).then((res) => res.json())
@@ -160,11 +171,11 @@ window.selectChecker = function(element) {
     // console.log(canMove(window.selectedChecker));
     if(canMove(element)) {
       // console.log(element);
-      console.log('selected x: ' + window.selectedChecker.dataset.x);
-      console.log('selected y: ' + window.selectedChecker.dataset.y);
-      var isFight = isFightHappening(window.selectedChecker.dataset.x, window.selectedChecker.dataset.y);
-      console.log('isFight: ' + isFight);
-      console.log(window.possibleMoves.data[0].x);
+      // console.log('selected x: ' + window.selectedChecker.dataset.x);
+      // console.log('selected y: ' + window.selectedChecker.dataset.y);
+      // var isFight = isFightHappening(element.dataset.x, element.dataset.y);
+      // console.log('isFight: ' + isFight);
+      // console.log(window.possibleMoves.data[0].x);
       moveChecker(window.selectedChecker, element);
     }
 
