@@ -35,7 +35,7 @@ window.removeActiveSquares = function() {
   }
 }
 
-window.makeSquareActive = function(coordinates) {
+window.makeSquarePossible = function(coordinates) {
 
   coordinates.x += 1;
   coordinates.y += 1;
@@ -46,8 +46,10 @@ window.makeSquareActive = function(coordinates) {
 }
 
 window.isFightHappening = function(x, y) {
-  let isFightHappening = false;
-  window.possibleMoves.data.forEach((item) => {
+  let isFightHappening = false,
+      data = JSON.parse(window.possibleMoves.data);5
+      console.log(data);
+  data.forEach((item) => {
     // console.log(item.x);
     if(item.x == x && item.y == y && item.fight === true) { isFightHappening = true; }
   })
@@ -106,18 +108,20 @@ window.getPossibleMoves = function(x, y) {
        headers : new Headers()
    }).then((res) => res.json())
    .then((response) => {
+     let data = response.data;
+
      response.data = JSON.stringify(response.data); // solves the mutating x, y values
-
      window.possibleMoves = response;
-     
-     removeActiveSquares();
 
-     if(response.data.length > 0) {
-       response.data.map((coordinates) => {
+     removeActiveSquares();
+     if(data.length > 0) {
+       data.forEach((coordinates) => {
          // console.log(coordinates);
-         makeSquareActive(coordinates);
+         makeSquarePossible(coordinates);
        });
      }
+     console.log(response);
+
    })
    .catch((err)=>console.log(err))
 }

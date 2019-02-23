@@ -128,7 +128,7 @@ window.removeActiveSquares = function () {
   }
 };
 
-window.makeSquareActive = function (coordinates) {
+window.makeSquarePossible = function (coordinates) {
   coordinates.x += 1;
   coordinates.y += 1;
   var square = window.table.querySelector('.checker-row:nth-child(' + coordinates.y + ') .checker-col:nth-child(' + coordinates.x + ')');
@@ -136,8 +136,11 @@ window.makeSquareActive = function (coordinates) {
 };
 
 window.isFightHappening = function (x, y) {
-  var isFightHappening = false;
-  window.possibleMoves.data.forEach(function (item) {
+  var isFightHappening = false,
+      data = JSON.parse(window.possibleMoves.data);
+  5;
+  console.log(data);
+  data.forEach(function (item) {
     // console.log(item.x);
     if (item.x == x && item.y == y && item.fight === true) {
       isFightHappening = true;
@@ -192,17 +195,20 @@ window.getPossibleMoves = function (x, y) {
   }).then(function (res) {
     return res.json();
   }).then(function (response) {
+    var data = response.data;
     response.data = JSON.stringify(response.data); // solves the mutating x, y values
 
     window.possibleMoves = response;
     removeActiveSquares();
 
-    if (response.data.length > 0) {
-      response.data.map(function (coordinates) {
+    if (data.length > 0) {
+      data.forEach(function (coordinates) {
         // console.log(coordinates);
-        makeSquareActive(coordinates);
+        makeSquarePossible(coordinates);
       });
     }
+
+    console.log(response);
   }).catch(function (err) {
     return console.log(err);
   });
