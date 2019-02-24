@@ -63,53 +63,34 @@ window.isFightHappening = function(x, y) {
 
 window.moveChecker = function(from, to) {
 
-    let fromCoordinates = {
-              x: from.dataset.x,
-              y: from.dataset.y
-           },
-           toCoordinates = {
-              x: to.dataset.x,
-              y: to.dataset.y
-            },
-            isFight = isFightHappening(toCoordinates.x, toCoordinates.y);
+  window.api.moveChecker({  x1: from.dataset.x, y1: from.dataset.y,
+                            x2: to.dataset.x,   y2: to.dataset.y,
+                            fight: isFightHappening(to.dataset.x, to.dataset.y)},
+                            (response) => {
+      console.log(response);
+      let activeChecker = window.table.querySelector('.checker-col-active'),
+          activeImg = activeChecker.querySelector('img'),
+          img = document.createElement('img');
 
+          img.className = "checker";
+          img.src = activeImg.src;
+          img.dataset.x = to.dataset.x;
+          img.dataset.y = to.dataset.y;
 
-  APImoveChecker(fromCoordinates, toCoordinates, isFight);
+      activeChecker.classList.remove('checker-col-active');
 
-  let activeChecker = window.table.querySelector('.checker-col-active'),
-      activeImg = activeChecker.querySelector('img'),
-      img = document.createElement('img');
+      activeImg.remove();
 
-      img.className = "checker";
-      img.src = activeImg.src;
-      img.dataset.x = toCoordinates.x;
-      img.dataset.y = toCoordinates.y;
+      to.appendChild(img);
 
-  activeChecker.classList.remove('checker-col-active');
-
-  activeImg.remove();
-
-  to.appendChild(img);
-
-  removeActiveSquares();
+      removeActiveSquares();
+  });
 }
 
 window.removeChecker = function(x, y) {
 
   window.table.querySelector('img[data-x="' + x +'"][data-y="' + y + '"]').remove();
 
-}
-
-window.APImoveChecker = function(from, to, fight) {
-  fetch('http://talents.test/api/checker/move?game_hash=74a89731e2edb67f19d60c11d38ca3f6&x1=' + from.x + '&y1=' + from.y + '&x2=' + to.x + '&y2=' + to.y + '&fight=' + fight, {
-       method: 'GET',
-       headers : new Headers()
-   }).then((res) => res.json())
-   .then((response) => {
-
-     // console.log(response);
-   })
-   .catch((err)=>console.log(err))
 }
 
 window.canMove = function(element) {

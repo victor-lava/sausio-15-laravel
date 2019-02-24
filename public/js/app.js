@@ -46560,15 +46560,55 @@ function () {
     this.table = table;
     this.game_hash = table.dataset.hash;
     this.url = table.dataset.api;
+    this.pusher_key = 'a4784a4451c0de4372ac';
+    this.pusher = this.initPusher();
+    this.channel = this.createChannel('my-event', function (data) {
+      alert(data);
+    });
+    console.log(this.pusher);
   }
 
   _createClass(API, [{
+    key: "initPusher",
+    value: function initPusher() {
+      // Enable pusher logging - don't include this in production
+      Pusher.logToConsole = true;
+      var pusher = new Pusher(this.pusher_key, {
+        cluster: 'eu',
+        forceTLS: true
+      });
+      return pusher;
+    }
+  }, {
+    key: "createChannel",
+    value: function createChannel(name, callback) {
+      var channel = this.pusher.subscribe(this.game_hash);
+      channel.bind(name, callback());
+      return channel;
+    }
+  }, {
     key: "getMoves",
     value: function getMoves(x, y, callback) {
       axios.get("".concat(this.url, "/checker/moves"), {
         params: {
           x: x,
           y: y,
+          game_hash: this.game_hash
+        }
+      }).then(function (response) {
+        callback(response.data);
+      }).catch(function (error) {});
+    }
+  }, {
+    key: "moveChecker",
+    value: function moveChecker(data, callback) {
+      axios.get("".concat(this.url, "/checker/move"), {
+        params: {
+          x1: data.x1,
+          y1: data.y1,
+          x2: data.x2,
+          y2: data.y2,
+          fight: data.fight,
           game_hash: this.game_hash
         }
       }).then(function (response) {
@@ -46651,43 +46691,30 @@ window.isFightHappening = function (x, y) {
 };
 
 window.moveChecker = function (from, to) {
-  var fromCoordinates = {
-    x: from.dataset.x,
-    y: from.dataset.y
-  },
-      toCoordinates = {
-    x: to.dataset.x,
-    y: to.dataset.y
-  },
-      isFight = isFightHappening(toCoordinates.x, toCoordinates.y);
-  APImoveChecker(fromCoordinates, toCoordinates, isFight);
-  var activeChecker = window.table.querySelector('.checker-col-active'),
-      activeImg = activeChecker.querySelector('img'),
-      img = document.createElement('img');
-  img.className = "checker";
-  img.src = activeImg.src;
-  img.dataset.x = toCoordinates.x;
-  img.dataset.y = toCoordinates.y;
-  activeChecker.classList.remove('checker-col-active');
-  activeImg.remove();
-  to.appendChild(img);
-  removeActiveSquares();
+  window.api.moveChecker({
+    x1: from.dataset.x,
+    y1: from.dataset.y,
+    x2: to.dataset.x,
+    y2: to.dataset.y,
+    fight: isFightHappening(to.dataset.x, to.dataset.y)
+  }, function (response) {
+    console.log(response);
+    var activeChecker = window.table.querySelector('.checker-col-active'),
+        activeImg = activeChecker.querySelector('img'),
+        img = document.createElement('img');
+    img.className = "checker";
+    img.src = activeImg.src;
+    img.dataset.x = to.dataset.x;
+    img.dataset.y = to.dataset.y;
+    activeChecker.classList.remove('checker-col-active');
+    activeImg.remove();
+    to.appendChild(img);
+    removeActiveSquares();
+  });
 };
 
 window.removeChecker = function (x, y) {
   window.table.querySelector('img[data-x="' + x + '"][data-y="' + y + '"]').remove();
-};
-
-window.APImoveChecker = function (from, to, fight) {
-  fetch('http://talents.test/api/checker/move?game_hash=74a89731e2edb67f19d60c11d38ca3f6&x1=' + from.x + '&y1=' + from.y + '&x2=' + to.x + '&y2=' + to.y + '&fight=' + fight, {
-    method: 'GET',
-    headers: new Headers()
-  }).then(function (res) {
-    return res.json();
-  }).then(function (response) {// console.log(response);
-  }).catch(function (err) {
-    return console.log(err);
-  });
 };
 
 window.canMove = function (element) {
