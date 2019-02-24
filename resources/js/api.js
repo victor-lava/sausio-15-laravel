@@ -1,6 +1,4 @@
-define([], function(){
-
-    return class API {
+export default class API {
 
       constructor(table) {
          this.table = table;
@@ -8,28 +6,17 @@ define([], function(){
          this.url = table.dataset.api;
       }
 
-      getMoves(x, y) {
-        let url = 'checker/' + this.url;
+      getMoves(x, y, callback) {
+        axios.get(`${this.url}/checker/moves`, {
+          params: {
+            x, y,
+            game_hash: this.game_hash
+          }
+        }).then(function(response) {
+          callback(response.data);
+        }).catch(function(error) {
 
-        fetch('http://talents.test/api/checker/moves?game_hash=' + url + '&x=' + x + '&y=' + y, {
-             method: 'GET',
-             headers : new Headers()
-         }).then((res) => res.json())
-         .then((response) => {
-           window.possibleMoves = response;
-
-           removeActiveSquares();
-
-           if(response.data.length > 0) {
-             response.data.map((coordinates) => {
-               // console.log(coordinates);
-               makeSquareActive(coordinates);
-             });
-           }
-         })
-         .catch((err)=>console.log(err));
+        });
       }
 
-    }
-
-});
+}

@@ -5,16 +5,14 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
- require('./bootstrap');
- window.table = document.querySelector('.table');
+require('./bootstrap');
+import API from "./api.js";
 
-const API = require('./api'),
-      DB = new API(window.table);
-
-// console.log(DB.getMoves(6,1));
-
+window.table = document.querySelector('.table');
+window.api = new API(window.table);
 window.possibleMoves = false;
 window.selectedChecker = false;
+
 window.isSquareFilled = function (el) {
   return el.querySelector('img') ? true : false;
 }
@@ -79,8 +77,7 @@ window.moveChecker = function(from, to) {
   APImoveChecker(fromCoordinates, toCoordinates, isFight);
 
   let activeChecker = window.table.querySelector('.checker-col-active'),
-      activeImg = activeChecker.querySelector('img');
-
+      activeImg = activeChecker.querySelector('img'),
       img = document.createElement('img');
 
       img.className = "checker";
@@ -104,38 +101,13 @@ window.removeChecker = function(x, y) {
 }
 
 window.APImoveChecker = function(from, to, fight) {
-  fetch('http://talents.test/api/checker/move?game_hash=f7d296315d57c3f7b56832a046f937f8&x1=' + from.x + '&y1=' + from.y + '&x2=' + to.x + '&y2=' + to.y + '&fight=' + fight, {
+  fetch('http://talents.test/api/checker/move?game_hash=74a89731e2edb67f19d60c11d38ca3f6&x1=' + from.x + '&y1=' + from.y + '&x2=' + to.x + '&y2=' + to.y + '&fight=' + fight, {
        method: 'GET',
        headers : new Headers()
    }).then((res) => res.json())
    .then((response) => {
 
      // console.log(response);
-   })
-   .catch((err)=>console.log(err))
-}
-
-window.getPossibleMoves = function(x, y) {
-  // console.log('x:' + x + ' y:' + y);
-  fetch('http://talents.test/api/checker/moves?game_hash=f7d296315d57c3f7b56832a046f937f8&x=' + x + '&y=' + y, {
-       method: 'GET',
-       headers : new Headers()
-   }).then((res) => res.json())
-   .then((response) => {
-     let data = response.data;
-
-     response.data = JSON.stringify(response.data); // solves the mutating x, y values
-     window.possibleMoves = response;
-
-     removeActiveSquares();
-     if(data.length > 0) {
-       data.forEach((coordinates) => {
-         // console.log(coordinates);
-         makeSquarePossible(coordinates);
-       });
-     }
-     console.log(response);
-
    })
    .catch((err)=>console.log(err))
 }
@@ -156,8 +128,23 @@ window.selectChecker = function(element) {
     makeCheckerActive(element); // makes selected checker active and removes active class from the rest of the checker
     // console.log(element);
     // console.log(window.selectedChecker.dataset.x);
-    getPossibleMoves( element.dataset.x,
-                      element.dataset.y);
+    // getPossibleMoves( element.dataset.x,
+    //                   element.dataset.y);
+
+    window.api.getMoves(element.dataset.x, element.dataset.y, (response) => {
+      let data = response.data;
+
+      response.data = JSON.stringify(response.data); // solves the mutating x, y values
+      window.possibleMoves = response;
+
+      removeActiveSquares();
+      if(data.length > 0) {
+        data.forEach((coordinates) => {
+          // console.log(coordinates);
+          makeSquarePossible(coordinates);
+        });
+      }
+    });
 
     if(checkerImg) { window.selectedChecker = checkerImg; }
     // console.log(window.selectedChecker);
@@ -165,20 +152,12 @@ window.selectChecker = function(element) {
     // 2. turi vykti fetchas ir turi grazinti possible ejimus
     // 3 kai grazina possible ejimus uzdeda klases checker-col-possible
 
-
-
   } else { // square empty
     // 2. saskes permetimas, taciau permetam tik ten kur yra checker-col-possible
     // console.log(element);
     // console.log(window.selectedChecker);
     // console.log(canMove(window.selectedChecker));
     if(canMove(element)) {
-      // console.log(element);
-      // console.log('selected x: ' + window.selectedChecker.dataset.x);
-      // console.log('selected y: ' + window.selectedChecker.dataset.y);
-      // var isFight = isFightHappening(element.dataset.x, element.dataset.y);
-      // console.log('isFight: ' + isFight);
-      // console.log(window.possibleMoves.data[0].x);
       moveChecker(window.selectedChecker, element);
     }
 
