@@ -46672,10 +46672,8 @@ window.removeActiveSquares = function () {
 };
 
 window.makeSquarePossible = function (coordinates) {
-  coordinates.x += 1;
-  coordinates.y += 1;
-  var square = window.table.querySelector('.checker-row:nth-child(' + coordinates.y + ') .checker-col:nth-child(' + coordinates.x + ')');
-  square.classList.add('checker-col-possible');
+  var selector = ".checker-col[data-x=\"".concat(coordinates.x, "\"][data-y=\"").concat(coordinates.y, "\"]");
+  square = window.table.querySelector(selector).classList.add('checker-col-possible');
 };
 
 window.isFightHappening = function (x, y) {
@@ -46714,7 +46712,7 @@ window.moveChecker = function (from, to) {
 };
 
 window.removeChecker = function (x, y) {
-  window.table.querySelector('img[data-x="' + x + '"][data-y="' + y + '"]').remove();
+  window.table.querySelector("img[data-x=\"".concat(x, "\"][data-y=\"").concat(y, "\"]")).remove();
 };
 
 window.canMove = function (element) {
