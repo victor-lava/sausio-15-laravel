@@ -46675,11 +46675,11 @@ function () {
     }
   }, {
     key: "getMoves",
-    value: function getMoves(x, y, callback) {
+    value: function getMoves(location, callback) {
       axios.get("".concat(this.url, "/checker/moves"), {
         params: {
-          x: x,
-          y: y,
+          x: location.x,
+          y: location.y,
           game_hash: this.game_hash
         }
       }).then(function (response) {
@@ -46691,10 +46691,10 @@ function () {
     value: function moveChecker(data, callback) {
       axios.get("".concat(this.url, "/checker/move"), {
         params: {
-          x1: data.x1,
-          y1: data.y1,
-          x2: data.x2,
-          y2: data.y2,
+          x1: data.from.x,
+          y1: data.from.y,
+          x2: data.to.x,
+          y2: data.to.y,
           fight: data.fight,
           game_hash: this.game_hash
         }
@@ -46721,12 +46721,14 @@ function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Checker; });
-/* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Square.js */ "./resources/js/classes/Square.js");
+/* harmony import */ var _Point_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Point.js */ "./resources/js/classes/Point.js");
+/* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Square.js */ "./resources/js/classes/Square.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -46740,7 +46742,7 @@ function () {
     this.api = api;
     this.moves = false;
     this.activeChecker = false;
-    this.square = new _Square_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.table);
+    this.square = new _Square_js__WEBPACK_IMPORTED_MODULE_1__["default"](this.table);
   }
 
   _createClass(Checker, [{
@@ -46755,21 +46757,21 @@ function () {
     }
   }, {
     key: "remove",
-    value: function remove(x, y) {
-      this.table.querySelector("img[data-x=\"".concat(x, "\"][data-y=\"").concat(y, "\"]")).remove();
+    value: function remove(location) {
+      this.table.querySelector("img[data-x=\"".concat(location.x, "\"][data-y=\"").concat(location.y, "\"]")).remove();
     }
   }, {
     key: "isFightHappening",
-    value: function isFightHappening(x, y) {
+    value: function isFightHappening(location) {
       var _this = this;
 
       var isFightHappening = false,
           data = JSON.parse(this.moves);
       data.forEach(function (item) {
-        if (item.x == x && item.y == y && item.fight === true) {
+        if (item.x == location.x && item.y == location.y && item.fight === true) {
           isFightHappening = true;
 
-          _this.remove(item.enemy.x, item.enemy.y);
+          _this.remove(new _Point_js__WEBPACK_IMPORTED_MODULE_0__["default"](item.enemy.x, item.enemy.y));
         }
       });
       return isFightHappening;
@@ -46780,11 +46782,9 @@ function () {
       var _this2 = this;
 
       this.api.moveChecker({
-        x1: from.dataset.x,
-        y1: from.dataset.y,
-        x2: to.dataset.x,
-        y2: to.dataset.y,
-        fight: this.isFightHappening(to.dataset.x, to.dataset.y)
+        from: new _Point_js__WEBPACK_IMPORTED_MODULE_0__["default"](from.dataset.x, from.dataset.y),
+        to: new _Point_js__WEBPACK_IMPORTED_MODULE_0__["default"](to.dataset.x, to.dataset.y),
+        fight: this.isFightHappening(new _Point_js__WEBPACK_IMPORTED_MODULE_0__["default"](to.dataset.x, to.dataset.y))
       }, function (response) {
         var activeChecker = _this2.table.querySelector('.checker-col-active'),
             activeImg = activeChecker.querySelector('img'),
@@ -46821,7 +46821,7 @@ function () {
 
           this.setActive(checkerImg); // make checker active
 
-          this.api.getMoves(el.dataset.x, el.dataset.y, function (response) {
+          this.api.getMoves(new _Point_js__WEBPACK_IMPORTED_MODULE_0__["default"](el.dataset.x, el.dataset.y), function (response) {
             _this3.setMoves(response.data); // save current moves in the class property
 
 
@@ -46837,6 +46837,29 @@ function () {
 
   return Checker;
 }();
+
+
+
+/***/ }),
+
+/***/ "./resources/js/classes/Point.js":
+/*!***************************************!*\
+  !*** ./resources/js/classes/Point.js ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Point; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Point = function Point(x, y) {
+  _classCallCheck(this, Point);
+
+  this.x = x;
+  this.y = y;
+};
 
 
 

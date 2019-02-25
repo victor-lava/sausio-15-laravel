@@ -1,3 +1,4 @@
+import Point from "./Point.js";
 import Square from "./Square.js";
 
 export default class Checker {
@@ -18,20 +19,20 @@ export default class Checker {
     this.activeChecker = checker;
   }
 
-  remove(x, y) {
-    this.table.querySelector(`img[data-x="${x}"][data-y="${y}"]`).remove();
+  remove(location) {
+    this.table.querySelector(`img[data-x="${location.x}"][data-y="${location.y}"]`).remove();
   }
 
-  isFightHappening(x, y) {
+  isFightHappening(location) {
     let isFightHappening = false,
         data = JSON.parse(this.moves);
 
     data.forEach((item) => {
-      if( item.x == x &&
-          item.y == y &&
+      if( item.x == location.x &&
+          item.y == location.y &&
           item.fight === true) {
         isFightHappening = true;
-        this.remove(item.enemy.x, item.enemy.y);
+        this.remove(new Point(item.enemy.x, item.enemy.y));
       }
     })
     return isFightHappening;
@@ -39,10 +40,13 @@ export default class Checker {
 
   move(from, to) {
 
-    this.api.moveChecker({  x1: from.dataset.x, y1: from.dataset.y,
-                              x2: to.dataset.x,   y2: to.dataset.y,
-                              fight: this.isFightHappening(to.dataset.x, to.dataset.y)},
-                              (response) => {
+    this.api.moveChecker(   {   from: new Point(from.dataset.x, from.dataset.y),
+                                to: new Point(to.dataset.x, to.dataset.y),
+                                fight: this.isFightHappening(
+                                  new Point(to.dataset.x, to.dataset.y)
+                                )
+                            },
+                          (response) => {
 
         let activeChecker = this.table.querySelector('.checker-col-active'),
             activeImg = activeChecker.querySelector('img'),
@@ -78,8 +82,7 @@ export default class Checker {
       this.square.setActive(el); // make square active
       this.setActive(checkerImg); // make checker active
 
-      this.api.getMoves(el.dataset.x,
-                        el.dataset.y,
+      this.api.getMoves(new Point(el.dataset.x, el.dataset.y),
                         (response) => {
 
         this.setMoves(response.data); // save current moves in the class property

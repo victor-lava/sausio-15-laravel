@@ -31,10 +31,11 @@ export default class API {
         return channel;
       }
 
-      getMoves(x, y, callback) {
+      getMoves(location, callback) {
         axios.get(`${this.url}/checker/moves`, {
           params: {
-            x, y,
+            x: location.x,
+            y: location.y,
             game_hash: this.game_hash
           }
         }).then(function(response) {
@@ -47,10 +48,10 @@ export default class API {
       moveChecker(data, callback) {
         axios.get(`${this.url}/checker/move`, {
           params: {
-            x1: data.x1,
-            y1: data.y1,
-            x2: data.x2,
-            y2: data.y2,
+            x1: data.from.x,
+            y1: data.from.y,
+            x2: data.to.x,
+            y2: data.to.y,
             fight: data.fight,
             game_hash: this.game_hash
           }
