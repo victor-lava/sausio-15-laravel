@@ -46675,6 +46675,19 @@ function () {
       return channel;
     }
   }, {
+    key: "joinGame",
+    value: function joinGame(color, user_id) {
+      axios.get("".concat(this.url, "/game/join"), {
+        params: {
+          color: color,
+          user_id: user_id,
+          game_hash: this.game_hash
+        }
+      }).then(function (response) {
+        callback(response.data);
+      }).catch(function (error) {});
+    }
+  }, {
     key: "getMoves",
     value: function getMoves(location, callback) {
       axios.get("".concat(this.url, "/checker/moves"), {

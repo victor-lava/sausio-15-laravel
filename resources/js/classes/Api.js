@@ -32,6 +32,19 @@ export default class API {
         return channel;
       }
 
+      joinGame(color, user_id) {
+        axios.get(`${this.url}/game/join`, {
+          params: {
+            color, user_id,
+            game_hash: this.game_hash
+          }
+        }).then(function(response) {
+          callback(response.data);
+        }).catch(function(error) {
+
+        });
+      }
+
       getMoves(location, callback) {
         axios.get(`${this.url}/checker/moves`, {
           params: {
