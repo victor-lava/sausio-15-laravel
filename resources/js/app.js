@@ -6,8 +6,8 @@
  */
 
 require('./bootstrap');
-import API from "./api.js";
-import Checker from "./checker.js";
+import API from "./classes/Api.js";
+import Checker from "./classes/Checker.js";
 
 window.table = document.querySelector('.table');
 window.api = new API(window.table);

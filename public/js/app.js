@@ -46535,10 +46535,99 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/js/api.js":
+/***/ "./resources/js/app.js":
 /*!*****************************!*\
-  !*** ./resources/js/api.js ***!
+  !*** ./resources/js/app.js ***!
   \*****************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _classes_Api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./classes/Api.js */ "./resources/js/classes/Api.js");
+/* harmony import */ var _classes_Checker_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./classes/Checker.js */ "./resources/js/classes/Checker.js");
+/**
+ * First we will load all of this project's JavaScript dependencies which
+ * includes Vue and other libraries. It is a great starting point when
+ * building robust, powerful web applications using Vue and Laravel.
+ */
+__webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+
+
+
+window.table = document.querySelector('.table');
+window.api = new _classes_Api_js__WEBPACK_IMPORTED_MODULE_0__["default"](window.table);
+window.checker = new _classes_Checker_js__WEBPACK_IMPORTED_MODULE_1__["default"](window.table, window.api);
+
+/***/ }),
+
+/***/ "./resources/js/bootstrap.js":
+/*!***********************************!*\
+  !*** ./resources/js/bootstrap.js ***!
+  \***********************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
+window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/**
+ * We'll load jQuery and the Bootstrap jQuery plugin which provides support
+ * for JavaScript based Bootstrap features such as modals and tabs. This
+ * code may be modified to fit the specific needs of your application.
+ */
+
+try {
+  window.Popper = __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js").default;
+  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+
+  __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
+} catch (e) {}
+/**
+ * We'll load the axios HTTP library which allows us to easily issue requests
+ * to our Laravel back-end. This library automatically handles sending the
+ * CSRF token as a header based on the value of the "XSRF" token cookie.
+ */
+
+
+window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+/**
+ * Next we will register the CSRF Token as a common header with Axios so that
+ * all outgoing HTTP requests automatically have it attached. This is just
+ * a simple convenience so we don't have to attach every token manually.
+ */
+
+var token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+} else {
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+}
+/**
+ * Echo exposes an expressive API for subscribing to channels and listening
+ * for events that are broadcast by Laravel. Echo and event broadcasting
+ * allows your team to easily build robust real-time web applications.
+ */
+
+
+
+window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
+window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
+  broadcaster: 'pusher',
+  key: "87ca1bcc9f7c89ec8deb",
+  cluster: "eu",
+  encrypted: true
+});
+
+/***/ }),
+
+/***/ "./resources/js/classes/Api.js":
+/*!*************************************!*\
+  !*** ./resources/js/classes/Api.js ***!
+  \*************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -46622,106 +46711,17 @@ function () {
 
 /***/ }),
 
-/***/ "./resources/js/app.js":
-/*!*****************************!*\
-  !*** ./resources/js/app.js ***!
-  \*****************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./api.js */ "./resources/js/api.js");
-/* harmony import */ var _checker_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./checker.js */ "./resources/js/checker.js");
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-__webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
-
-
-
-window.table = document.querySelector('.table');
-window.api = new _api_js__WEBPACK_IMPORTED_MODULE_0__["default"](window.table);
-window.checker = new _checker_js__WEBPACK_IMPORTED_MODULE_1__["default"](window.table, window.api);
-
-/***/ }),
-
-/***/ "./resources/js/bootstrap.js":
-/*!***********************************!*\
-  !*** ./resources/js/bootstrap.js ***!
-  \***********************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
-window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/**
- * We'll load jQuery and the Bootstrap jQuery plugin which provides support
- * for JavaScript based Bootstrap features such as modals and tabs. This
- * code may be modified to fit the specific needs of your application.
- */
-
-try {
-  window.Popper = __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js").default;
-  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
-
-  __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
-} catch (e) {}
-/**
- * We'll load the axios HTTP library which allows us to easily issue requests
- * to our Laravel back-end. This library automatically handles sending the
- * CSRF token as a header based on the value of the "XSRF" token cookie.
- */
-
-
-window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-/**
- * Next we will register the CSRF Token as a common header with Axios so that
- * all outgoing HTTP requests automatically have it attached. This is just
- * a simple convenience so we don't have to attach every token manually.
- */
-
-var token = document.head.querySelector('meta[name="csrf-token"]');
-
-if (token) {
-  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-}
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
-
-
-
-window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
-window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
-  broadcaster: 'pusher',
-  key: "87ca1bcc9f7c89ec8deb",
-  cluster: "eu",
-  encrypted: true
-});
-
-/***/ }),
-
-/***/ "./resources/js/checker.js":
-/*!*********************************!*\
-  !*** ./resources/js/checker.js ***!
-  \*********************************/
+/***/ "./resources/js/classes/Checker.js":
+/*!*****************************************!*\
+  !*** ./resources/js/classes/Checker.js ***!
+  \*****************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Checker; });
-/* harmony import */ var _square_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./square.js */ "./resources/js/square.js");
+/* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Square.js */ "./resources/js/classes/Square.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -46738,21 +46738,25 @@ function () {
 
     this.table = table;
     this.api = api;
-    this.possibleMoves = false;
-    this.selectedChecker = false;
-    this.square = new _square_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.table);
+    this.moves = false;
+    this.activeChecker = false;
+    this.square = new _Square_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.table);
   }
 
   _createClass(Checker, [{
-    key: "makeCheckerActive",
-    value: function makeCheckerActive(el) {
-      var activeChecker = this.table.querySelector('.checker-col-active');
-
-      if (activeChecker) {
-        activeChecker.classList.remove('checker-col-active');
-      }
-
-      el.classList.add('checker-col-active');
+    key: "setMoves",
+    value: function setMoves(moves) {
+      this.moves = JSON.stringify(moves);
+    }
+  }, {
+    key: "setActive",
+    value: function setActive(checker) {
+      this.activeChecker = checker;
+    }
+  }, {
+    key: "remove",
+    value: function remove(x, y) {
+      this.table.querySelector("img[data-x=\"".concat(x, "\"][data-y=\"").concat(y, "\"]")).remove();
     }
   }, {
     key: "isFightHappening",
@@ -46760,19 +46764,19 @@ function () {
       var _this = this;
 
       var isFightHappening = false,
-          data = JSON.parse(this.possibleMoves.data);
+          data = JSON.parse(this.moves);
       data.forEach(function (item) {
         if (item.x == x && item.y == y && item.fight === true) {
           isFightHappening = true;
 
-          _this.removeChecker(item.enemy.x, item.enemy.y);
+          _this.remove(item.enemy.x, item.enemy.y);
         }
       });
       return isFightHappening;
     }
   }, {
-    key: "moveChecker",
-    value: function moveChecker(from, to) {
+    key: "move",
+    value: function move(from, to) {
       var _this2 = this;
 
       this.api.moveChecker({
@@ -46794,61 +46798,40 @@ function () {
         activeImg.remove();
         to.appendChild(img);
 
-        _this2.square.removeActiveAll();
+        _this2.square.removePossibles();
       });
     }
   }, {
-    key: "removeChecker",
-    value: function removeChecker(x, y) {
-      this.table.querySelector("img[data-x=\"".concat(x, "\"][data-y=\"").concat(y, "\"]")).remove();
-    }
-  }, {
-    key: "canMove",
-    value: function canMove(el) {
-      var isColPossible = el.classList.contains('checker-col-possible');
-      return isColPossible ? true : false;
-    }
-  }, {
-    key: "selectChecker",
-    value: function selectChecker(el) {
+    key: "select",
+    value: function select(el) {
       var _this3 = this;
 
       var activeChecker = this.table.querySelector('.checker-col-active'),
           checkerImg = el.querySelector('img');
+      /* 2. If square is possible, then it means that we already have
+            an activeChecker and we are moving the checker to this position. */
 
-      if (this.square.isFilled(el)) {
-        // square filled, means that we are selecting checker
-        this.makeCheckerActive(el); // makes selected checker active and removes active class from the rest of the checker
-
-        this.api.getMoves(el.dataset.x, el.dataset.y, function (response) {
-          var data = response.data;
-          response.data = JSON.stringify(response.data); // solves the mutating x, y values
-
-          _this3.possibleMoves = response;
-
-          _this3.square.removeActiveAll();
-
-          if (data.length > 0) {
-            data.forEach(function (coordinates) {
-              _this3.square.setPossible(coordinates);
-            });
-          }
-        });
-
-        if (checkerImg) {
-          this.selectedChecker = checkerImg;
-        } // console.log(this.selectedChecker);
-        // 1. zingsnis, saskes paselektinimas
-        // 2. turi vykti fetchas ir turi grazinti possible ejimus
-        // 3 kai grazina possible ejimus uzdeda klases checker-col-possible
-
-      } else {
-        // square is empty, means that we are moving the checker
-        // 2. saskes permetimas, taciau permetam tik ten kur yra checker-col-possible
-        if (this.canMove(el)) {
-          this.moveChecker(this.selectedChecker, el);
-        }
+      if (this.square.isPossible(el)) {
+        this.move(this.activeChecker, el);
       }
+      /* 1. If square is not empty, then we are selecting it, thus we need to
+            get possible movement of the checker from the database. */
+      else if (!this.square.isEmpty(el)) {
+          this.square.setActive(el); // make square active
+
+          this.setActive(checkerImg); // make checker active
+
+          this.api.getMoves(el.dataset.x, el.dataset.y, function (response) {
+            _this3.setMoves(response.data); // save current moves in the class property
+
+
+            _this3.square.removePossibles(); // remove old possible movements
+
+
+            _this3.square.setPossibles(response.data); // add new ones
+
+          });
+        }
     }
   }]);
 
@@ -46859,10 +46842,10 @@ function () {
 
 /***/ }),
 
-/***/ "./resources/js/square.js":
-/*!********************************!*\
-  !*** ./resources/js/square.js ***!
-  \********************************/
+/***/ "./resources/js/classes/Square.js":
+/*!****************************************!*\
+  !*** ./resources/js/classes/Square.js ***!
+  \****************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -46885,13 +46868,21 @@ function () {
   }
 
   _createClass(Square, [{
+    key: "findActive",
+    value: function findActive() {
+      var active = this.table.querySelector('.checker-col-active');
+      return active ? active : false;
+    }
+  }, {
+    key: "removeActive",
+    value: function removeActive() {
+      var active = this.table.querySelector('.checker-col-active');
+      return active ? active.classList.remove('checker-col-active') : false;
+    }
+  }, {
     key: "setActive",
     value: function setActive(element) {
-      var activeChecker = this.table.querySelector('.checker-col-active');
-
-      if (activeChecker) {
-        activeChecker.classList.remove('checker-col-active');
-      }
+      this.removeActive(); // removes active, because there can't be 2 selected checkers
 
       element.classList.add('checker-col-active');
     }
@@ -46903,8 +46894,19 @@ function () {
       square.classList.add('checker-col-possible');
     }
   }, {
-    key: "removeActiveAll",
-    value: function removeActiveAll() {
+    key: "setPossibles",
+    value: function setPossibles(moves) {
+      var _this = this;
+
+      if (moves.length > 0) {
+        moves.forEach(function (coordinates) {
+          _this.setPossible(coordinates);
+        });
+      }
+    }
+  }, {
+    key: "removePossibles",
+    value: function removePossibles() {
       var activeSquares = this.table.querySelectorAll('.checker-col-possible');
 
       if (activeSquares.length > 0) {
@@ -46914,12 +46916,14 @@ function () {
       }
     }
   }, {
-    key: "removePossible",
-    value: function removePossible() {}
+    key: "isEmpty",
+    value: function isEmpty(square) {
+      return square.querySelector('img') ? false : true;
+    }
   }, {
-    key: "isFilled",
-    value: function isFilled(el) {
-      return el.querySelector('img') ? true : false;
+    key: "isPossible",
+    value: function isPossible(square) {
+      return square.classList.contains('checker-col-possible') ? true : false;
     }
   }]);
 
