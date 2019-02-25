@@ -15,6 +15,7 @@ class GameController extends Controller
 
       // dd(Auth::user());
         $authHash = false;
+        $color = false;
         $game = Game::where('hash', $hash)->first();
 
         // dd($squares);
