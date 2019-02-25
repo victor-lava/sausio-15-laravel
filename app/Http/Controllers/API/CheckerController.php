@@ -24,6 +24,20 @@ class CheckerController extends Controller
 
     }
 
+    public function validateUser(Game $game, $hash) {
+
+      $user = false;
+      if($hash !== null) {
+        if($game->firstPlayer->token === $hash) {
+          $user = $game->firstPlayer;
+        } elseif($game->secondPlayer->token === $hash) {
+          $user = $game->secondPlayer;
+        }
+      }
+
+      return $user;
+    }
+
     public function moves(Request $request) {
 
       $data = [ 'status' => 404,
@@ -34,10 +48,13 @@ class CheckerController extends Controller
                     ->where('status', 1)
                     ->first();
 
-      if($game) {
+      $isValidUser = $this->validateUser($game, $request->auth_hash);
+      // dd($isValidUser);
+      if($game && $isValidUser) {
         $checker = Checker::where('game_id', $game->id)
                           ->where('x', $request->x)
                           ->where('y', $request->y)
+                          ->where('user_id', $isValidUser->id)
                           ->where('dead', 0)
                           ->first();
         if($checker) {
@@ -64,11 +81,14 @@ class CheckerController extends Controller
                   ->where('status', 1)
                   ->first();
 
-      if($game) {
+      $isValidUser = $this->validateUser($game, $request->auth_hash);
+
+      if($game && $isValidUser) {
 
         $checker = Checker::where('game_id', $game->id)
                           ->where('x', $request->x1)
                           ->where('y', $request->y1)
+                          ->where('user_id', $isValidUser->id)
                           ->where('dead', 0)
                           ->update([  'x' => $request->x2,
                                       'y' => $request->y2]);

@@ -46648,6 +46648,7 @@ function () {
 
     this.table = table;
     this.game_hash = table.dataset.hash;
+    this.auth_hash = table.dataset.auth;
     this.url = table.dataset.api;
     this.pusher_key = 'a4784a4451c0de4372ac';
     this.pusher = this.initPusher();
@@ -46680,7 +46681,8 @@ function () {
         params: {
           x: location.x,
           y: location.y,
-          game_hash: this.game_hash
+          game_hash: this.game_hash,
+          auth_hash: this.auth_hash
         }
       }).then(function (response) {
         callback(response.data);
@@ -46696,7 +46698,8 @@ function () {
           x2: data.to.x,
           y2: data.to.y,
           fight: data.fight,
-          game_hash: this.game_hash
+          game_hash: this.game_hash,
+          auth_hash: this.auth_hash
         }
       }).then(function (response) {
         callback(response.data);
@@ -46824,10 +46827,12 @@ function () {
     value: function select(el) {
       var _this3 = this;
 
+      // alert('selected');
       var activeChecker = this.table.querySelector('.checker-col-active'),
           checkerImg = el.querySelector('img');
       /* 2. If square is possible, then it means that we already have
             an activeChecker and we are moving the checker to this position. */
+      // console.log(this.square.isPossible(el));
 
       if (this.square.isPossible(el)) {
         this.move(this.activeChecker, el);

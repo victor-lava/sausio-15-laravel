@@ -3,6 +3,7 @@ export default class API {
       constructor(table) {
          this.table = table;
          this.game_hash = table.dataset.hash;
+         this.auth_hash = table.dataset.auth;
          this.url = table.dataset.api;
          this.pusher_key = 'a4784a4451c0de4372ac';
          this.pusher = this.initPusher();
@@ -36,7 +37,8 @@ export default class API {
           params: {
             x: location.x,
             y: location.y,
-            game_hash: this.game_hash
+            game_hash: this.game_hash,
+            auth_hash: this.auth_hash
           }
         }).then(function(response) {
           callback(response.data);
@@ -53,7 +55,8 @@ export default class API {
             x2: data.to.x,
             y2: data.to.y,
             fight: data.fight,
-            game_hash: this.game_hash
+            game_hash: this.game_hash,
+            auth_hash: this.auth_hash
           }
         }).then(function(response) {
           callback(response.data);

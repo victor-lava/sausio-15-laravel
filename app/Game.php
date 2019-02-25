@@ -209,7 +209,7 @@ class Game extends Model
               ($move['vectors']['y'] < 0 && $checker->color === 0)) {
                 $emptyMoves[] = $coordinates;
           }
-          
+
         }
       }
 
@@ -242,7 +242,11 @@ class Game extends Model
         return $result;
     }
 
-    public function createGameTable() {
+    public function isClickable() {
+
+    }
+
+    public function createGameTable($authHash, $colorNumber) {
         $table = [];
         $alphabet = 'abcdefgh';
 
@@ -254,6 +258,7 @@ class Game extends Model
                 $yLyginis = ($y % 2 === 0) ? true : false;
                 $xLyginis = ($x % 2 === 0) ? true : false;
                 $checker = false;
+                $isClickable = false;
                 $idLetter = $alphabet[$x];
 
                 $table[$y][$x]['id'] = $idLetter . $idNumber;
@@ -261,22 +266,30 @@ class Game extends Model
                 if(  ($yLyginis && !$xLyginis) || // jei y yra lyginis ir x yra nelyginis
                      (!$yLyginis && $xLyginis)) { // jei y yra nelyginis ir x yra lyginis
                     $color = 'black';
-                    // echo $x;
+
                     $isChecker = $this->findCheckerByCoordinates($x, $y);
 
                     if($isChecker) {
                         $checker = $isChecker;
-                    }
+                        // dd($color);
+                        if( $checker->user->token === $authHash &&
+                            $checker->color === $colorNumber) {
+                              $isClickable = true;
+                            }
+                    } else { $isClickable = true; }
 
                 } else { // jei y yra lyginis ir x yra lyginis, arba jei y yra nelyginis ir x yra nelyginis nespausdinu
                     $color = 'white';
                 }
+
                 $table[$y][$x]['color'] = $color;
                 $table[$y][$x]['checker'] = $checker;
+                $table[$y][$x]['clickable'] = $isClickable;
+
             }
             $idNumber--;
         }
-
+        // dd($table);
         return $table;
     }
 }

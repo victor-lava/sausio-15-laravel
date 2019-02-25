@@ -20,7 +20,10 @@
 
                   <div  class="table"
                         data-api="{{ url('/api/') }}"
-                        data-hash="{{ $hash }}">
+                        data-hash="{{ $hash }}"
+                        @if($authHash)
+                        data-auth="{{ $authHash }}"
+                        @endif>
 
                     @foreach($squares as $squareLine)
                       @php $y = $loop->index @endphp
@@ -28,10 +31,10 @@
                       @foreach($squareLine as $squareColumn)
                         @php $x = $loop->index @endphp
                       <div id="{{ $squareColumn['id'] }}"
-                           class="checker-col checker-col-{{ $squareColumn['color'] }}"
+                           class="checker-col checker-col-{{ $squareColumn['color'] }}{{ $squareColumn['clickable'] && $squareColumn['checker'] !== false ? ' checker-col-clickable' : '' }}"
                            data-x="{{ $x }}"
                            data-y="{{ $y }}"
-                           @if($squareColumn['color'] === 'black')
+                           @if($squareColumn['color'] === 'black' && $squareColumn['clickable'])
                            onclick="checker.select(this)"
                            @endif>
                            <!-- <span>{{ $squareColumn['id'] }}</span> -->
@@ -42,6 +45,7 @@
                            @endif
 
                            @if($squareColumn['checker'] !== false)
+
                            <img class="checker"
                                 data-x="{{ $squareColumn['checker']->x }}"
                                 data-y="{{ $squareColumn['checker']->y }}"

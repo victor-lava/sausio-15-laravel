@@ -13,11 +13,28 @@ class GameController extends Controller
 
     public function show(string $hash) {
 
-      dd(Auth::user());
+      // dd(Auth::user());
+        $authHash = false;
         $game = Game::where('hash', $hash)->first();
-        $squares = $game->createGameTable();
 
-        return view('pages/game', compact('hash', 'squares'));
+        // dd($squares);
+        // dd($game->firstPlayer->checker);
+
+        if(Auth::user()) { // logged in
+          $token = Auth::user()->token;
+
+          if($token === $game->firstPlayer->token) {
+            $authHash = $token;
+            $color = 0; // white
+          } elseif ($token === $game->secondPlayer->token) {
+            $authHash = $token;
+            $color = 1; // black
+          }
+        }
+
+        // dd($color . ' ' . $authHash);
+        $squares = $game->createGameTable($authHash, $color);
+        return view('pages/game', compact('hash', 'squares', 'authHash'));
 
     }
 

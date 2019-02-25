@@ -12,6 +12,10 @@ class Checker extends Model
       return $this->color === 1 ? 'black' : 'white';
     }
 
+    public function user() {
+      return $this->belongsTo('App\User');
+    }
+
     // public function game() {
     //   $game = App\Game::where('id', $this->game_id)->first();
     //   if($game) {

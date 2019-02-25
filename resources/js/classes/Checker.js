@@ -79,11 +79,13 @@ export default class Checker {
   }
 
   select(el) {
+    // alert('selected');
     let activeChecker = this.table.querySelector('.checker-col-active'),
         checkerImg = el.querySelector('img');
 
     /* 2. If square is possible, then it means that we already have
           an activeChecker and we are moving the checker to this position. */
+          // console.log(this.square.isPossible(el));
     if(this.square.isPossible(el)) {
         this.move(this.activeChecker, el);
     } /* 1. If square is not empty, then we are selecting it, thus we need to
