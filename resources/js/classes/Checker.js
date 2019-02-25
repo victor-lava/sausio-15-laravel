@@ -15,6 +15,10 @@ export default class Checker {
     this.moves = JSON.stringify(moves);
   }
 
+  getMoves() {
+    return JSON.parse(this.moves);
+  }
+
   setActive(checker) {
     this.activeChecker = checker;
   }
@@ -30,13 +34,17 @@ export default class Checker {
     return checker;
   }
 
+  createFrom(location, checker) {
+    return this.create(location, checker.src);;
+  }
+
   remove(location) {
     this.table.querySelector(`img[data-x="${location.x}"][data-y="${location.y}"]`).remove();
   }
 
   isFightHappening(location) {
     let isFightHappening = false,
-        data = JSON.parse(this.moves);
+        data = this.getMoves();
 
     data.forEach((item) => {
       if( item.x == location.x &&
@@ -59,17 +67,13 @@ export default class Checker {
                             },
                           (response) => {
 
-        let square = this.square.findActive(),
-            checker = square.querySelector('img'),
-            newChecker = this.create(new Point( to.dataset.x,
-                                                to.dataset.y),
-                                      checker.src);
-                                      console.log(square);
-        square.classList.remove('checker-col-active');
-        checker.remove();
+        let newChecker = this.createFrom(new Point( to.dataset.x,
+                                                    to.dataset.y), from); // Create new checker from the old one, however with the new location
 
-        to.appendChild(newChecker);
+        from.remove(); // remove checker from where it was moved
+        to.appendChild(newChecker); // append checker copy to where we want to move
 
+        this.square.removeActive();
         this.square.removePossibles();
     });
   }

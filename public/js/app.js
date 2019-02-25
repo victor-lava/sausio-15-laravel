@@ -46751,6 +46751,11 @@ function () {
       this.moves = JSON.stringify(moves);
     }
   }, {
+    key: "getMoves",
+    value: function getMoves() {
+      return JSON.parse(this.moves);
+    }
+  }, {
     key: "setActive",
     value: function setActive(checker) {
       this.activeChecker = checker;
@@ -46766,6 +46771,12 @@ function () {
       return checker;
     }
   }, {
+    key: "createFrom",
+    value: function createFrom(location, checker) {
+      return this.create(location, checker.src);
+      ;
+    }
+  }, {
     key: "remove",
     value: function remove(location) {
       this.table.querySelector("img[data-x=\"".concat(location.x, "\"][data-y=\"").concat(location.y, "\"]")).remove();
@@ -46776,7 +46787,7 @@ function () {
       var _this = this;
 
       var isFightHappening = false,
-          data = JSON.parse(this.moves);
+          data = this.getMoves();
       data.forEach(function (item) {
         if (item.x == location.x && item.y == location.y && item.fight === true) {
           isFightHappening = true;
@@ -46796,14 +46807,14 @@ function () {
         to: new _Point_js__WEBPACK_IMPORTED_MODULE_0__["default"](to.dataset.x, to.dataset.y),
         fight: this.isFightHappening(new _Point_js__WEBPACK_IMPORTED_MODULE_0__["default"](to.dataset.x, to.dataset.y))
       }, function (response) {
-        var square = _this2.square.findActive(),
-            checker = square.querySelector('img'),
-            newChecker = _this2.create(new _Point_js__WEBPACK_IMPORTED_MODULE_0__["default"](to.dataset.x, to.dataset.y), checker.src);
+        var newChecker = _this2.createFrom(new _Point_js__WEBPACK_IMPORTED_MODULE_0__["default"](to.dataset.x, to.dataset.y), from); // Create new checker from the old one, however with the new location
 
-        console.log(square);
-        square.classList.remove('checker-col-active');
-        checker.remove();
-        to.appendChild(newChecker);
+
+        from.remove(); // remove checker from where it was moved
+
+        to.appendChild(newChecker); // append checker copy to where we want to move
+
+        _this2.square.removeActive();
 
         _this2.square.removePossibles();
       });
