@@ -1,3 +1,5 @@
+import Square from "./square.js";
+
 export default class Checker {
 
   constructor(table, api) {
@@ -5,10 +7,7 @@ export default class Checker {
      this.api = api;
      this.possibleMoves = false;
      this.selectedChecker = false;
-  }
-
-  isSquareFilled(el) {
-    return el.querySelector('img') ? true : false;
+     this.square = new Square(this.table);
   }
 
   makeCheckerActive(el) {
@@ -19,31 +18,6 @@ export default class Checker {
     }
 
     el.classList.add('checker-col-active');
-  }
-
-  removeActiveSquare() {
-    let activeSquares = this.table.querySelectorAll('.checker-col-possible');
-    if(activeSquares.length > 0) {
-      activeSquares.forEach((square) => {
-        square.classList.remove('checker-col-possible');
-      })
-    }
-  }
-
-  makeSquarePossible(coordinates) {
-    let selector = `.checker-col[data-x="${coordinates.x}"][data-y="${coordinates.y}"]`,
-        square = this.table.querySelector(selector);
-
-        square.classList.add('checker-col-possible');
-  }
-
-  removeActiveSquares() {
-    let activeSquares = window.table.querySelectorAll('.checker-col-possible');
-    if(activeSquares.length > 0) {
-      activeSquares.forEach((square) => {
-        square.classList.remove('checker-col-possible');
-      })
-    }
   }
 
   isFightHappening(x, y) {
@@ -83,7 +57,7 @@ export default class Checker {
 
         to.appendChild(img);
 
-        this.removeActiveSquares();
+        this.square.removeActiveAll();
     });
   }
 
@@ -103,7 +77,7 @@ export default class Checker {
     let activeChecker = this.table.querySelector('.checker-col-active'),
         checkerImg = el.querySelector('img');
 
-    if(this.isSquareFilled(el)) { // square filled, means that we are selecting checker
+    if(this.square.isFilled(el)) { // square filled, means that we are selecting checker
       this.makeCheckerActive(el); // makes selected checker active and removes active class from the rest of the checker
 
       this.api.getMoves(el.dataset.x, el.dataset.y, (response) => {
@@ -111,11 +85,11 @@ export default class Checker {
 
         response.data = JSON.stringify(response.data); // solves the mutating x, y values
         this.possibleMoves = response;
-        this.removeActiveSquares();
+        this.square.removeActiveAll();
 
         if(data.length > 0) {
           data.forEach((coordinates) => {
-            this.makeSquarePossible(coordinates);
+            this.square.setPossible(coordinates);
           });
         }
       });
