@@ -30,10 +30,13 @@ class CheckerController extends Controller
                 'message' => 'Not found',
                 'data' => null ];
 
-      $game = Game::where('hash', $request->game_hash)->first();
+      $game = Game::where('hash', $request->game_hash)
+                    ->where('status', 1)
+                    ->first();
 
       if($game) {
-        $checker = Checker::where('x', $request->x)
+        $checker = Checker::where('game_id', $game->id)
+                          ->where('x', $request->x)
                           ->where('y', $request->y)
                           ->where('dead', 0)
                           ->first();
@@ -57,18 +60,20 @@ class CheckerController extends Controller
                 'message' => 'Not found',
                 'data' => null ];
 
-      $game = Game::where('hash', $request->game_hash)->first();
+      $game = Game::where('hash', $request->game_hash)
+                  ->where('status', 1)
+                  ->first();
 
       if($game) {
 
-        $checker = Checker::where('x', $request->x1)
+        $checker = Checker::where('game_id', $game->id)
+                          ->where('x', $request->x1)
                           ->where('y', $request->y1)
                           ->where('dead', 0)
                           ->update([  'x' => $request->x2,
                                       'y' => $request->y2]);
 
 
-        // dd($checker);
         // dd(Checker::update());
         if($checker > 0) {
 

@@ -77,10 +77,19 @@
                                 </a>
                             </li>
                             <li class="nav-item dropdown">
-                                @component('components/button', ['size' => 'lg',
+                                {{-- @component('components/button', ['size' => 'lg',
                                                                  'type' => 'logout'])
                                                                  Logout
-                                @endcomponent
+                                @endcomponent --}}
+
+                                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                class="btn btn-primary btn-lg">
+                                    Logout
+                                </a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
                             </li>
                         @endguest
                     </ul>

@@ -205,13 +205,15 @@ class Game extends Model
         } elseif ($move['empty'] === true) { // if empty true
 
           // if moving forward or moving backwards
-          if(($move['vectors']['y'] > 0 && $checker->color === 1) || ($move['vectors']['y'] < 0 && $checker->color === 0)) {
+          if( ($move['vectors']['y'] > 0 && $checker->color === 1) ||
+              ($move['vectors']['y'] < 0 && $checker->color === 0)) {
                 $emptyMoves[] = $coordinates;
           }
+          
         }
       }
 
-      // dd($emptyMoves);
+      // dd($fightMoves);
       // if there are any fight moves, then return them (need to fight!) don't return empty
       return count($fightMoves) === 0 ? $emptyMoves : $fightMoves;
     }

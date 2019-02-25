@@ -13,6 +13,7 @@ class GameController extends Controller
 
     public function show(string $hash) {
 
+      dd(Auth::user());
         $game = Game::where('hash', $hash)->first();
         $squares = $game->createGameTable();
 
