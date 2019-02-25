@@ -32,7 +32,7 @@
                            data-x="{{ $x }}"
                            data-y="{{ $y }}"
                            @if($squareColumn['color'] === 'black')
-                           onclick="selectChecker(this)"
+                           onclick="checker.selectChecker(this)"
                            @endif>
                            <!-- <span>{{ $squareColumn['id'] }}</span> -->
                            @if($squareColumn['color'] === 'black')

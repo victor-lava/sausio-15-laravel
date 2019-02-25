@@ -46562,17 +46562,15 @@ function () {
     this.url = table.dataset.api;
     this.pusher_key = 'a4784a4451c0de4372ac';
     this.pusher = this.initPusher();
-    this.channel = this.createChannel('my-event', function (data) {
-      alert(data);
-    });
-    console.log(this.pusher);
+    this.channel = this.createChannel('my-event', function (data) {// alert(data);
+    }); // console.log(this.pusher);
   }
 
   _createClass(API, [{
     key: "initPusher",
     value: function initPusher() {
       // Enable pusher logging - don't include this in production
-      Pusher.logToConsole = true;
+      // Pusher.logToConsole = true;
       var pusher = new Pusher(this.pusher_key, {
         cluster: 'eu',
         forceTLS: true
@@ -46634,6 +46632,7 @@ function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./api.js */ "./resources/js/api.js");
+/* harmony import */ var _checker_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./checker.js */ "./resources/js/checker.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -46642,130 +46641,10 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
+
 window.table = document.querySelector('.table');
 window.api = new _api_js__WEBPACK_IMPORTED_MODULE_0__["default"](window.table);
-window.possibleMoves = false;
-window.selectedChecker = false;
-
-window.isSquareFilled = function (el) {
-  return el.querySelector('img') ? true : false;
-};
-
-window.makeCheckerActive = function (element) {
-  var activeChecker = window.table.querySelector('.checker-col-active');
-
-  if (activeChecker) {
-    activeChecker.classList.remove('checker-col-active');
-  }
-
-  element.classList.add('checker-col-active');
-};
-
-window.removeActiveSquares = function () {
-  var activeSquares = window.table.querySelectorAll('.checker-col-possible');
-
-  if (activeSquares.length > 0) {
-    activeSquares.forEach(function (square) {
-      square.classList.remove('checker-col-possible');
-    });
-  }
-};
-
-window.makeSquarePossible = function (coordinates) {
-  var selector = ".checker-col[data-x=\"".concat(coordinates.x, "\"][data-y=\"").concat(coordinates.y, "\"]");
-  square = window.table.querySelector(selector).classList.add('checker-col-possible');
-};
-
-window.isFightHappening = function (x, y) {
-  var isFightHappening = false,
-      data = JSON.parse(window.possibleMoves.data);
-  data.forEach(function (item) {
-    if (item.x == x && item.y == y && item.fight === true) {
-      isFightHappening = true;
-      removeChecker(item.enemy.x, item.enemy.y);
-    }
-  });
-  return isFightHappening;
-};
-
-window.moveChecker = function (from, to) {
-  window.api.moveChecker({
-    x1: from.dataset.x,
-    y1: from.dataset.y,
-    x2: to.dataset.x,
-    y2: to.dataset.y,
-    fight: isFightHappening(to.dataset.x, to.dataset.y)
-  }, function (response) {
-    console.log(response);
-    var activeChecker = window.table.querySelector('.checker-col-active'),
-        activeImg = activeChecker.querySelector('img'),
-        img = document.createElement('img');
-    img.className = "checker";
-    img.src = activeImg.src;
-    img.dataset.x = to.dataset.x;
-    img.dataset.y = to.dataset.y;
-    activeChecker.classList.remove('checker-col-active');
-    activeImg.remove();
-    to.appendChild(img);
-    removeActiveSquares();
-  });
-};
-
-window.removeChecker = function (x, y) {
-  window.table.querySelector("img[data-x=\"".concat(x, "\"][data-y=\"").concat(y, "\"]")).remove();
-};
-
-window.canMove = function (element) {
-  var isColPossible = element.classList.contains('checker-col-possible');
-  return isColPossible ? true : false;
-};
-
-window.selectChecker = function (element) {
-  var activeChecker = window.table.querySelector('.checker-col-active'),
-      checkerImg = element.querySelector('img'); // console.log(window.selectedChecker);
-
-  if (isSquareFilled(element)) {
-    // square filled
-    // window.selectedChecker = activeChecker.querySelector('img');
-    makeCheckerActive(element); // makes selected checker active and removes active class from the rest of the checker
-    // console.log(element);
-    // console.log(window.selectedChecker.dataset.x);
-    // getPossibleMoves( element.dataset.x,
-    //                   element.dataset.y);
-
-    window.api.getMoves(element.dataset.x, element.dataset.y, function (response) {
-      var data = response.data;
-      response.data = JSON.stringify(response.data); // solves the mutating x, y values
-
-      window.possibleMoves = response;
-      removeActiveSquares();
-
-      if (data.length > 0) {
-        data.forEach(function (coordinates) {
-          // console.log(coordinates);
-          makeSquarePossible(coordinates);
-        });
-      }
-    });
-
-    if (checkerImg) {
-      window.selectedChecker = checkerImg;
-    } // console.log(window.selectedChecker);
-    // 1. zingsnis, saskes paselektinimas
-    // 2. turi vykti fetchas ir turi grazinti possible ejimus
-    // 3 kai grazina possible ejimus uzdeda klases checker-col-possible
-
-  } else {
-    // square empty
-    // 2. saskes permetimas, taciau permetam tik ten kur yra checker-col-possible
-    // console.log(element);
-    // console.log(window.selectedChecker);
-    // console.log(canMove(window.selectedChecker));
-    if (canMove(element)) {
-      moveChecker(window.selectedChecker, element);
-    }
-  }
-};
+window.checker = new _checker_js__WEBPACK_IMPORTED_MODULE_1__["default"](window.table, window.api);
 
 /***/ }),
 
@@ -46829,6 +46708,184 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   cluster: "eu",
   encrypted: true
 });
+
+/***/ }),
+
+/***/ "./resources/js/checker.js":
+/*!*********************************!*\
+  !*** ./resources/js/checker.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Checker; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Checker =
+/*#__PURE__*/
+function () {
+  function Checker(table, api) {
+    _classCallCheck(this, Checker);
+
+    this.table = table;
+    this.api = api;
+    this.possibleMoves = false;
+    this.selectedChecker = false;
+  }
+
+  _createClass(Checker, [{
+    key: "isSquareFilled",
+    value: function isSquareFilled(el) {
+      return el.querySelector('img') ? true : false;
+    }
+  }, {
+    key: "makeCheckerActive",
+    value: function makeCheckerActive(el) {
+      var activeChecker = this.table.querySelector('.checker-col-active');
+
+      if (activeChecker) {
+        activeChecker.classList.remove('checker-col-active');
+      }
+
+      el.classList.add('checker-col-active');
+    }
+  }, {
+    key: "removeActiveSquare",
+    value: function removeActiveSquare() {
+      var activeSquares = this.table.querySelectorAll('.checker-col-possible');
+
+      if (activeSquares.length > 0) {
+        activeSquares.forEach(function (square) {
+          square.classList.remove('checker-col-possible');
+        });
+      }
+    }
+  }, {
+    key: "makeSquarePossible",
+    value: function makeSquarePossible(coordinates) {
+      var selector = ".checker-col[data-x=\"".concat(coordinates.x, "\"][data-y=\"").concat(coordinates.y, "\"]"),
+          square = this.table.querySelector(selector);
+      square.classList.add('checker-col-possible');
+    }
+  }, {
+    key: "removeActiveSquares",
+    value: function removeActiveSquares() {
+      var activeSquares = window.table.querySelectorAll('.checker-col-possible');
+
+      if (activeSquares.length > 0) {
+        activeSquares.forEach(function (square) {
+          square.classList.remove('checker-col-possible');
+        });
+      }
+    }
+  }, {
+    key: "isFightHappening",
+    value: function isFightHappening(x, y) {
+      var _this = this;
+
+      var isFightHappening = false,
+          data = JSON.parse(this.possibleMoves.data);
+      data.forEach(function (item) {
+        if (item.x == x && item.y == y && item.fight === true) {
+          isFightHappening = true;
+
+          _this.removeChecker(item.enemy.x, item.enemy.y);
+        }
+      });
+      return isFightHappening;
+    }
+  }, {
+    key: "moveChecker",
+    value: function moveChecker(from, to) {
+      var _this2 = this;
+
+      this.api.moveChecker({
+        x1: from.dataset.x,
+        y1: from.dataset.y,
+        x2: to.dataset.x,
+        y2: to.dataset.y,
+        fight: this.isFightHappening(to.dataset.x, to.dataset.y)
+      }, function (response) {
+        var activeChecker = _this2.table.querySelector('.checker-col-active'),
+            activeImg = activeChecker.querySelector('img'),
+            img = document.createElement('img');
+
+        img.className = "checker";
+        img.src = activeImg.src;
+        img.dataset.x = to.dataset.x;
+        img.dataset.y = to.dataset.y;
+        activeChecker.classList.remove('checker-col-active');
+        activeImg.remove();
+        to.appendChild(img);
+
+        _this2.removeActiveSquares();
+      });
+    }
+  }, {
+    key: "removeChecker",
+    value: function removeChecker(x, y) {
+      this.table.querySelector("img[data-x=\"".concat(x, "\"][data-y=\"").concat(y, "\"]")).remove();
+    }
+  }, {
+    key: "canMove",
+    value: function canMove(el) {
+      var isColPossible = el.classList.contains('checker-col-possible');
+      return isColPossible ? true : false;
+    }
+  }, {
+    key: "selectChecker",
+    value: function selectChecker(el) {
+      var _this3 = this;
+
+      var activeChecker = this.table.querySelector('.checker-col-active'),
+          checkerImg = el.querySelector('img');
+
+      if (this.isSquareFilled(el)) {
+        // square filled, means that we are selecting checker
+        this.makeCheckerActive(el); // makes selected checker active and removes active class from the rest of the checker
+
+        this.api.getMoves(el.dataset.x, el.dataset.y, function (response) {
+          var data = response.data;
+          response.data = JSON.stringify(response.data); // solves the mutating x, y values
+
+          _this3.possibleMoves = response;
+
+          _this3.removeActiveSquares();
+
+          if (data.length > 0) {
+            data.forEach(function (coordinates) {
+              _this3.makeSquarePossible(coordinates);
+            });
+          }
+        });
+
+        if (checkerImg) {
+          this.selectedChecker = checkerImg;
+        } // console.log(this.selectedChecker);
+        // 1. zingsnis, saskes paselektinimas
+        // 2. turi vykti fetchas ir turi grazinti possible ejimus
+        // 3 kai grazina possible ejimus uzdeda klases checker-col-possible
+
+      } else {
+        // square is empty, means that we are moving the checker
+        // 2. saskes permetimas, taciau permetam tik ten kur yra checker-col-possible
+        if (this.canMove(el)) {
+          this.moveChecker(this.selectedChecker, el);
+        }
+      }
+    }
+  }]);
+
+  return Checker;
+}();
+
+
 
 /***/ }),
 

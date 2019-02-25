@@ -8,14 +8,14 @@ export default class API {
          this.pusher = this.initPusher();
 
          this.channel = this.createChannel('my-event', function(data) {
-           alert(data);
+           // alert(data);
          });
-         console.log(this.pusher);
+         // console.log(this.pusher);
       }
 
       initPusher() {
         // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true;
+        // Pusher.logToConsole = true;
 
         var pusher = new Pusher(this.pusher_key, {
           cluster: 'eu',
