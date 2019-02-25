@@ -46756,6 +46756,16 @@ function () {
       this.activeChecker = checker;
     }
   }, {
+    key: "create",
+    value: function create(location, src) {
+      var checker = document.createElement('img');
+      checker.className = "checker";
+      checker.src = src;
+      checker.dataset.x = location.x;
+      checker.dataset.y = location.y;
+      return checker;
+    }
+  }, {
     key: "remove",
     value: function remove(location) {
       this.table.querySelector("img[data-x=\"".concat(location.x, "\"][data-y=\"").concat(location.y, "\"]")).remove();
@@ -46786,17 +46796,14 @@ function () {
         to: new _Point_js__WEBPACK_IMPORTED_MODULE_0__["default"](to.dataset.x, to.dataset.y),
         fight: this.isFightHappening(new _Point_js__WEBPACK_IMPORTED_MODULE_0__["default"](to.dataset.x, to.dataset.y))
       }, function (response) {
-        var activeChecker = _this2.table.querySelector('.checker-col-active'),
-            activeImg = activeChecker.querySelector('img'),
-            img = document.createElement('img');
+        var square = _this2.square.findActive(),
+            checker = square.querySelector('img'),
+            newChecker = _this2.create(new _Point_js__WEBPACK_IMPORTED_MODULE_0__["default"](to.dataset.x, to.dataset.y), checker.src);
 
-        img.className = "checker";
-        img.src = activeImg.src;
-        img.dataset.x = to.dataset.x;
-        img.dataset.y = to.dataset.y;
-        activeChecker.classList.remove('checker-col-active');
-        activeImg.remove();
-        to.appendChild(img);
+        console.log(square);
+        square.classList.remove('checker-col-active');
+        checker.remove();
+        to.appendChild(newChecker);
 
         _this2.square.removePossibles();
       });

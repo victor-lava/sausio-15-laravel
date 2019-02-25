@@ -19,6 +19,17 @@ export default class Checker {
     this.activeChecker = checker;
   }
 
+  create(location, src) {
+    let checker = document.createElement('img');
+
+        checker.className = "checker";
+        checker.src = src;
+        checker.dataset.x = location.x;
+        checker.dataset.y = location.y;
+
+    return checker;
+  }
+
   remove(location) {
     this.table.querySelector(`img[data-x="${location.x}"][data-y="${location.y}"]`).remove();
   }
@@ -48,20 +59,16 @@ export default class Checker {
                             },
                           (response) => {
 
-        let activeChecker = this.table.querySelector('.checker-col-active'),
-            activeImg = activeChecker.querySelector('img'),
-            img = document.createElement('img');
+        let square = this.square.findActive(),
+            checker = square.querySelector('img'),
+            newChecker = this.create(new Point( to.dataset.x,
+                                                to.dataset.y),
+                                      checker.src);
+                                      console.log(square);
+        square.classList.remove('checker-col-active');
+        checker.remove();
 
-            img.className = "checker";
-            img.src = activeImg.src;
-            img.dataset.x = to.dataset.x;
-            img.dataset.y = to.dataset.y;
-
-        activeChecker.classList.remove('checker-col-active');
-
-        activeImg.remove();
-
-        to.appendChild(img);
+        to.appendChild(newChecker);
 
         this.square.removePossibles();
     });
