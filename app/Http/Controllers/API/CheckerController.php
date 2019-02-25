@@ -36,16 +36,16 @@ class CheckerController extends Controller
         $checker = Checker::where('x', $request->x)
                           ->where('y', $request->y)
                           ->first();
-                          // dd($checker);
+                          
         if($checker) {
 
-          // possible moves
-          // $checker = $game->findCheckerByCoordinates($request->x, $request->y);
 
           $squares = $game->getAround($checker);
-
+          $moves = $game->filterMoves($checker, $squares);
 
           $data['status'] = 200;
+          $data['data'] = $moves;
+          $data['message'] = count($moves) > 0 ? 'Found some possibilities' : 'No moves found';
 
         }
       }

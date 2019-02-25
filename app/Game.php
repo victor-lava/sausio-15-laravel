@@ -78,8 +78,6 @@ class Game extends Model
 
     public function getAround(Checker $checker) {
 
-      // dd($this->checkers);
-
       $moves = [];
       $vectors = $this->createVectors();
       foreach ($vectors as $vector) {
@@ -102,6 +100,8 @@ class Game extends Model
             if($this->isCoordinatesInRange($enemyX, $enemyY) &&
               !$this->findCheckerByCoordinates($enemyX, $enemyY)) {
                 $isFight = true;
+                $x = $enemyX;
+                $y = $enemyY;
               }
           }
 
@@ -117,7 +117,30 @@ class Game extends Model
         }
       }
 
-      dd($moves);
+     return $moves;
+    }
+
+    public function filterMoves(Checker $checker,
+                                array $moves) {
+      $fightMoves = [];
+      $emptyMoves = [];
+
+      foreach ($moves as $move) {
+
+        if($move['fight'] === true) {
+          $fightMoves[] = $move;
+        } elseif($move['empty'] === true) {
+
+          if(($checker->color === 0 && $move['vector']['y'] < 0) ||
+              $checker->color === 1 && $move['vector']['y'] > 0) {
+                $emptyMoves[] = $move;
+          }
+
+        }
+
+      }
+
+      return count($fightMoves) > 0 ? $fightMoves : $emptyMoves;
     }
 
     public function findCheckerByCoordinates($x, $y) {

@@ -18,7 +18,7 @@
 
                 <div class="card-body">
 
-                  <div class="table">
+                  <div id="checkers" class="table" data-hash="{{ $hash }}">
 
                     @foreach($squares as $squareLine)
                       @php $y = $loop->index @endphp
@@ -29,7 +29,9 @@
                            class="checker-col checker-col-{{ $squareColumn['color'] }}"
                            @if($squareColumn['color'] === 'black')
                            onclick="selectChecker(this)"
-                           @endif>
+                           @endif
+                           data-x="{{ $x }}"
+                           data-y="{{ $y }}">
                            <!-- <span>{{ $squareColumn['id'] }}</span> -->
                            @if($squareColumn['color'] === 'black')
                            <span>
