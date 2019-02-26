@@ -46,7 +46,7 @@ class Game extends Model
     }
 
     public function checkers() {
-        return $this->hasMany('App\Checker');
+        return $this->hasMany('App\Checker')->where('dead', 0);
     }
 
     public function createVectors() {

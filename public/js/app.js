@@ -36402,6 +36402,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.table = document.querySelector('#checkers');
 window.selectedChecker = false;
+window.moves = false;
 
 window.isSquareFilled = function (el) {
   return el.querySelector('img') ? true : false;
@@ -36418,8 +36419,7 @@ window.makeCheckerActive = function (element) {
 };
 
 window.removePossibleMovements = function () {
-  var activeSquares = window.table.querySelectorAll('.checker-col-possible');
-  console.log(activeSquares);
+  var activeSquares = window.table.querySelectorAll('.checker-col-possible'); // console.log(activeSquares);
 
   if (activeSquares.length > 0) {
     activeSquares.forEach(function (square) {
@@ -36453,9 +36453,17 @@ window.moveChecker = function (x1, y1, x2, y2, callback) {
       y2: y2
     }
   }).then(function (response) {
-    // console.log(response);
     callback(response);
   }); // return response;
+};
+
+window.findChecker = function (x, y) {
+  var checker = window.table.querySelector(".checker[data-x=\"".concat(x, "\"][data-y=\"").concat(y, "\"]"));
+  return checker ? checker : false;
+};
+
+window.isPossible = function (element) {
+  return element.classList.contains('checker-col-possible');
 };
 
 window.selectChecker = function (element) {
@@ -36468,32 +36476,42 @@ window.selectChecker = function (element) {
     makeCheckerActive(element); // makes selected checker active and removes active class from the rest of the checker
 
     getPossibleMoves(checker.dataset.x, checker.dataset.y, function (response) {
-      console.log(response);
+      // console.log(response);
       removePossibleMovements();
       response.data.data.map(function (item) {
         var square = window.table.querySelector("div.checker-col[data-x=\"".concat(item.x, "\"][data-y=\"").concat(item.y, "\"]"));
         square.classList.add('checker-col-possible');
       });
+      window.moves = response.data.data;
     }); // 1. zingsnis, saskes paselektinimas
     // 2. turi vykti fetchas ir turi grazinti possible ejimus
     // 3 kai grazina possible ejimus uzdeda klases checker-col-possible
   } else {
     // square empty
     // 2. saskes permetimas, taciau permetam tik ten kur yra checker-col-possible
-    console.log(window.selectedChecker);
-    moveChecker(window.selectedChecker.dataset.x, window.selectedChecker.dataset.y, element.dataset.x, element.dataset.y, function () {
-      removePossibleMovements();
-      var activeChecker = window.table.querySelector('.checker-col-active'),
-          activeImg = activeChecker.querySelector('img');
-      img = document.createElement('img');
-      img.className = "checker";
-      img.src = activeImg.src;
-      img.dataset.x = element.dataset.x;
-      img.dataset.y = element.dataset.y;
-      activeChecker.classList.remove('checker-col-active');
-      activeImg.remove();
-      element.appendChild(img);
-    });
+    // console.log(window.selectedChecker);
+    if (isPossible(element)) {
+      // if square has class checker-col-possible then move it there
+      moveChecker(window.selectedChecker.dataset.x, window.selectedChecker.dataset.y, element.dataset.x, element.dataset.y, function (response) {
+        var data = response.data.data;
+
+        if (data !== null) {
+          findChecker(data.x, data.y).remove();
+        }
+
+        removePossibleMovements();
+        var activeChecker = window.table.querySelector('.checker-col-active'),
+            activeImg = activeChecker.querySelector('img');
+        img = document.createElement('img');
+        img.className = "checker";
+        img.src = activeImg.src;
+        img.dataset.x = element.dataset.x;
+        img.dataset.y = element.dataset.y;
+        activeChecker.classList.remove('checker-col-active');
+        activeImg.remove();
+        element.appendChild(img);
+      });
+    }
   }
 };
 

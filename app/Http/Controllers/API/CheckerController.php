@@ -33,15 +33,18 @@ class CheckerController extends Controller
       $game = Game::where('hash', $request->game_hash)->first();
 
       if($game) {
-        $checker = Checker::where('x', $request->x)
+        $checker = Checker::where('game_id', $game->id)
+                          ->where('x', $request->x)
                           ->where('y', $request->y)
+                          ->where('dead', 0)
                           ->first();
-                          
+
         if($checker) {
 
 
           $squares = $game->getAround($checker);
           $moves = $game->filterMoves($checker, $squares);
+          // dd($moves);
 
           $data['status'] = 200;
           $data['data'] = $moves;
@@ -53,6 +56,27 @@ class CheckerController extends Controller
       return response()->json($data);
     }
 
+    public function calcVector(array $from, array $to) {
+
+      $x = ($to['x'] - $from['x']) / 2;
+      $y = ($to['y'] - $from['y']) / 2;
+
+      return ['x' => $x, 'y' => $y];
+
+    }
+
+    public function calcEnemy($request) {
+      $vector = $this->calcVector(['x' => $request->x1,
+                                   'y' => $request->y1],
+                                  ['x' => $request->x2,
+                                  'y' => $request->y2]);
+
+      $x = $request->x1 + $vector['x'];
+      $y = $request->y1 + $vector['y'];
+
+      return ['x' => $x, 'y' => $y];
+    }
+
     public function move(Request $request) {
 
       $data = [ 'status' => 404,
@@ -62,16 +86,27 @@ class CheckerController extends Controller
       $game = Game::where('hash', $request->game_hash)->first();
 
       if($game) { // create issue in laravel
-        $checker = Checker::where('x', $request->x1)
+        $checker = Checker::where('game_id', $game->id)
+                          ->where('x', $request->x1)
                           ->where('y', $request->y1)
+                          ->where('dead', 0)
                           ->update([  'x' => $request->x2,
                                       'y' => $request->y2]);
-        // dd($checker);
-        // dd(Checker::update());
-        if($checker > 0) {
 
+
+
+
+        if($checker > 0) {
           $data['status'] = 200;
           $data['message'] = 'Checker succesfully moved';
+
+          $enemyLocation = $this->calcEnemy($request);
+          $enemy = Checker::where('x', $enemyLocation['x'])
+                            ->where('y', $enemyLocation['y'])
+                            ->update(['dead' => 1]);
+          if($enemy > 0) {
+            $data['data'] = $enemyLocation;
+          }
 
         }
       }

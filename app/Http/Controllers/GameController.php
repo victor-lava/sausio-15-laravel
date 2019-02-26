@@ -14,9 +14,28 @@ class GameController extends Controller
     public function show(string $hash) {
 
         $game = Game::where('hash', $hash)->first();
+        $isLogged = false;
+        $isPlaying = false;
+
+        if(Auth::user()) {
+          $isLogged = true;
+          if($game->firstPlayer->token === Auth::user()->token) {
+            $isPlaying = true;
+            $color = 0;
+          } elseif ($game->secondPlayer->token === Auth::user()->token) {
+            $isPlaying = true;
+            $color = 1;
+          }
+        }
+        
         $squares = $game->createGameTable();
 
-        return view('pages/game', compact('squares', 'hash'));
+
+        return view('pages/game', compact('squares',
+                                          'hash',
+                                          'isLogged',
+                                          'isPlaying',
+                                          'color'));
 
     }
 

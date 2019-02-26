@@ -35,4 +35,13 @@ class User extends Authenticatable
     public function histories() {
         return $this->hasMany('App\History');
     }
+
+    public function generateKey() {
+      do{
+         $this->token = str_random(60);
+      }
+      while($this->where('token', $this->token)->exists());
+      
+      $this->save();
+    }
 }

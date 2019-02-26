@@ -27,7 +27,7 @@
                         @php $x = $loop->index @endphp
                       <div id="{{ $squareColumn['id'] }}"
                            class="checker-col checker-col-{{ $squareColumn['color'] }}"
-                           @if($squareColumn['color'] === 'black')
+                           @if($squareColumn['color'] === 'black' && $isLogged === true && $isPlaying === true && ($squareColumn['checker'] !== false && $squareColumn['checker']->color === $color) || $squareColumn['checker'] === false)
                            onclick="selectChecker(this)"
                            @endif
                            data-x="{{ $x }}"
