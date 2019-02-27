@@ -104,9 +104,10 @@ class CheckerController extends Controller
           $enemy = Checker::where('x', $enemyLocation['x'])
                             ->where('y', $enemyLocation['y'])
                             ->update(['dead' => 1]);
-          if($enemy > 0) {
-            $data['data'] = $enemyLocation;
-          }
+
+          $data['data'] = [ 'x' => $request->x2,
+                            'y' => $request->y2,
+                            'enemy' => $enemy > 0 ? $enemyLocation : false];
 
         }
       }

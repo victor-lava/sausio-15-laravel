@@ -72,6 +72,34 @@ window.isPossible = function(element) {
   return element.classList.contains('checker-col-possible');
 }
 
+window.moveCheckerOnDOM = function(response) {
+  console.log(response);
+  let data = response.data.data;
+
+  if(data.enemy !== false) {
+    findChecker(data.enemy.x, data.enemy.y).remove();
+  }
+
+  removePossibleMovements();
+
+  let appendTo = window.table.querySelector(`.checker-col[data-x="${data.x}"][data-y="${data.y}"]`),
+      activeChecker = window.table.querySelector('.checker-col-active'),
+      activeImg = activeChecker.querySelector('img');
+
+      console.log(appendTo);
+      img = document.createElement('img');
+
+      img.className = "checker";
+      img.src = activeImg.src;
+      img.dataset.x = data.x;
+      img.dataset.y = data.y;
+
+  activeChecker.classList.remove('checker-col-active');
+  activeImg.remove();
+
+  appendTo.appendChild(img);
+}
+
 window.selectChecker = function(element) {
 
   let activeChecker = window.table.querySelector('.checker-col-active'),
@@ -111,28 +139,8 @@ window.selectChecker = function(element) {
             element.dataset.y,
             function(response) {
 
-              let data = response.data.data;
-
-              if(data !== null) {
-                findChecker(data.x, data.y).remove();
-              }
-
-              removePossibleMovements();
-
-              let activeChecker = window.table.querySelector('.checker-col-active'),
-                  activeImg = activeChecker.querySelector('img');
-
-                  img = document.createElement('img');
-
-                  img.className = "checker";
-                  img.src = activeImg.src;
-                  img.dataset.x = element.dataset.x;
-                  img.dataset.y = element.dataset.y;
-
-              activeChecker.classList.remove('checker-col-active');
-              activeImg.remove();
-
-              element.appendChild(img);
+              moveCheckerOnDOM(response);
+              
         })
 
     }

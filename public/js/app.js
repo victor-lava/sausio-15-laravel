@@ -36466,6 +36466,29 @@ window.isPossible = function (element) {
   return element.classList.contains('checker-col-possible');
 };
 
+window.moveCheckerOnDOM = function (response) {
+  console.log(response);
+  var data = response.data.data;
+
+  if (data.enemy !== false) {
+    findChecker(data.enemy.x, data.enemy.y).remove();
+  }
+
+  removePossibleMovements();
+  var appendTo = window.table.querySelector(".checker-col[data-x=\"".concat(data.x, "\"][data-y=\"").concat(data.y, "\"]")),
+      activeChecker = window.table.querySelector('.checker-col-active'),
+      activeImg = activeChecker.querySelector('img');
+  console.log(appendTo);
+  img = document.createElement('img');
+  img.className = "checker";
+  img.src = activeImg.src;
+  img.dataset.x = data.x;
+  img.dataset.y = data.y;
+  activeChecker.classList.remove('checker-col-active');
+  activeImg.remove();
+  appendTo.appendChild(img);
+};
+
 window.selectChecker = function (element) {
   var activeChecker = window.table.querySelector('.checker-col-active'),
       checker = element.querySelector('img');
@@ -36493,23 +36516,7 @@ window.selectChecker = function (element) {
     if (isPossible(element)) {
       // if square has class checker-col-possible then move it there
       moveChecker(window.selectedChecker.dataset.x, window.selectedChecker.dataset.y, element.dataset.x, element.dataset.y, function (response) {
-        var data = response.data.data;
-
-        if (data !== null) {
-          findChecker(data.x, data.y).remove();
-        }
-
-        removePossibleMovements();
-        var activeChecker = window.table.querySelector('.checker-col-active'),
-            activeImg = activeChecker.querySelector('img');
-        img = document.createElement('img');
-        img.className = "checker";
-        img.src = activeImg.src;
-        img.dataset.x = element.dataset.x;
-        img.dataset.y = element.dataset.y;
-        activeChecker.classList.remove('checker-col-active');
-        activeImg.remove();
-        element.appendChild(img);
+        moveCheckerOnDOM(response);
       });
     }
   }
@@ -36564,14 +36571,30 @@ if (token) {
  * for events that are broadcast by Laravel. Echo and event broadcasting
  * allows your team to easily build robust real-time web applications.
  */
+//
 // import Echo from 'laravel-echo'
+//
 // window.Pusher = require('pusher-js');
+//
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
 //     key: process.env.MIX_PUSHER_APP_KEY,
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+// window.Pusher.subscribe('my-channel');
+// channel.bind('my-event', function(data) {
+//   alert(JSON.stringify(data));
+// })
+// document.addEventListener('DOMContentLoaded', function() {
+//   window.Echo.channel('my-channel')
+//   .listen('my-event', (e) => {
+//     alert(e.name);
+//   });
+//
+// })
+// console.log(window.Echo);
+// alert('sdf');
 
 /***/ }),
 
