@@ -18,7 +18,7 @@
 
                 <div class="card-body">
 
-                  <div id="checkers" class="table" data-hash="{{ $hash }}">
+                  <div id="checkers" class="table" data-hash="{{ $hash }}" data-user="{{ Auth::user()->id }}" data-enemy="{{ $oponnentID }}">
 
                     @foreach($squares as $squareLine)
                       @php $y = $loop->index @endphp
@@ -68,10 +68,20 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   var channel = pusher.subscribe(window.table.dataset.hash);
-  channel.bind('move-checker', function(response) {
-    alert(JSON.stringify(response));
+  channel.bind('move-checker-'+window.table.dataset.user, function(response) {
+    // alert(JSON.stringify(response));
     console.log(response);
+
     window.moveCheckerOnDOM(response);
+
+    /* {
+"data": {
+"data": {
+"enemy":false,
+"from": {"x":2,"y":5}, "to": {"x":3,"y":4}
+}
+}
+} */
   })
   // alert('sdf');
 })

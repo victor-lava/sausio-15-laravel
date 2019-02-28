@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Checker;
 use App\Game;
+use App\Events\CheckerMoved;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -105,10 +106,13 @@ class CheckerController extends Controller
                             ->where('y', $enemyLocation['y'])
                             ->update(['dead' => 1]);
 
-          $data['data'] = [ 'x' => $request->x2,
-                            'y' => $request->y2,
+          $data['data'] = [ 'from' => ['x' => $request->x1,
+                                      'y' => $request->y1],
+                            'to' => ['x' => $request->x2,
+                                     'y' => $request->y2],
                             'enemy' => $enemy > 0 ? $enemyLocation : false];
 
+          event(new CheckerMoved($request->game_hash, $request->user_id, $data));
         }
       }
 

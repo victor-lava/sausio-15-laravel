@@ -16,18 +16,21 @@ class GameController extends Controller
         $game = Game::where('hash', $hash)->first();
         $isLogged = false;
         $isPlaying = false;
+        $oponnentID = false;
 
         if(Auth::user()) {
           $isLogged = true;
           if($game->firstPlayer->token === Auth::user()->token) {
             $isPlaying = true;
+            $oponnentID = $game->secondPlayer->id;
             $color = 0;
           } elseif ($game->secondPlayer->token === Auth::user()->token) {
             $isPlaying = true;
+            $oponnentID = $game->firstPlayer->id;
             $color = 1;
           }
         }
-        
+
         $squares = $game->createGameTable();
 
 
@@ -35,7 +38,8 @@ class GameController extends Controller
                                           'hash',
                                           'isLogged',
                                           'isPlaying',
-                                          'color'));
+                                          'color',
+                                          'oponnentID'));
 
     }
 

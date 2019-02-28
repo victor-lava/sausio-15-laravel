@@ -40,7 +40,7 @@ window.getPossibleMoves = function(x, y, callback) {
   let game_hash = window.table.dataset.hash;
 
   window.axios.get('/api/checker/moves', {
-    params: { game_hash, x, y }
+    params: { game_hash, x, y, user_id: window.table.dataset.enemy }
   })
   .then(function(response) {
       // console.log(response);
@@ -54,7 +54,7 @@ window.moveChecker = function(x1, y1, x2, y2, callback) {
   let game_hash = window.table.dataset.hash;
 
   window.axios.get('/api/checker/move', {
-    params: { game_hash, x1, y1, x2, y2 }
+    params: { game_hash, x1, y1, x2, y2, user_id: window.table.dataset.enemy }
   })
   .then(function(response) {
       callback(response);
@@ -82,20 +82,20 @@ window.moveCheckerOnDOM = function(response) {
 
   removePossibleMovements();
 
-  let appendTo = window.table.querySelector(`.checker-col[data-x="${data.x}"][data-y="${data.y}"]`),
-      activeChecker = window.table.querySelector('.checker-col-active'),
-      activeImg = activeChecker.querySelector('img');
+  let appendTo = window.table.querySelector(`.checker-col[data-x="${data.to.x}"][data-y="${data.to.y}"]`),
+      activeChecker = findChecker(data.from.x, data.from.y);
 
-      console.log(appendTo);
+      // console.log(appendTo);
+      console.log(activeChecker);
       img = document.createElement('img');
 
       img.className = "checker";
-      img.src = activeImg.src;
-      img.dataset.x = data.x;
-      img.dataset.y = data.y;
+      img.src = activeChecker.src;
+      img.dataset.x = data.to.x;
+      img.dataset.y = data.to.y;
 
-  activeChecker.classList.remove('checker-col-active');
-  activeImg.remove();
+  activeChecker.parentNode.classList.remove('checker-col-active');
+  activeChecker.remove();
 
   appendTo.appendChild(img);
 }
@@ -113,7 +113,7 @@ window.selectChecker = function(element) {
                       checker.dataset.y,
                       function(response) {
 
-      // console.log(response);
+      console.log(response);
       removePossibleMovements();
       response.data.data.map((item) => {
       let square = window.table.querySelector(`div.checker-col[data-x="${item.x}"][data-y="${item.y}"]`)
@@ -140,7 +140,7 @@ window.selectChecker = function(element) {
             function(response) {
 
               moveCheckerOnDOM(response);
-              
+
         })
 
     }

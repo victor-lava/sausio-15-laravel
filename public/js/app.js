@@ -36434,7 +36434,8 @@ window.getPossibleMoves = function (x, y, callback) {
     params: {
       game_hash: game_hash,
       x: x,
-      y: y
+      y: y,
+      user_id: window.table.dataset.enemy
     }
   }).then(function (response) {
     // console.log(response);
@@ -36450,7 +36451,8 @@ window.moveChecker = function (x1, y1, x2, y2, callback) {
       x1: x1,
       y1: y1,
       x2: x2,
-      y2: y2
+      y2: y2,
+      user_id: window.table.dataset.enemy
     }
   }).then(function (response) {
     callback(response);
@@ -36475,17 +36477,17 @@ window.moveCheckerOnDOM = function (response) {
   }
 
   removePossibleMovements();
-  var appendTo = window.table.querySelector(".checker-col[data-x=\"".concat(data.x, "\"][data-y=\"").concat(data.y, "\"]")),
-      activeChecker = window.table.querySelector('.checker-col-active'),
-      activeImg = activeChecker.querySelector('img');
-  console.log(appendTo);
+  var appendTo = window.table.querySelector(".checker-col[data-x=\"".concat(data.to.x, "\"][data-y=\"").concat(data.to.y, "\"]")),
+      activeChecker = findChecker(data.from.x, data.from.y); // console.log(appendTo);
+
+  console.log(activeChecker);
   img = document.createElement('img');
   img.className = "checker";
-  img.src = activeImg.src;
-  img.dataset.x = data.x;
-  img.dataset.y = data.y;
-  activeChecker.classList.remove('checker-col-active');
-  activeImg.remove();
+  img.src = activeChecker.src;
+  img.dataset.x = data.to.x;
+  img.dataset.y = data.to.y;
+  activeChecker.parentNode.classList.remove('checker-col-active');
+  activeChecker.remove();
   appendTo.appendChild(img);
 };
 
@@ -36499,7 +36501,7 @@ window.selectChecker = function (element) {
     makeCheckerActive(element); // makes selected checker active and removes active class from the rest of the checker
 
     getPossibleMoves(checker.dataset.x, checker.dataset.y, function (response) {
-      // console.log(response);
+      console.log(response);
       removePossibleMovements();
       response.data.data.map(function (item) {
         var square = window.table.querySelector("div.checker-col[data-x=\"".concat(item.x, "\"][data-y=\"").concat(item.y, "\"]"));
