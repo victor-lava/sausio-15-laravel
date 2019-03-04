@@ -18,28 +18,46 @@ class GameController extends Controller
         $isPlaying = false;
         $oponnentID = false;
 
-        if(Auth::user()) {
+        if($game->firstPlayer) {
+          $firstPlayer = $game->firstPlayer->id;
+        }
+
+        if($game->secondPlayer) {
+          $secondPlayer = $game->secondPlayer->id;
+        }
+
+
+      if(Auth::user()) {
+          if(Auth::user()->token === null) {
+            Auth::logout();
+            return redirect()->route('login');
+           }
+
           $isLogged = true;
+          $token = Auth::user()->token;
+
           if($game->firstPlayer->token === Auth::user()->token) {
             $isPlaying = true;
-            $oponnentID = $game->secondPlayer->id;
+            $myself = $game->firstPlayer->id;
             $color = 0;
           } elseif ($game->secondPlayer->token === Auth::user()->token) {
             $isPlaying = true;
-            $oponnentID = $game->firstPlayer->id;
+            $myself = $game->secondPlayer->id;
             $color = 1;
           }
         }
 
         $squares = $game->createGameTable();
 
-
         return view('pages/game', compact('squares',
                                           'hash',
                                           'isLogged',
                                           'isPlaying',
                                           'color',
-                                          'oponnentID'));
+                                          'firstPlayer',
+                                          'secondPlayer',
+                                          'myself',
+                                          'token'));
 
     }
 

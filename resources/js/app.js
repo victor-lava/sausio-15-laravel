@@ -54,7 +54,7 @@ window.moveChecker = function(x1, y1, x2, y2, callback) {
   let game_hash = window.table.dataset.hash;
 
   window.axios.get('/api/checker/move', {
-    params: { game_hash, x1, y1, x2, y2, user_id: window.table.dataset.enemy }
+    params: { game_hash, x1, y1, x2, y2, token: window.table.dataset.token }
   })
   .then(function(response) {
       callback(response);

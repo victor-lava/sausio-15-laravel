@@ -18,7 +18,16 @@
 
                 <div class="card-body">
 
-                  <div id="checkers" class="table" data-hash="{{ $hash }}" data-user="{{ Auth::user()->id }}" data-enemy="{{ $oponnentID }}">
+                  <div id="checkers"
+                      class="table"
+                      data-hash="{{ $hash }}"
+                      data-first="{{ $firstPlayer }}"
+                      data-second="{{ $secondPlayer }}"
+                      @if(isset($myself))
+                      data-token="{{ $token }}"
+                      data-myself="{{ $myself }}"
+                      @endif
+                  >
 
                     @foreach($squares as $squareLine)
                       @php $y = $loop->index @endphp
@@ -62,19 +71,44 @@
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function() {
 
+  let first = window.table.dataset.first,
+      second = window.table.dataset.second,
+      myself = false;
+
+    if(window.table.dataset.myself) { myself = window.table.dataset.myself; }
+
+    console.log(myself);
+
   var pusher = new Pusher('a4784a4451c0de4372ac', {
     cluster: 'eu',
     forceTLS: true
   });
-
   var channel = pusher.subscribe(window.table.dataset.hash);
-  channel.bind('move-checker-'+window.table.dataset.user, function(response) {
-    // alert(JSON.stringify(response));
-    console.log(response);
 
-    window.moveCheckerOnDOM(response);
+  if(myself === false) { // watching, both channels
+    channel.bind('move-checker-'+first, function(response) {
+      window.moveCheckerOnDOM(response);
+    })
 
-    /* {
+    channel.bind('move-checker-'+second, function(response) {
+      window.moveCheckerOnDOM(response);
+    })
+
+  } else { // playing, watching only one channel
+
+    let enemy;
+
+    if(myself === first) { enemy = second; }
+    else { enemy = first; }
+
+    channel.bind('move-checker-'+enemy, function(response) {
+      // alert(JSON.stringify(response));
+      console.log(response);
+      window.moveCheckerOnDOM(response);
+    })
+  }
+
+  /* {
 "data": {
 "data": {
 "enemy":false,
@@ -82,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 }
 } */
-  })
   // alert('sdf');
 })
 </script>

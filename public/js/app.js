@@ -36452,7 +36452,7 @@ window.moveChecker = function (x1, y1, x2, y2, callback) {
       y1: y1,
       x2: x2,
       y2: y2,
-      user_id: window.table.dataset.enemy
+      token: window.table.dataset.token
     }
   }).then(function (response) {
     callback(response);
