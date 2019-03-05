@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'gravatar_url', 'location', 'token'
     ];
 
     /**
@@ -41,7 +41,7 @@ class User extends Authenticatable
          $this->token = str_random(60);
       }
       while($this->where('token', $this->token)->exists());
-      
+
       $this->save();
     }
 }
