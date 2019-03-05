@@ -87,11 +87,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if(myself === false) { // watching, both channels
     channel.bind('move-checker-'+first, function(response) {
-      window.moveCheckerOnDOM(response);
+      window.moveCheckerOnDOM(response, true);
     })
 
     channel.bind('move-checker-'+second, function(response) {
-      window.moveCheckerOnDOM(response);
+      window.moveCheckerOnDOM(response, true);
     })
 
   } else { // playing, watching only one channel
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
     channel.bind('move-checker-'+enemy, function(response) {
       // alert(JSON.stringify(response));
       console.log(response);
-      window.moveCheckerOnDOM(response);
+      window.moveCheckerOnDOM(response, true);
     })
   }
 

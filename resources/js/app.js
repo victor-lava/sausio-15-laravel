@@ -72,8 +72,8 @@ window.isPossible = function(element) {
   return element.classList.contains('checker-col-possible');
 }
 
-window.moveCheckerOnDOM = function(response) {
-  console.log(response);
+window.moveCheckerOnDOM = function(response, broadcasted = false) {
+  //console.log(response);
   let data = response.data.data;
 
   if(data.enemy !== false) {
@@ -85,8 +85,11 @@ window.moveCheckerOnDOM = function(response) {
   let appendTo = window.table.querySelector(`.checker-col[data-x="${data.to.x}"][data-y="${data.to.y}"]`),
       activeChecker = findChecker(data.from.x, data.from.y);
 
+
+    (broadcasted) ? appendTo.removeAttribute('onclick') : '';
+
       // console.log(appendTo);
-      console.log(activeChecker);
+    //  console.log(activeChecker);
       img = document.createElement('img');
 
       img.className = "checker";
@@ -113,7 +116,7 @@ window.selectChecker = function(element) {
                       checker.dataset.y,
                       function(response) {
 
-      console.log(response);
+      //console.log(response);
       removePossibleMovements();
       response.data.data.map((item) => {
       let square = window.table.querySelector(`div.checker-col[data-x="${item.x}"][data-y="${item.y}"]`)
