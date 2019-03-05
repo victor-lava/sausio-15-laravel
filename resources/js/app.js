@@ -63,6 +63,19 @@ window.moveChecker = function(x1, y1, x2, y2, callback) {
   // return response;
 }
 
+window.joinGame = function(color, user_id) {
+  let game_hash = window.table.dataset.hash;
+
+  window.axios.get('/api/game/join', {
+    params: { game_hash, color, user_id }
+  })
+  .then(function(response) {
+      callback(response);
+  });
+
+  // return response;
+}
+
 window.findChecker = function(x, y) {
   let checker = window.table.querySelector(`.checker[data-x="${x}"][data-y="${y}"]`);
   return checker ? checker : false;

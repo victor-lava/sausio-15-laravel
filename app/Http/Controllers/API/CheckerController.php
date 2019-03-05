@@ -96,6 +96,7 @@ class CheckerController extends Controller
                 'data' => null ];
 
       $game = Game::where('hash', $request->game_hash)->first();
+              
 
       // dd($request->token);
       if($this->validateToken($request->token)) {

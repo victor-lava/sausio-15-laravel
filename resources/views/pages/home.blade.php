@@ -35,6 +35,7 @@
                                 <tr>
                                   <th scope="row">{{ $loop->iteration }}</th>
                                   <td>
+                                      @if($game->firstPlayer)
                                       <a href="{{ route('user', $game->firstPlayer->id) }}">
                                           {{ $game->firstPlayer->name }}
                                       </a>
@@ -42,6 +43,7 @@
                                                 ['className' => 'light' ])
                                             {{ $game->firstPlayer->statistic->getPlayed() }}
                                       @endcomponent
+                                      @endif
                                      </br>
                                      @if($game->secondPlayer)
                                          <a href="{{ route('user', $game->secondPlayer->id) }}">

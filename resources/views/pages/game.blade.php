@@ -61,6 +61,13 @@
                   </div>
                 </div>
             </div>
+
+            @if(!Auth::guest())
+            <div class="">
+                <a href="#" onclick="joinGame('white', {{ Auth::user()->id }})">Join White</a>
+                <a href="#" onclick="joinGame('black', {{ Auth::user()->id }})">Join Black</a>
+            </div>
+            @endif
         </div>
     </div>
 </div>

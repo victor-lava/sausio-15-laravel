@@ -36459,6 +36459,19 @@ window.moveChecker = function (x1, y1, x2, y2, callback) {
   }); // return response;
 };
 
+window.joinGame = function (color, user_id) {
+  var game_hash = window.table.dataset.hash;
+  window.axios.get('/api/game/join', {
+    params: {
+      game_hash: game_hash,
+      color: color,
+      user_id: user_id
+    }
+  }).then(function (response) {
+    callback(response);
+  }); // return response;
+};
+
 window.findChecker = function (x, y) {
   var checker = window.table.querySelector(".checker[data-x=\"".concat(x, "\"][data-y=\"").concat(y, "\"]"));
   return checker ? checker : false;

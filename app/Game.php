@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Game extends Model
 {
+
+    protected $fillable = [
+        'first_user_id', 'second_user_id'
+    ];
+
     public $className;
     public $name;
 

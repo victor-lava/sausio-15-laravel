@@ -18,6 +18,9 @@ class GameController extends Controller
         $isPlaying = false;
         $oponnentID = false;
 
+        $firstPlayer = false;
+        $secondPlayer = false;
+
         if($game->firstPlayer) {
           $firstPlayer = $game->firstPlayer->id;
         }
@@ -36,11 +39,11 @@ class GameController extends Controller
           $isLogged = true;
           $token = Auth::user()->token;
 
-          if($game->firstPlayer->token === Auth::user()->token) {
+          if($game->firstPlayer && $game->firstPlayer->token === Auth::user()->token) {
             $isPlaying = true;
             $myself = $game->firstPlayer->id;
             $color = 0;
-          } elseif ($game->secondPlayer->token === Auth::user()->token) {
+          } elseif ($game->secondPlayer && $game->secondPlayer->token === Auth::user()->token) {
             $isPlaying = true;
             $myself = $game->secondPlayer->id;
             $color = 1;
