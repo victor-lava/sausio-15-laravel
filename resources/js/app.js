@@ -63,7 +63,7 @@ window.moveChecker = function(x1, y1, x2, y2, callback) {
   // return response;
 }
 
-window.joinGame = function(color, user_id) {
+window.joinGame = function(color, user_id, callback) {
   let game_hash = window.table.dataset.hash;
 
   window.axios.get('/api/game/join', {
@@ -74,6 +74,50 @@ window.joinGame = function(color, user_id) {
   });
 
   // return response;
+}
+
+window.toggleBadge = function(wrapper, username) {
+
+  let white = wrapper.querySelector('.join-white .badge'),
+      black = wrapper.querySelector('.join-black .badge');
+
+      if(white.classList.contains('badge-warning')) {
+        white.classList.remove('badge-warning')
+        white.classList.add('badge-success');
+        white.innerHTML = username;
+        // window.toggleBadge(document.querySelector('#join-game'), 'empty');
+      } else {
+        white.classList.remove('badge-success')
+        white.classList.add('badge-warning');
+        white.innerHTML = 'empty';
+      }
+
+      if(black.classList.contains('badge-warning')) {
+        black.classList.remove('badge-warning');
+        black.classList.add('badge-success');
+        black.innerHTML = username;
+        // window.toggleBadge(document.querySelector('#join-game'), 'empty');
+      } else {
+        black.classList.remove('badge-success')
+        black.classList.add('badge-warning');
+        black.innerHTML = 'empty';
+      }
+
+}
+
+window.joinGameOnDOM = function(response, broadcasted = false) {
+   // console.log(response);
+   let data = response.data;
+   if(data.status === 200) { // can join
+     let joinDiv = document.querySelector('#join-game');
+
+      
+         if(data.data.seated == 'white' ||
+            data.data.seated == 'black') {
+           toggleBadge(joinDiv, data.data.seated_user);
+         }
+
+   }
 }
 
 window.findChecker = function(x, y) {

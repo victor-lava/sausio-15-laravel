@@ -22,11 +22,11 @@ class GameController extends Controller
         $secondPlayer = false;
 
         if($game->firstPlayer) {
-          $firstPlayer = $game->firstPlayer->id;
+          $firstPlayer = $game->firstPlayer;
         }
 
         if($game->secondPlayer) {
-          $secondPlayer = $game->secondPlayer->id;
+          $secondPlayer = $game->secondPlayer;
         }
 
 

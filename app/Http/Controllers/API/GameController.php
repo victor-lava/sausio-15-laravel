@@ -37,6 +37,9 @@ class GameController extends Controller
                 $game->update(['second_user_id' => null]);
               }
 
+              $game->seated = 'white';
+              $game->seated_user = $game->firstPlayer->name;
+
           } elseif ($request->color === 'black' &&
                     $game->second_user_id === null) {
 
@@ -47,6 +50,9 @@ class GameController extends Controller
              if($game->first_user_id === (int) $request->user_id) {
                $game->update(['first_user_id' => null]);
              }
+
+             $game->seated = 'black';
+             $game->seated_user = $game->secondPlayer->name;
           }
 
           $data['status'] = ($joined) ? 200 : 400;

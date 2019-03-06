@@ -12,7 +12,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-12">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header">Game</div>
 
@@ -21,8 +21,12 @@
                   <div id="checkers"
                       class="table"
                       data-hash="{{ $hash }}"
-                      data-first="{{ $firstPlayer }}"
-                      data-second="{{ $secondPlayer }}"
+                      @if($firstPlayer)
+                      data-first="{{ $firstPlayer->id }}"
+                      @endif
+                      @if($secondPlayer)
+                      data-second="{{ $secondPlayer->id }}"
+                      @endif
                       @if(isset($myself))
                       data-token="{{ $token }}"
                       data-myself="{{ $myself }}"
@@ -61,13 +65,32 @@
                   </div>
                 </div>
             </div>
-
-            @if(!Auth::guest())
-            <div class="">
-                <a href="#" onclick="joinGame('white', {{ Auth::user()->id }})">Join White</a>
-                <a href="#" onclick="joinGame('black', {{ Auth::user()->id }})">Join Black</a>
+        </div>
+        <div class="col-md-4">
+          @if(!Auth::guest())
+          <div id="join-game" class="row">
+            <div class="col-md-6 join-white">
+              @if($firstPlayer)
+              <span class="badge badge-success">{{ $firstPlayer->name }}</span></br>
+              @else
+              <span class="badge badge-warning">Empty</span></br>
+              @endif
+              <button class="btn btn-secondary" onclick="joinGame('white',
+                                                                {{ Auth::user()->id }},
+                                                                joinGameOnDOM)">Join White</button>
             </div>
-            @endif
+            <div class="col-md-6 join-black">
+              @if($secondPlayer)
+              <span class="badge badge-success">{{ $secondPlayer->name }}</span></br>
+              @else
+              <span class="badge badge-warning">Empty</span></br>
+              @endif
+              <button class="btn btn-dark" onclick="joinGame('black',
+                                                          {{ Auth::user()->id }},
+                                                          joinGameOnDOM)">Join Black</button>
+            </div>
+          </div>
+          @endif
         </div>
     </div>
 </div>
