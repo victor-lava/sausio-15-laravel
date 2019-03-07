@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Game;
+use App\Checker;
 
 class GameController extends Controller
 {
@@ -24,7 +25,9 @@ class GameController extends Controller
 
       if($game) {
         // dd($game);
-         $joined = false;
+          $joined = false;
+          $jsData = ['seated' => null, 'seated_user' => null];
+
           if( $request->color === 'white' &&
               $game->first_user_id === null) { // empty seat
 
@@ -37,8 +40,8 @@ class GameController extends Controller
                 $game->update(['second_user_id' => null]);
               }
 
-              $game->seated = 'white';
-              $game->seated_user = $game->firstPlayer->name;
+              $jsData['seated'] = 'white';
+              $jsData['seated_user'] = $game->firstPlayer->name;
 
           } elseif ($request->color === 'black' &&
                     $game->second_user_id === null) {
@@ -51,9 +54,28 @@ class GameController extends Controller
                $game->update(['first_user_id' => null]);
              }
 
-             $game->seated = 'black';
-             $game->seated_user = $game->secondPlayer->name;
+             $jsData['seated'] = 'black';
+             $jsData['seated_user'] = $game->secondPlayer->name;
           }
+
+          if($game->first_user_id !== null &&
+             $game->second_user_id !== null) { // game is starting
+
+
+               $game->update(['status' => 1,
+                              'started_at' => date('Y-m-d H:i:s', time())]);
+
+               Checker::where('game_id', $game->id)
+                          ->where('color', 0)
+                          ->update(['user_id' => $game->first_user_id]);
+
+               Checker::where('game_id', $game->id)
+                           ->where('color', 1)
+                           ->update(['user_id' => $game->second_user_id]);
+
+          }
+
+          $game->js = $jsData;
 
           $data['status'] = ($joined) ? 200 : 400;
           $data['data'] = $game;

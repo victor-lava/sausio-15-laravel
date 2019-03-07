@@ -111,7 +111,7 @@ window.joinGameOnDOM = function(response, broadcasted = false) {
    if(data.status === 200) { // can join
      let joinDiv = document.querySelector('#join-game');
 
-      
+
          if(data.data.seated == 'white' ||
             data.data.seated == 'black') {
            toggleBadge(joinDiv, data.data.seated_user);
@@ -130,7 +130,7 @@ window.isPossible = function(element) {
 }
 
 window.moveCheckerOnDOM = function(response, broadcasted = false) {
-  //console.log(response);
+  console.log(response);
   let data = response.data.data;
 
   if(data.enemy !== false) {

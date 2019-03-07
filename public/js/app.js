@@ -36523,7 +36523,7 @@ window.isPossible = function (element) {
 
 window.moveCheckerOnDOM = function (response) {
   var broadcasted = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-  //console.log(response);
+  console.log(response);
   var data = response.data.data;
 
   if (data.enemy !== false) {
@@ -36673,8 +36673,8 @@ if (token) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/viktoras/Code/Homestead/talents/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/viktoras/Code/Homestead/talents/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/vagrant/code/talents/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/vagrant/code/talents/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

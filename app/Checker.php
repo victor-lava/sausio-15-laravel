@@ -16,7 +16,7 @@ class Checker extends Model
                                     int $y,
                                     int $x,
                                     int $color,
-                                    int $user_id) {
+                                    $user_id) {
         $checker = new Checker();
         $checker->game_id = $game_id;
         $checker->user_id = $user_id;

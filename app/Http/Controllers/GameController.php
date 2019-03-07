@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Game;
 use App\User;
+use App\Checker;
 
 class GameController extends Controller
 {
@@ -29,7 +30,7 @@ class GameController extends Controller
           $secondPlayer = $game->secondPlayer;
         }
 
-
+    
       if(Auth::user()) {
           if(Auth::user()->token === null) {
             Auth::logout();
@@ -78,15 +79,31 @@ class GameController extends Controller
                          ->first();
 
 
-        if(!$gameFound) {
+        // if(!$gameFound) {
             $game = new Game();
             $game->first_user_id = Auth::user()->id;
             $game->hash = md5($game->first_user_id . time());
             $game->save();
             $gameHash = $game->hash;
-        } else {
-            $gameHash = $gameFound->hash;
-        }
+
+            $checker = new Checker();
+
+            for ($y = 7; $y >= 5; $y--) { // white
+                for ($x = 7; $x >= 0; $x--) {
+                    $checker->createChecker($game->id, $y, $x, 0, null);
+                }
+            }
+
+            for ($y = 0; $y <= 2; $y++) { // black
+                for ($x = 0; $x <= 7; $x++) {
+                    $checker->createChecker($game->id, $y, $x, 1, null);
+                }
+            }
+
+
+        // } else {
+            // $gameHash = $gameFound->hash;
+        // }
 
         return redirect()->route('game.show', $gameHash);
     }

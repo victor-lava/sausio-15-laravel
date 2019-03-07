@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Checker;
 use App\Game;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Events\CheckerMoved;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -33,6 +33,7 @@ class CheckerController extends Controller
                 'data' => null ];
 
       $game = Game::where('hash', $request->game_hash)->first();
+      // dd($game);
 
       if($game) {
         $checker = Checker::where('game_id', $game->id)
@@ -81,6 +82,7 @@ class CheckerController extends Controller
 
     public function validateToken(string $token): bool {
         $isValid = false;
+          // dd($token);
         if( Auth::user() &&
             $token === Auth::user()->token) {
           $isValid = true;
@@ -96,10 +98,13 @@ class CheckerController extends Controller
                 'data' => null ];
 
       $game = Game::where('hash', $request->game_hash)->first();
-              
+
 
       // dd($request->token);
+      // dd($request->token);
+      // dd(Auth::user());
       if($this->validateToken($request->token)) {
+        // dd('asd');
         if($game) { // create issue in laravel
           $checker = Checker::where('game_id', $game->id)
                             ->where('x', $request->x1)
@@ -113,6 +118,7 @@ class CheckerController extends Controller
 
 
 
+                                        // dd(Auth::user()->id);
           if($checker > 0) {
             $data['status'] = 200;
             $data['message'] = 'Checker succesfully moved';
@@ -129,6 +135,8 @@ class CheckerController extends Controller
                               'to' => ['x' => $request->x2,
                                        'y' => $request->y2],
                               'enemy' => $enemy > 0 ? $enemyLocation : false];
+
+            // Tikrinti kiek saskiu liko pas priesininka, jei neliko tai siusti data jog laimejo
 
             event(new CheckerMoved($request->game_hash, Auth::user()->id, $data));
           }
