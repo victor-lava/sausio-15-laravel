@@ -35,6 +35,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/checker.css') }}" rel="stylesheet">
+    @yield('scripts')
 </head>
 <body>
     <div id="app">
@@ -82,8 +83,8 @@
                                                                  Logout
                                 @endcomponent --}}
 
-                                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                class="btn btn-primary btn-lg">
+                                <a class="btn btn-primary btn-lg"
+                                    href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     Logout
                                 </a>
 
@@ -114,7 +115,7 @@
         </main>
 
         <footer>
-            <p>Mano footeris</p>
+
         </footer>
     </div>
 </body>

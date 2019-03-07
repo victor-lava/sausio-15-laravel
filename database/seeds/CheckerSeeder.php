@@ -19,13 +19,13 @@ class CheckerSeeder extends Seeder
 
             for ($y = 0; $y <= 2; $y++) { // black
                 for ($x = 0; $x <= 7; $x++) {
-                    $this->createChecker($b, $y, $x, 1, 1);
+                    $this->createChecker($b, $y, $x, 1, 2);
                 }
             }
 
             for ($y = 7; $y >= 5; $y--) { // white
                 for ($x = 7; $x >= 0; $x--) {
-                    $this->createChecker($b, $y, $x, 0, 2);
+                    $this->createChecker($b, $y, $x, 0, 1);
                 }
             }
 

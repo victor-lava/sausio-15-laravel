@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Checker;
 use App\Game;
+use Illuminate\Support\Facades\Auth;
+use App\Events\CheckerMoved;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -44,31 +46,63 @@ class CheckerController extends Controller
                 'message' => 'Not found',
                 'data' => null ];
 
-      $game = Game::where('hash', $request->game_hash)
-                    ->where('status', 1)
-                    ->first();
+      $game = Game::where('hash', $request->game_hash)->first();
+      // dd($game);
 
-      $isValidUser = $this->validateUser($game, $request->auth_hash);
-      // dd($isValidUser);
-      if($game && $isValidUser) {
+      if($game) {
         $checker = Checker::where('game_id', $game->id)
                           ->where('x', $request->x)
                           ->where('y', $request->y)
-                          ->where('user_id', $isValidUser->id)
                           ->where('dead', 0)
                           ->first();
+
         if($checker) {
-          $moves = $game->getMoves($checker);
+
+
+          $squares = $game->getAround($checker);
+          $moves = $game->filterMoves($checker, $squares);
           // dd($moves);
+
           $data['status'] = 200;
           $data['data'] = $moves;
-
-          $data['message'] = count($moves) > 0 ? 'Found some possible movements' : 'No possible movements found';
+          $data['message'] = count($moves) > 0 ? 'Found some possibilities' : 'No moves found';
 
         }
       }
 
       return response()->json($data);
+    }
+
+    public function calcVector(array $from, array $to) {
+
+      $x = ($to['x'] - $from['x']) / 2;
+      $y = ($to['y'] - $from['y']) / 2;
+
+      return ['x' => $x, 'y' => $y];
+
+    }
+
+    public function calcEnemy($request) {
+      $vector = $this->calcVector(['x' => $request->x1,
+                                   'y' => $request->y1],
+                                  ['x' => $request->x2,
+                                  'y' => $request->y2]);
+
+      $x = $request->x1 + $vector['x'];
+      $y = $request->y1 + $vector['y'];
+
+      return ['x' => $x, 'y' => $y];
+    }
+
+    public function validateToken(string $token): bool {
+        $isValid = false;
+          // dd($token);
+        if( Auth::user() &&
+            $token === Auth::user()->token) {
+          $isValid = true;
+        }
+
+        return $isValid;
     }
 
     public function move(Request $request) {
@@ -81,50 +115,44 @@ class CheckerController extends Controller
                   ->where('status', 1)
                   ->first();
 
-      $isValidUser = $this->validateUser($game, $request->auth_hash);
 
-      if($game && $isValidUser) {
+      if($this->validateToken($request->token)) {
+        // dd('asd');
+        if($game) { // create issue in laravel
+          $checker = Checker::where('game_id', $game->id)
+                            ->where('x', $request->x1)
+                            ->where('y', $request->y1)
+                            ->where('user_id', Auth::user()->id)
+                            ->where('dead', 0)
+                            ->update([  'x' => $request->x2,
+                                        'y' => $request->y2]);
 
-        $checker = Checker::where('game_id', $game->id)
-                          ->where('x', $request->x1)
-                          ->where('y', $request->y1)
-                          ->where('user_id', $isValidUser->id)
-                          ->where('dead', 0)
-                          ->update([  'x' => $request->x2,
-                                      'y' => $request->y2]);
 
+          if($checker > 0) {
+            $data['status'] = 200;
+            $data['message'] = 'Checker succesfully moved';
 
-        // dd(Checker::update());
-        if($checker > 0) {
+            $enemyLocation = $this->calcEnemy($request);
+            $enemy = Checker::where('game_id', $game->id)
+                              ->where('x', $enemyLocation['x'])
+                              ->where('y', $enemyLocation['y'])
+                              ->where('user_id', '!=', Auth::user()->id)
+                              ->update(['dead' => 1]);
 
-          $data['status'] = 200;
-          $data['message'] = 'Checker succesfully moved';
-          $data['data'] = $checker;
+            $data['data'] = [ 'from' => ['x' => $request->x1,
+                                        'y' => $request->y1],
+                              'to' => ['x' => $request->x2,
+                                       'y' => $request->y2],
+                              'enemy' => $enemy > 0 ? $enemyLocation : false];
 
-          if($request->fight === 'true') {
-            $movementVector = $game->calcVector(
-                                                ['x' => $request->x1,
-                                                 'y' => $request->y1
-                                                ],
-                                                ['x' => $request->x2,
-                                                 'y' => $request->y2
-                                                ],
-                                                2);
+            // Tikrinti kiek saskiu liko pas priesininka, jei neliko tai siusti data jog laimejo
 
-            $enemyCoords = $game->calcEnemyCoordinatesBetween(
-              ['x' => $request->x1,
-               'y' => $request->y1],
-               $movementVector);
-
-            Checker::where('x', $enemyCoords['x'])
-                    ->where('y', $enemyCoords['y'])
-                    ->update(['dead' => 1]);
-
+            event(new CheckerMoved($request->game_hash, Auth::user()->id, $data));
           }
-
         }
 
       }
+
 
       return response()->json($data);
     }

@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'gravatar_url', 'location', 'token'
     ];
 
     /**
@@ -25,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'token'
     ];
 
     public function statistic() {
@@ -36,10 +36,11 @@ class User extends Authenticatable
         return $this->hasMany('App\History');
     }
 
-    public function rollApiKey(){
-     do {
-        $this->token = str_random(60);
-     } while($this->where('token', $this->token)->exists());
+    public function generateKey() {
+      do{
+         $this->token = str_random(60);
+      }
+      while($this->where('token', $this->token)->exists());
 
       $this->save();
     }

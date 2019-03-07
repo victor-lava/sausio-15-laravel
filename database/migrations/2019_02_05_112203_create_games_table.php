@@ -15,7 +15,7 @@ class CreateGamesTable extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('first_user_id');
+            $table->unsignedInteger('first_user_id')->nullable();
             $table->unsignedInteger('second_user_id')->nullable();
             $table->string('hash');
             $table->datetime('started_at')->nullable(); // pakeisit į datetimestamp, imti lentos sukūrimo momentą ir lyginti su dabartniu laiku ir taip išskaičiuoti trukmę

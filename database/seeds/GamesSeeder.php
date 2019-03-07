@@ -17,7 +17,7 @@ class GamesSeeder extends Seeder
 
         $count = User::count();
 
-        foreach (range(0,5) as $number) {
+        foreach (range(0,0) as $number) {
 
             $first_id = $faker->numberBetween(1, $count);
             $second_id = $faker->numberBetween(1, $count);
@@ -27,11 +27,11 @@ class GamesSeeder extends Seeder
             }
 
             $game = new Game();
-            $game->first_user_id = $first_id;
-            $game->second_user_id = $second_id;
+            $game->first_user_id = 1;
+            $game->second_user_id = 2;
             $game->hash = md5($game->first_user_id . time());
             $game->started_at = $faker->time('Y-m-d H:i:s');
-            $game->status = $faker->numberBetween(0, 2);
+            $game->status = 0;
             $game->save();
         }
     }

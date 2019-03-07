@@ -16,12 +16,12 @@ class CreateCheckersTable extends Migration
         Schema::create('checkers', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('game_id');
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->nullable();
             $table->integer('x')->nullable();
             $table->integer('y')->nullable();
             $table->boolean('color'); // 0 - white, 1 - black
             $table->boolean('type')->default(0); // 0 - simple, 1 - queen
-            $table->boolean('dead')->default(0); // 0 - alive
+            $table->boolean('dead')->default(0); // 0 - alive, 1 - dead
 
             $table->foreign('game_id')->references('id')->on('games');
             $table->foreign('user_id')->references('id')->on('users');

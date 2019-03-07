@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Game;
 use App\User;
+use App\Checker;
 
 class GameController extends Controller
 {
@@ -17,25 +18,53 @@ class GameController extends Controller
         $authHash = false;
         $color = false;
         $game = Game::where('hash', $hash)->first();
+        $isLogged = false;
+        $isPlaying = false;
+        $oponnentID = false;
 
-        // dd($squares);
-        // dd($game->firstPlayer->checker);
+        $firstPlayer = false;
+        $secondPlayer = false;
 
-        if(Auth::user()) { // logged in
+        if($game->firstPlayer) {
+          $firstPlayer = $game->firstPlayer;
+        }
+
+        if($game->secondPlayer) {
+          $secondPlayer = $game->secondPlayer;
+        }
+
+
+      if(Auth::user()) {
+          if(Auth::user()->token === null) {
+            Auth::logout();
+            return redirect()->route('login');
+           }
+
+          $isLogged = true;
           $token = Auth::user()->token;
 
-          if($token === $game->firstPlayer->token) {
-            $authHash = $token;
-            $color = 0; // white
-          } elseif ($token === $game->secondPlayer->token) {
-            $authHash = $token;
-            $color = 1; // black
+          if($game->firstPlayer && $game->firstPlayer->token === Auth::user()->token) {
+            $isPlaying = true;
+            $myself = $game->firstPlayer->id;
+            $color = 0;
+          } elseif ($game->secondPlayer && $game->secondPlayer->token === Auth::user()->token) {
+            $isPlaying = true;
+            $myself = $game->secondPlayer->id;
+            $color = 1;
           }
         }
 
-        // dd($color . ' ' . $authHash);
-        $squares = $game->createGameTable($authHash, $color);
-        return view('pages/game', compact('hash', 'squares', 'authHash'));
+        $squares = $game->createGameTable();
+
+        return view('pages/game', compact('squares',
+                                          'hash',
+                                          'isLogged',
+                                          'isPlaying',
+                                          'color',
+                                          'firstPlayer',
+                                          'secondPlayer',
+                                          'myself',
+                                          'token'));
 
     }
 
@@ -53,15 +82,31 @@ class GameController extends Controller
                          ->first();
 
 
-        if(!$gameFound) {
+        // if(!$gameFound) {
             $game = new Game();
             $game->first_user_id = Auth::user()->id;
             $game->hash = md5($game->first_user_id . time());
             $game->save();
             $gameHash = $game->hash;
-        } else {
-            $gameHash = $gameFound->hash;
-        }
+
+            $checker = new Checker();
+
+            for ($y = 7; $y >= 5; $y--) { // white
+                for ($x = 7; $x >= 0; $x--) {
+                    $checker->createChecker($game->id, $y, $x, 0, null);
+                }
+            }
+
+            for ($y = 0; $y <= 2; $y++) { // black
+                for ($x = 0; $x <= 7; $x++) {
+                    $checker->createChecker($game->id, $y, $x, 1, null);
+                }
+            }
+
+
+        // } else {
+            // $gameHash = $gameFound->hash;
+        // }
 
         return redirect()->route('game.show', $gameHash);
     }
