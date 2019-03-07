@@ -44,16 +44,18 @@ class GameController extends Controller
           $token = Auth::user()->token;
 
           if($game->firstPlayer && $game->firstPlayer->token === Auth::user()->token) {
-            $isPlaying = true;
+            // $isPlaying = true;
             $myself = $game->firstPlayer->id;
             $color = 0;
           } elseif ($game->secondPlayer && $game->secondPlayer->token === Auth::user()->token) {
-            $isPlaying = true;
+            // $isPlaying = true;
             $myself = $game->secondPlayer->id;
             $color = 1;
           }
         }
 
+        $isPlaying = $game->isPlaying();
+        // dd($isPlaying);
         $squares = $game->createGameTable($token, $color);
 
         return view('pages/game', compact('squares',
@@ -96,7 +98,7 @@ class GameController extends Controller
                     $checker->createChecker($game->id, $y, $x, 0, null);
                 }
             }
-            
+
             for ($y = 0; $y <= 2; $y++) { // black
                 for ($x = 0; $x <= 7; $x++) {
                     $checker->createChecker($game->id, $y, $x, 1, null);

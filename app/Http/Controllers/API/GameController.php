@@ -28,57 +28,26 @@ class GameController extends Controller
                     ->where('status', 0)
                     ->first();
       //
-      if( $game &&
-          $game->validateRequest($request->auth_hash)) {
-            // dd('valid');
-        // dd('valid');
-      //   // dd($game);
-      //     $joined = false;
-      //     $jsData = ['seated' => null, 'seated_user' => null];
+      if( $game && $game->validateRequest($request->auth_hash)) {
 
-          // $game->seatTo($request->color, Auth::user()->id);
+          if($game->seat->to(Auth::user()->id, $request->color)) {
+            $data['message'] = 'Succesfully joined the game.';
+            // event player joined the game
+          }
+          else {
+            $data['message'] = "Can't join the game.";
+          }
 
-          $game->seat->to($request->color,
-                          Auth::user()->id);
+          if($game->seat->isBothSeated()) {
+            $data['message'] .= ' Starting the game.';
+            // event starting the game
+            $game->start();
+          } else {
+            $data['message'] .= ' Waiting for other player.';
+          }
 
-          // if($request->color === 'white' &&
-          //    $game->isSeatWhiteEmpty()){
-          //      $game->seatWhite(Auth::user()->id);
-          //
-          // }
-          // elseif ($request->color === 'black' &&
-          //         $game->isSeatBlackEmpty()){
-          //
-          //           $game->seatBlack(Auth::user()->id);
-          //
-          // }
-
-      //
-
-      //
-      //     if($game->first_user_id !== null &&
-      //        $game->second_user_id !== null) { // game is starting
-      //
-      //
-      //          $game->update(['status' => 1,
-      //                         'started_at' => date('Y-m-d H:i:s', time())]);
-      //
-      //          Checker::where('game_id', $game->id)
-      //                     ->where('color', 0)
-      //                     ->update(['user_id' => $game->first_user_id]);
-      //
-      //          Checker::where('game_id', $game->id)
-      //                      ->where('color', 1)
-      //                      ->update(['user_id' => $game->second_user_id]);
-      //
-      //     }
-      //
-      //     $game->js = $jsData;
-      //
-      //     $data['status'] = ($joined) ? 200 : 400;
-      //     $data['data'] = $game;
-      //     $data['message'] = ($joined) ? 'Succesfully joined the game.' : "Can't join the game";
-      //
+          $data['status'] = 200;
+          $data['data'] = $game;
       }
 
       return response()->json($data);

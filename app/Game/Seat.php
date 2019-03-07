@@ -59,21 +59,24 @@ class Seat
   /**
    * Seat's user in the desired position
    *
-   * Seat's user in the desired position and unseat's it if it already seated in the opposite position.
+   * Seat's user in the desired position and unseat's it if it already seated in the opposite position. Also, returns false if user can't be seated there.
    *
    * @param string $seatColor white or black
    * @param int $userID
    *
+   * @return bool
    */
-  public function to( string $seatColor,
-                      int $userID) {
+  public function to( int $userID,
+                      string $seatColor) {
 
+    $seated = false;
     $this->setUser($userID);
 
     if( $seatColor === 'white') {
 
-        if($this->isEmptySeat('white')) {
+        if($this->isEmptySeat($seatColor)) {
           $this->seatToWhite();
+          $seated = true;
           if($this->doISeatIn('black')) { $this->unseat('black'); }
         }
 
@@ -81,13 +84,25 @@ class Seat
 
       if($this->isEmptySeat($seatColor)) {
         $this->seatToBlack();
+        $seated = true;
         if($this->doISeatIn('white')) { $this->unseat('white'); }
       }
 
     }
 
+    return $seated;
   }
 
+  public function isBothSeated() {
+    $isBoth = false;
+
+    if(!$this->isEmptySeat('black') &&
+       !$this->isEmptySeat('white')) {
+         $isBoth = true;
+    }
+
+    return $isBoth;
+  }
   /**
    * Check's if seat is empty
    *

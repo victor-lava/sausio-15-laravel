@@ -21,6 +21,10 @@ class Game extends Model
       $this->seat = new Seat($this);
     }
 
+    public function isPlaying(): bool {
+        return $this->status == 1 ? true : false;
+    }
+
     public function validateRequest(string $token): bool {
       $isValid = false;
         // dd($token);
@@ -405,5 +409,18 @@ class Game extends Model
         }
         // dd($table);
         return $table;
+    }
+
+    public function start() {
+     $this->update(['status' => 1,
+                    'started_at' => date('Y-m-d H:i:s', time())]);
+
+     Checker::where('game_id', $this->id)
+                ->where('color', 0)
+                ->update(['user_id' => $this->first_user_id]);
+
+     Checker::where('game_id', $this->id)
+                 ->where('color', 1)
+                 ->update(['user_id' => $this->second_user_id]);
     }
 }

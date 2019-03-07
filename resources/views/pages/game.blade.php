@@ -28,8 +28,10 @@
                       @if($secondPlayer)
                       data-second="{{ $secondPlayer->id }}"
                       @endif
-                      @if(isset($myself))
+                      @if($isLogged)
                       data-auth="{{ $token }}"
+                      @endif
+                      @if(isset($myself))
                       data-myself="{{ $myself }}"
                       @endif
                   >
@@ -72,24 +74,10 @@
             <div class="card-header">Actions</div>
             <div class="card-body">
               @if(!Auth::guest())
-              <div id="join-game" class="row">
-                <div class="col-md-6 join-white">
-                  @if($firstPlayer)
-                  <span class="badge badge-success">{{ $firstPlayer->name }}</span></br>
-                  @else
-                  <span class="badge badge-warning">Empty</span></br>
-                  @endif
-                  <button class="btn btn-secondary" onclick="game.join('white')">Join White</button>
-                </div>
-                <div class="col-md-6 join-black">
-                  @if($secondPlayer)
-                  <span class="badge badge-success">{{ $secondPlayer->name }}</span></br>
-                  @else
-                  <span class="badge badge-warning">Empty</span></br>
-                  @endif
-                  <button class="btn btn-dark" onclick="game.join('black')">Join Black</button>
-                </div>
-              </div>
+                @component('partials/game/action', ['firstPlayer' => $firstPlayer,
+                                                    'secondPlayer' => $secondPlayer,
+                                                    'isPlaying' => $isPlaying])
+                @endcomponent
               @endif
             </div>
           </div>
