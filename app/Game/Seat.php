@@ -13,18 +13,36 @@ class Seat
     $this->userID = null;
   }
 
-  public function setUser($userID) {
+  /**
+   * Set's the userID for later usage
+   *
+   * @param int $userID
+   */
+  public function setUser(int $userID) {
     $this->userID = $userID;
   }
 
+  /**
+   * Seat's user to the white position
+   */
   public function seatToWhite() {
       $this->game->update(['first_user_id' => $this->userID]);
   }
 
+  /**
+   * Seat's user to the black position
+   */
   public function seatToBlack() {
       $this->game->update(['second_user_id' => $this->userID]);
   }
 
+  /**
+   * Tell's if the current user seats in the requested position
+   *
+   * @param string $seatColor white or black
+   *
+   * @return bool
+   */
   public function doISeatIn(string $seatColor) {
       $doSeat = false;
       if($seatColor === 'white' &&
@@ -38,6 +56,15 @@ class Seat
       return $doSeat;
   }
 
+  /**
+   * Seat's user in the desired position
+   *
+   * Seat's user in the desired position and unseat's it if it already seated in the opposite position.
+   *
+   * @param string $seatColor white or black
+   * @param int $userID
+   *
+   */
   public function to( string $seatColor,
                       int $userID) {
 
@@ -51,13 +78,23 @@ class Seat
         }
 
     } elseif ($seatColor === 'black') {
+
       if($this->isEmptySeat($seatColor)) {
         $this->seatToBlack();
         if($this->doISeatIn('white')) { $this->unseat('white'); }
       }
+
     }
+
   }
 
+  /**
+   * Check's if seat is empty
+   *
+   * @param string $seatColor white or black
+   *
+   * @return bool
+   */
   public function isEmptySeat(string $seatColor): bool {
     $isEmpty = false;
 
@@ -69,6 +106,12 @@ class Seat
     return $isEmpty;
   }
 
+  /**
+   * Unseat's user from the selected seat
+   *
+   * @param string $seatColor white or black
+   *
+   */
   public function unseat(string $seatColor) {
     if($seatColor === 'white') { $this->game->update(['first_user_id' => null]); }
     elseif($seatColor === 'black') { $this->game->update(['second_user_id' => null]); }
