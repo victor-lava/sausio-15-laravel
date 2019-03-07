@@ -36673,8 +36673,8 @@ if (token) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/vagrant/code/talents/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/vagrant/code/talents/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/viktoras/Code/Homestead/talents/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/viktoras/Code/Homestead/talents/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -99,7 +99,7 @@
         </main>
 
         <footer>
-            <p>Mano footeris</p>
+
         </footer>
     </div>
 </body>
