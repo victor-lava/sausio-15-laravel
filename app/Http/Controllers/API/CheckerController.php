@@ -94,17 +94,6 @@ class CheckerController extends Controller
       return ['x' => $x, 'y' => $y];
     }
 
-    public function validateToken(string $token): bool {
-        $isValid = false;
-          // dd($token);
-        if( Auth::user() &&
-            $token === Auth::user()->token) {
-          $isValid = true;
-        }
-
-        return $isValid;
-    }
-
     public function move(Request $request) {
 
       $data = [ 'status' => 404,
@@ -115,10 +104,9 @@ class CheckerController extends Controller
                   ->where('status', 1)
                   ->first();
 
+      if( $game &&
+          $game->validateRequest($request->auth_hash)) {
 
-      if($this->validateToken($request->token)) {
-        // dd('asd');
-        if($game) { // create issue in laravel
           $checker = Checker::where('game_id', $game->id)
                             ->where('x', $request->x1)
                             ->where('y', $request->y1)
@@ -128,6 +116,7 @@ class CheckerController extends Controller
                                         'y' => $request->y2]);
 
 
+                                        // dd(Auth::user()->id);
           if($checker > 0) {
             $data['status'] = 200;
             $data['message'] = 'Checker succesfully moved';
@@ -149,7 +138,7 @@ class CheckerController extends Controller
 
             event(new CheckerMoved($request->game_hash, Auth::user()->id, $data));
           }
-        }
+
 
       }
 

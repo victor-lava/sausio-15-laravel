@@ -12,6 +12,10 @@ class Checker extends Model
       return $this->color === 1 ? 'black' : 'white';
     }
 
+    public function user() {
+      return $this->belongsTo('App\User')->where('id', '!=', null);
+    }
+
     public function createChecker(  int $game_id,
                                     int $y,
                                     int $x,

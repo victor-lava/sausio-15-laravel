@@ -32,10 +32,13 @@ export default class API {
         return channel;
       }
 
-      joinGame(color, user_id) {
+
+
+      joinGame(color, callback) {
         axios.get(`${this.url}/game/join`, {
           params: {
-            color, user_id,
+            color: color,
+            auth_hash: this.auth_hash,
             game_hash: this.game_hash
           }
         }).then(function(response) {

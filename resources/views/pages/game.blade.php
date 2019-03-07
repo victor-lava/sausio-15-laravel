@@ -14,19 +14,13 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Game #{{ $hash }}</div>
+                <div class="card-header">Game</div>
 
                 <div class="card-body">
-                  <div class="row">
-                    <div  class="col-md-6 table"
-                          data-api="{{ url('/api/') }}"
-                          data-hash="{{ $hash }}"
-                          @if($authHash)
-                          data-auth="{{ $authHash }}"
-                          @endif>
 
                   <div id="checkers"
                       class="table"
+                      data-api={{ url('/api/') }}
                       data-hash="{{ $hash }}"
                       @if($firstPlayer)
                       data-first="{{ $firstPlayer->id }}"
@@ -35,7 +29,7 @@
                       data-second="{{ $secondPlayer->id }}"
                       @endif
                       @if(isset($myself))
-                      data-token="{{ $token }}"
+                      data-auth="{{ $token }}"
                       data-myself="{{ $myself }}"
                       @endif
                   >
@@ -48,7 +42,7 @@
                       <div id="{{ $squareColumn['id'] }}"
                            class="checker-col checker-col-{{ $squareColumn['color'] }}"
                            @if($squareColumn['color'] === 'black' && $isLogged === true && $isPlaying === true && ($squareColumn['checker'] !== false && $squareColumn['checker']->color === $color) || $squareColumn['checker'] === false)
-                           onclick="selectChecker(this)"
+                           onclick="checker.select(this)"
                            @endif
                            data-x="{{ $x }}"
                            data-y="{{ $y }}">
@@ -68,56 +62,37 @@
                       </div>
                       @endforeach
                     </div>
-
-
-                    <div class="col-md-4">
-                      <h2>Status: <span class="badge badge-warning">Waiting</span></h2>
-                      <div class="col-md-12">
-                        <div class="row">
-                          <div class="col-md-6">
-                            #1 White<br>
-                            <a href="#" class="btn btn-light">Join</a>
-                            <br>
-                            <span class="badge badge-secondary">empty</span>
-                          </div>
-                          <div class="col-md-6">
-                            #2 Black<br>
-                            <a href="#" class="btn btn-dark">Join</a>
-                            <br>
-                            <span class="badge badge-secondary">empty</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    @endforeach
                   </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-          @if(!Auth::guest())
-          <div id="join-game" class="row">
-            <div class="col-md-6 join-white">
-              @if($firstPlayer)
-              <span class="badge badge-success">{{ $firstPlayer->name }}</span></br>
-              @else
-              <span class="badge badge-warning">Empty</span></br>
+          <div class="card">
+            <div class="card-header">Actions</div>
+            <div class="card-body">
+              @if(!Auth::guest())
+              <div id="join-game" class="row">
+                <div class="col-md-6 join-white">
+                  @if($firstPlayer)
+                  <span class="badge badge-success">{{ $firstPlayer->name }}</span></br>
+                  @else
+                  <span class="badge badge-warning">Empty</span></br>
+                  @endif
+                  <button class="btn btn-secondary" onclick="game.join('white')">Join White</button>
+                </div>
+                <div class="col-md-6 join-black">
+                  @if($secondPlayer)
+                  <span class="badge badge-success">{{ $secondPlayer->name }}</span></br>
+                  @else
+                  <span class="badge badge-warning">Empty</span></br>
+                  @endif
+                  <button class="btn btn-dark" onclick="game.join('black')">Join Black</button>
+                </div>
+              </div>
               @endif
-              <button class="btn btn-secondary" onclick="joinGame('white',
-                                                                {{ Auth::user()->id }},
-                                                                joinGameOnDOM)">Join White</button>
-            </div>
-            <div class="col-md-6 join-black">
-              @if($secondPlayer)
-              <span class="badge badge-success">{{ $secondPlayer->name }}</span></br>
-              @else
-              <span class="badge badge-warning">Empty</span></br>
-              @endif
-              <button class="btn btn-dark" onclick="joinGame('black',
-                                                          {{ Auth::user()->id }},
-                                                          joinGameOnDOM)">Join Black</button>
             </div>
           </div>
-          @endif
         </div>
     </div>
 </div>

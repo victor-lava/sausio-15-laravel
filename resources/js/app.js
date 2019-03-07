@@ -8,7 +8,9 @@
 require('./bootstrap');
 import API from "./classes/Api.js";
 import Checker from "./classes/Checker.js";
+import Game from "./classes/Game.js";
 
-window.table = document.querySelector('.table');
+window.table = document.querySelector('#checkers');
 window.api = new API(window.table);
 window.checker = new Checker(window.table, window.api);
+window.game = new Game(window.api);

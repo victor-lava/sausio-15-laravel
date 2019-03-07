@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Game\Seat;
+use Auth;
 
 class Game extends Model
 {
@@ -13,6 +15,22 @@ class Game extends Model
 
     public $className;
     public $name;
+    public $seat;
+
+    public function __construct() {
+      $this->seat = new Seat($this);
+    }
+
+    public function validateRequest(string $token): bool {
+      $isValid = false;
+        // dd($token);
+      if( Auth::user() &&
+          $token === Auth::user()->token) {
+        $isValid = true;
+      }
+
+      return $isValid;
+    }
 
     public function getDuration() {
 
@@ -160,31 +178,31 @@ class Game extends Model
      *
      * @return array
      */
-    private function createVectors() {
-      $y = 1;
-      $x = 1;
-      $vectors = [];
+    // private function createVectors() {
+    //   $y = 1;
+    //   $x = 1;
+    //   $vectors = [];
+    //
+    //   for ($i = 0; $i < 4; $i++) {
+    //
+    //     if($i % 2) { $y *= -1; $x *= -1; }
+    //     else { $y *= -1; $x *= 1; }
+    //
+    //     $vectors[] = ['x' => $x, 'y' => $y];
+    //   }
+    //
+    //   return $vectors;
+    // }
 
-      for ($i = 0; $i < 4; $i++) {
-
-        if($i % 2) { $y *= -1; $x *= -1; }
-        else { $y *= -1; $x *= 1; }
-
-        $vectors[] = ['x' => $x, 'y' => $y];
-      }
-
-      return $vectors;
-    }
-
-    public function calcEnemyCoordinatesBetween(array $startingCoordinates,
-                                                array $movementVector) {
-      $enemy = [];
-
-      $enemy['x'] = $startingCoordinates['x'] + $movementVector['x'];
-      $enemy['y'] = $startingCoordinates['y'] + $movementVector['y'];
-
-      return $enemy;
-    }
+    // public function calcEnemyCoordinatesBetween(array $startingCoordinates,
+    //                                             array $movementVector) {
+    //   $enemy = [];
+    //
+    //   $enemy['x'] = $startingCoordinates['x'] + $movementVector['x'];
+    //   $enemy['y'] = $startingCoordinates['y'] + $movementVector['y'];
+    //
+    //   return $enemy;
+    // }
 
     public function calcVector(array $from, array $to, $steps = 1) {
 
@@ -205,57 +223,57 @@ class Game extends Model
      *
      * @return bool
      */
-    private function isCoordinatesInRange(int $x, int $y): bool {
-      $isCoordinates = false;
+    // private function isCoordinatesInRange(int $x, int $y): bool {
+    //   $isCoordinates = false;
+    //
+    //   if(($x >= 0 && $y >= 0) &&
+    //      ($x <= 7 && $y <= 7)) {
+    //         $isCoordinates = true;
+    //   }
+    //
+    //   return $isCoordinates;
+    // }
 
-      if(($x >= 0 && $y >= 0) &&
-         ($x <= 7 && $y <= 7)) {
-            $isCoordinates = true;
-      }
-
-      return $isCoordinates;
-    }
-
-    public function getAround(Checker $checker): array {
-      $vectors = $this->createVectors();
-
-      foreach ($vectors as $vector) {
-        $x = $checker->x + $vector['x'];
-        $y = $checker->y + $vector['y'];
-
-        if($this->isCoordinatesInRange($x, $y)) {
-
-          $isEmpty = false;
-          $isEnemy = false;
-          $isFight = false;
-
-          $foundChecker = $this->findCheckerByCoordinates($x, $y);
-
-          if(!$foundChecker) { $isEmpty = true; } // if we find checker, then it's nt
-          elseif($foundChecker->color !== $checker->color) {
-            $isEnemy = $foundChecker;
-            $enemyX = $isEnemy->x + $vector['x'];
-            $enemyY = $isEnemy->y + $vector['y'];
-
-            if($this->isCoordinatesInRange($enemyX, $enemyY)) {
-              $isEmptySpace = $this->findCheckerByCoordinates($enemyX, $enemyY);
-              if($isEmptySpace === false) { $isFight = true; }
-            }
-          }
-
-          $moves[] = ['x' => $x,
-                      'y' => $y,
-                      'vectors' => ['x' => $vector['x'],
-                                    'y' => $vector['y']],
-                      'empty' => $isEmpty,
-                      'enemy' => $isEnemy,
-                      'fight' => $isFight];
-         }
-
-      }
-      // dd($moves);
-      return $moves;
-    }
+    // public function getAround(Checker $checker): array {
+    //   $vectors = $this->createVectors();
+    //
+    //   foreach ($vectors as $vector) {
+    //     $x = $checker->x + $vector['x'];
+    //     $y = $checker->y + $vector['y'];
+    //
+    //     if($this->isCoordinatesInRange($x, $y)) {
+    //
+    //       $isEmpty = false;
+    //       $isEnemy = false;
+    //       $isFight = false;
+    //
+    //       $foundChecker = $this->findCheckerByCoordinates($x, $y);
+    //
+    //       if(!$foundChecker) { $isEmpty = true; } // if we find checker, then it's nt
+    //       elseif($foundChecker->color !== $checker->color) {
+    //         $isEnemy = $foundChecker;
+    //         $enemyX = $isEnemy->x + $vector['x'];
+    //         $enemyY = $isEnemy->y + $vector['y'];
+    //
+    //         if($this->isCoordinatesInRange($enemyX, $enemyY)) {
+    //           $isEmptySpace = $this->findCheckerByCoordinates($enemyX, $enemyY);
+    //           if($isEmptySpace === false) { $isFight = true; }
+    //         }
+    //       }
+    //
+    //       $moves[] = ['x' => $x,
+    //                   'y' => $y,
+    //                   'vectors' => ['x' => $vector['x'],
+    //                                 'y' => $vector['y']],
+    //                   'empty' => $isEmpty,
+    //                   'enemy' => $isEnemy,
+    //                   'fight' => $isFight];
+    //      }
+    //
+    //   }
+    //   // dd($moves);
+    //   return $moves;
+    // }
 
     /**
      * Gets checker possible moves
@@ -341,10 +359,6 @@ class Game extends Model
         return $result;
     }
 
-    public function isClickable() {
-
-    }
-
     public function createGameTable($authHash, $colorNumber) {
         $table = [];
         $alphabet = 'abcdefgh';
@@ -370,8 +384,9 @@ class Game extends Model
 
                     if($isChecker) {
                         $checker = $isChecker;
-                        // dd($color);
-                        if( $checker->user->token === $authHash &&
+                        // dd($checker);
+                        if( $checker->user &&
+                            $checker->user->token === $authHash &&
                             $checker->color === $colorNumber) {
                               $isClickable = true;
                             }

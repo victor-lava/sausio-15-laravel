@@ -54,7 +54,7 @@ class GameController extends Controller
           }
         }
 
-        $squares = $game->createGameTable();
+        $squares = $game->createGameTable($token, $color);
 
         return view('pages/game', compact('squares',
                                           'hash',
@@ -96,7 +96,7 @@ class GameController extends Controller
                     $checker->createChecker($game->id, $y, $x, 0, null);
                 }
             }
-
+            
             for ($y = 0; $y <= 2; $y++) { // black
                 for ($x = 0; $x <= 7; $x++) {
                     $checker->createChecker($game->id, $y, $x, 1, null);
