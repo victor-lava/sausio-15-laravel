@@ -26,6 +26,20 @@ class CheckerController extends Controller
 
     }
 
+    public function validateUser(Game $game, $hash) {
+
+      $user = false;
+      if($hash !== null) {
+        if($game->firstPlayer->token === $hash) {
+          $user = $game->firstPlayer;
+        } elseif($game->secondPlayer->token === $hash) {
+          $user = $game->secondPlayer;
+        }
+      }
+
+      return $user;
+    }
+
     public function moves(Request $request) {
 
       $data = [ 'status' => 404,
@@ -97,12 +111,11 @@ class CheckerController extends Controller
                 'message' => 'Not found',
                 'data' => null ];
 
-      $game = Game::where('hash', $request->game_hash)->first();
+      $game = Game::where('hash', $request->game_hash)
+                  ->where('status', 1)
+                  ->first();
 
 
-      // dd($request->token);
-      // dd($request->token);
-      // dd(Auth::user());
       if($this->validateToken($request->token)) {
         // dd('asd');
         if($game) { // create issue in laravel
@@ -114,11 +127,7 @@ class CheckerController extends Controller
                             ->update([  'x' => $request->x2,
                                         'y' => $request->y2]);
 
-                                        // dd(Auth::user()->id);
 
-
-
-                                        // dd(Auth::user()->id);
           if($checker > 0) {
             $data['status'] = 200;
             $data['message'] = 'Checker succesfully moved';
@@ -141,6 +150,7 @@ class CheckerController extends Controller
             event(new CheckerMoved($request->game_hash, Auth::user()->id, $data));
           }
         }
+
       }
 
 

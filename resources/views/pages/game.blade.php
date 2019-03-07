@@ -14,9 +14,16 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Game</div>
+                <div class="card-header">Game #{{ $hash }}</div>
 
                 <div class="card-body">
+                  <div class="row">
+                    <div  class="col-md-6 table"
+                          data-api="{{ url('/api/') }}"
+                          data-hash="{{ $hash }}"
+                          @if($authHash)
+                          data-auth="{{ $authHash }}"
+                          @endif>
 
                   <div id="checkers"
                       class="table"
@@ -61,7 +68,27 @@
                       </div>
                       @endforeach
                     </div>
-                    @endforeach
+
+
+                    <div class="col-md-4">
+                      <h2>Status: <span class="badge badge-warning">Waiting</span></h2>
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-6">
+                            #1 White<br>
+                            <a href="#" class="btn btn-light">Join</a>
+                            <br>
+                            <span class="badge badge-secondary">empty</span>
+                          </div>
+                          <div class="col-md-6">
+                            #2 Black<br>
+                            <a href="#" class="btn btn-dark">Join</a>
+                            <br>
+                            <span class="badge badge-secondary">empty</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
             </div>

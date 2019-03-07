@@ -17,6 +17,10 @@
   position: relative;
 }
 
+.checker-col-clickable:hover {
+  border: 4px solid blue;
+}
+
 .checker-col span {
     position: absolute;
     font-weight: bold;

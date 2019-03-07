@@ -36,12 +36,4 @@ class Checker extends Model
         }
     }
 
-    // public function game() {
-    //   $game = App\Game::where('id', $this->game_id)->first();
-    //   if($game) {
-    //     return $game;
-    //   } else {
-    //     return false;
-    //   }
-    // }
 }

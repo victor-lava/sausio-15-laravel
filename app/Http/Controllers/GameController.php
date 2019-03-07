@@ -14,6 +14,9 @@ class GameController extends Controller
 
     public function show(string $hash) {
 
+      // dd(Auth::user());
+        $authHash = false;
+        $color = false;
         $game = Game::where('hash', $hash)->first();
         $isLogged = false;
         $isPlaying = false;
@@ -30,7 +33,7 @@ class GameController extends Controller
           $secondPlayer = $game->secondPlayer;
         }
 
-    
+
       if(Auth::user()) {
           if(Auth::user()->token === null) {
             Auth::logout();

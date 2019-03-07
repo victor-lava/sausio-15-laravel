@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('location');
             $table->boolean('online')->default(0);
             $table->boolean('admin')->default(0);
-            $table->string('token', 60)->nullable();
+            $table->string('token', 60)->unique()->nullable()->default(null);
         });
     }
 

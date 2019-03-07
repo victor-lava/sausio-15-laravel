@@ -11,6 +11,22 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
+    <script>
+
+     // // Enable pusher logging - don't include this in production
+     // Pusher.logToConsole = true;
+     //
+     // var pusher = new Pusher('87ca1bcc9f7c89ec8deb', {
+     //   cluster: 'eu',
+     //   forceTLS: true
+     // });
+     //
+     // var channel = pusher.subscribe('my-channel');
+     // channel.bind('my-event', function(data) {
+     //   alert(JSON.stringify(data));
+     // });
+     </script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
