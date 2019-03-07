@@ -48,6 +48,20 @@ export default class API {
         });
       }
 
+      leaveGame(color, callback) {
+        axios.get(`${this.url}/game/leave`, {
+          params: {
+            color: color,
+            auth_hash: this.auth_hash,
+            game_hash: this.game_hash
+          }
+        }).then(function(response) {
+          callback(response.data);
+        }).catch(function(error) {
+
+        });
+      }
+
       getMoves(location, callback) {
         axios.get(`${this.url}/checker/moves`, {
           params: {

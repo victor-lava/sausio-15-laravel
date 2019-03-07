@@ -9,7 +9,9 @@
     {{ $player->name }}
   </span></br>
   <!-- time should start -->
-  <span class="btn btn-secondary">00:00</span>
+  <span class="btn btn-secondary">
+    <i class="fa fa-clock-o"></i> 00:00
+  </span>
   @elseif($player)
   <span class="badge badge-secondary">
     <i class="fa fa-user"></i>

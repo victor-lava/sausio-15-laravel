@@ -93,6 +93,30 @@ class Seat
     return $seated;
   }
 
+  /**
+   * Seat's user out of the desired position
+   *
+   *
+   * @param string $seatColor white or black
+   * @param int $userID
+   *
+   * @return bool
+   */
+  public function out( int $userID,
+                       string $seatColor) {
+
+    $isLeft = false;
+
+    $this->setUser($userID);
+
+    if($this->doISeatIn($seatColor)) {
+      $this->unseat($seatColor);
+      $isLeft = true;
+    }
+
+    return $isLeft;
+  }
+
   public function isBothSeated() {
     $isBoth = false;
 

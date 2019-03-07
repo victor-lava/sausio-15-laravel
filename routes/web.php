@@ -25,3 +25,4 @@ Route::get('/api/checker/move', 'API\CheckerController@move')->name('api.checker
 Route::get('/api/checker/moves', 'API\CheckerController@moves')->name('api.checker.moves');
 
 Route::get('/api/game/join', 'API\GameController@join')->name('api.game.join');
+Route::get('/api/game/leave', 'API\GameController@leave')->name('api.game.leave');
