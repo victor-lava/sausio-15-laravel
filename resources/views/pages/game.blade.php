@@ -105,6 +105,12 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   var channel = pusher.subscribe(window.table.dataset.hash);
 
+  channel.bind('game-leave', function(response) {
+    // alert(JSON.stringify(response));
+  // window.game.leave
+
+  })
+
   if(myself === false) { // watching, both channels
     channel.bind('move-checker-'+first, function(response) {
       window.moveCheckerOnDOM(response, true);

@@ -6,7 +6,7 @@
   @if($isPlaying)
   <span class="badge badge-secondary">
     <i class="fa fa-user"></i>
-    {{ $player->name }}
+    <span class="badge-name">{{ $player->name }}</span>
   </span></br>
   <!-- time should start -->
   <span class="btn btn-secondary">
@@ -15,7 +15,7 @@
   @elseif($player)
   <span class="badge badge-secondary">
     <i class="fa fa-user"></i>
-    {{ $player->name }}
+    <span class="badge-name">{{ $player->name }}</span>
   </span></br>
   <button class="btn btn-secondary" onclick="game.leave('{{ $color }}')">Leave</button>
   @else

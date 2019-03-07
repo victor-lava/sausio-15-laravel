@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Events\GameLeave;
 use App\Game;
 use App\Checker;
 use Auth;
@@ -28,10 +29,13 @@ class GameController extends Controller
             $data['message'] = 'Succesfully left the game.';
           }
 
-
           $data['status'] = 200;
-          $data['data'] = ['user_id' => $userID,
-                           'status' => $status];
+          $data['data'] = ['action' => 'game-leave',
+                           'game_hash' => $request->game_hash,
+                           'user_id' => $userID,
+                           'seat' => $request->color];
+
+          event(new GameLeave($data));
       }
 
       return response()->json($data);
