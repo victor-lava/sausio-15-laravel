@@ -56,6 +56,7 @@ class GameController extends Controller
 
         $isPlaying = $game->isPlaying();
         // dd($isPlaying);
+        if(!Auth::user()) { $token = ''; }
         $squares = $game->createGameTable($token, $color);
 
         return view('pages/game', compact('squares',
