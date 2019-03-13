@@ -130,13 +130,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if(myself === false) { // watching, both channels
     channel.bind('move-checker-'+first, function(response) {
-      // console.log(response.data.data.from);
-      // window.checker.move(z);
+
+            let data = response.data.data;
+
+
+            let point = {x: data.to.x, y: data.to.y},
+                to = document.querySelector(`.checker-col[data-x="${data.to.x}"][data-y="${data.to.y}"]`),
+                from = document.querySelector(`.checker[data-x="${data.from.x}"][data-y="${data.from.y}"]`),
+                newChecker = window.checker.createFrom(point, from); // Create new checker from the old one, however with the new location
+
+            from.remove(); // remove checker from where it was moved
+            to.appendChild(newChecker); // append checker copy to where we want to move
+
+
+            if(data.enemy !== false) {
+              document.querySelector(`.checker[data-x="${data.enemy.x}"][data-y="${data.enemy.y}"]`).remove();
+            }
     })
 
     channel.bind('move-checker-'+second, function(response) {
-        console.log(response.data.data.from);
-      window.checker.move(response.data.data.from, response.data.data.to);
+
+            let data = response.data.data;
+
+
+            let point = {x: data.to.x, y: data.to.y},
+                to = document.querySelector(`.checker-col[data-x="${data.to.x}"][data-y="${data.to.y}"]`),
+                from = document.querySelector(`.checker[data-x="${data.from.x}"][data-y="${data.from.y}"]`),
+                newChecker = window.checker.createFrom(point, from); // Create new checker from the old one, however with the new location
+
+            from.remove(); // remove checker from where it was moved
+            to.appendChild(newChecker); // append checker copy to where we want to move
+
+
+            if(data.enemy !== false) {
+              document.querySelector(`.checker[data-x="${data.enemy.x}"][data-y="${data.enemy.y}"]`).remove();
+            }
     })
 
   } else { // playing, watching only one channel
