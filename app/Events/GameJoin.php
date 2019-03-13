@@ -10,13 +10,14 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class GameLeave implements ShouldBroadcast
+class GameJoin implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $action;
     public $game_hash;
     public $user_id;
+    public $user_name;
     public $color;
     public $seat;
     /**
@@ -30,6 +31,7 @@ class GameLeave implements ShouldBroadcast
         $this->action = $response['action'];
         $this->game_hash = $response['game_hash'];
         $this->user_id = $response['user_id'];
+        $this->user_name = $response['user_name'];
         $this->color = $response['color'];
         $this->seat = $response['seat'];
     }
@@ -40,6 +42,6 @@ class GameLeave implements ShouldBroadcast
     }
 
     public function broadCastAs() {
-      return 'game-leave';
+      return 'game-join';
     }
 }

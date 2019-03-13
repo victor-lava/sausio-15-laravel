@@ -106,7 +106,7 @@ class CheckerController extends Controller
 
       if( $game &&
           $game->validateRequest($request->auth_hash)) {
-
+            // dd('sdf');
           $checker = Checker::where('game_id', $game->id)
                             ->where('x', $request->x1)
                             ->where('y', $request->y1)
@@ -116,8 +116,9 @@ class CheckerController extends Controller
                                         'y' => $request->y2]);
 
 
-                                        // dd(Auth::user()->id);
+                                        // dd($game->id);
           if($checker > 0) {
+            // dd('sdf');
             $data['status'] = 200;
             $data['message'] = 'Checker succesfully moved';
 

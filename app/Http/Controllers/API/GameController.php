@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Events\GameLeave;
+use App\Events\GameJoin;
 use App\Game;
 use App\Checker;
 use Auth;
@@ -32,6 +33,7 @@ class GameController extends Controller
           $data['status'] = 200;
           $data['data'] = ['action' => 'game-leave',
                            'game_hash' => $request->game_hash,
+                           'color' => $request->color,
                            'user_id' => $userID,
                            'seat' => $request->color];
 
@@ -54,6 +56,8 @@ class GameController extends Controller
           $userID = Auth::user()->id;
           $status = false;
 
+
+
           if($game->seat->to($userID, $request->color)) {
             $data['message'] = 'Succesfully joined the game.';
             // $status = 'joined';
@@ -75,8 +79,14 @@ class GameController extends Controller
           }
 
           $data['status'] = 200;
-          $data['data'] = ['user_id' => $userID,
-                           'status' => $status];
+          $data['data'] = [ 'action' => $game->seat->switched ? 'game-switch' : 'game-join',
+                            'game_hash' => $request->game_hash,
+                            'color' => $request->color,
+                            'user_id' => $userID,
+                            'user_name' => Auth::user()->name,
+                            'seat' => $request->color];
+
+          event(new GameJoin($data));
       }
 
       return response()->json($data);

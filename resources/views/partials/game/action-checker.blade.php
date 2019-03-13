@@ -19,7 +19,10 @@
   </span></br>
   <button class="btn btn-secondary" onclick="game.leave('{{ $color }}')">Leave</button>
   @else
-  <span class="badge badge-warning">Empty</span></br>
+  <span class="badge badge-warning">
+    <i class="fa fa-user"></i>
+    Empty
+  </span></br>
   <button class="btn btn-success" onclick="game.join('{{ $color }}')">Join</button>
   @endif
 </div>

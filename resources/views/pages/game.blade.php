@@ -89,6 +89,7 @@
 @section('scripts')
 <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
 <script type="text/javascript">
+// import Point from "./classes/Point.js";
 document.addEventListener('DOMContentLoaded', function() {
 
   let first = window.table.dataset.first,
@@ -108,16 +109,34 @@ document.addEventListener('DOMContentLoaded', function() {
   channel.bind('game-leave', function(response) {
     // alert(JSON.stringify(response));
   // window.game.leave
+  alert('game-left');
 
   })
 
+
+    channel.bind('game-join', function(response) {
+      // alert(JSON.stringify(response));
+    // window.game.leave
+      window.game.toggleSeat(response);
+
+    })
+
+    channel.bind('game-leave', function(response) {
+      // alert(JSON.stringify(response));
+    // window.game.leave
+      window.game.unseat(response.color);
+
+    })
+
   if(myself === false) { // watching, both channels
     channel.bind('move-checker-'+first, function(response) {
-      window.moveCheckerOnDOM(response, true);
+      // console.log(response.data.data.from);
+      // window.checker.move(z);
     })
 
     channel.bind('move-checker-'+second, function(response) {
-      window.moveCheckerOnDOM(response, true);
+        console.log(response.data.data.from);
+      window.checker.move(response.data.data.from, response.data.data.to);
     })
 
   } else { // playing, watching only one channel
@@ -129,8 +148,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     channel.bind('move-checker-'+enemy, function(response) {
       // alert(JSON.stringify(response));
+
       console.log(response);
-      window.moveCheckerOnDOM(response, true);
+
+      let data = response.data.data;
+
+
+      let point = {x: data.to.x, y: data.to.y},
+          to = document.querySelector(`.checker-col[data-x="${data.to.x}"][data-y="${data.to.y}"]`),
+          from = document.querySelector(`.checker[data-x="${data.from.x}"][data-y="${data.from.y}"]`),
+          newChecker = window.checker.createFrom(point, from); // Create new checker from the old one, however with the new location
+
+      from.remove(); // remove checker from where it was moved
+      to.appendChild(newChecker); // append checker copy to where we want to move
+
+
+      if(data.enemy !== false) {
+        document.querySelector(`.checker[data-x="${data.enemy.x}"][data-y="${data.enemy.y}"]`).remove();
+      }
+      // this.square.removeActive();
+      // this.square.removePossibles();
     })
   }
 

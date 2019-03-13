@@ -7,10 +7,12 @@ class Seat
 
   public $game;
   public $userID;
+  public $switched;
 
   public function __construct($game) {
     $this->game = $game;
     $this->userID = null;
+    $this->switched = false;
   }
 
   /**
@@ -25,14 +27,14 @@ class Seat
   /**
    * Seat's user to the white position
    */
-  public function seatToWhite() {
+  private function seatToWhite() {
       $this->game->update(['first_user_id' => $this->userID]);
   }
 
   /**
    * Seat's user to the black position
    */
-  public function seatToBlack() {
+  private function seatToBlack() {
       $this->game->update(['second_user_id' => $this->userID]);
   }
 
@@ -43,7 +45,7 @@ class Seat
    *
    * @return bool
    */
-  public function doISeatIn(string $seatColor) {
+  private function doISeatIn(string $seatColor) {
       $doSeat = false;
       if($seatColor === 'white' &&
         $this->game->first_user_id === $this->userID
@@ -77,7 +79,10 @@ class Seat
         if($this->isEmptySeat($seatColor)) {
           $this->seatToWhite();
           $seated = true;
-          if($this->doISeatIn('black')) { $this->unseat('black'); }
+          if($this->doISeatIn('black')) {
+            $this->unseat('black');
+            $this->switched = true;
+           }
         }
 
     } elseif ($seatColor === 'black') {
@@ -85,7 +90,10 @@ class Seat
       if($this->isEmptySeat($seatColor)) {
         $this->seatToBlack();
         $seated = true;
-        if($this->doISeatIn('white')) { $this->unseat('white'); }
+        if($this->doISeatIn('white')) {
+          $this->unseat('white');
+          $this->switched = true;
+         }
       }
 
     }
@@ -134,7 +142,7 @@ class Seat
    *
    * @return bool
    */
-  public function isEmptySeat(string $seatColor): bool {
+  private function isEmptySeat(string $seatColor): bool {
     $isEmpty = false;
 
     if( $this->game->first_user_id === null ||
@@ -151,9 +159,11 @@ class Seat
    * @param string $seatColor white or black
    *
    */
-  public function unseat(string $seatColor) {
+  private function unseat(string $seatColor) {
     if($seatColor === 'white') { $this->game->update(['first_user_id' => null]); }
     elseif($seatColor === 'black') { $this->game->update(['second_user_id' => null]); }
+
+    // ivykis game leave event(new GameLeave($data));
   }
 
 }

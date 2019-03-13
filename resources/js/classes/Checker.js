@@ -66,7 +66,7 @@ export default class Checker {
                                 )
                             },
                           (response) => {
-
+                            // console.log(response);
         let newChecker = this.createFrom(new Point( to.dataset.x,
                                                     to.dataset.y), from); // Create new checker from the old one, however with the new location
 
