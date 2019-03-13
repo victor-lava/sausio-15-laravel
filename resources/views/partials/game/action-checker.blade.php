@@ -1,6 +1,6 @@
 <div class="col-md-6 join-{{ $color }}">
   <div>
-      <img class="checker" width="60" src="http://talents.test/img/{{ $color }}-checker.png">
+      <img class="checker" width="60" src="/img/{{ $color }}-checker.png">
       <h5>{{ $color }}</h5>
   </div>
   @if($isPlaying)
