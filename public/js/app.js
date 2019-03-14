@@ -36398,12 +36398,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_Api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./classes/Api.js */ "./resources/js/classes/Api.js");
 /* harmony import */ var _classes_Checker_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./classes/Checker.js */ "./resources/js/classes/Checker.js");
 /* harmony import */ var _classes_Game_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./classes/Game.js */ "./resources/js/classes/Game.js");
+/* harmony import */ var _classes_Channel_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./classes/Channel.js */ "./resources/js/classes/Channel.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); // import Point from "./classes/Point.js";
+
 
 
 
@@ -36607,6 +36609,66 @@ function () {
 }();
 
 
+
+/***/ }),
+
+/***/ "./resources/js/classes/Channel.js":
+/*!*****************************************!*\
+  !*** ./resources/js/classes/Channel.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Channel; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Channel =
+/*#__PURE__*/
+function () {
+  function Channel(channelName) {
+    _classCallCheck(this, Channel);
+
+    this.url = "http://talents.test/api";
+    this.pusher_key = "a4784a4451c0de4372ac";
+    this.channelName = channelName;
+    this.pusher = this.init();
+    this.channel = this.subscribe();
+  }
+
+  _createClass(Channel, [{
+    key: "init",
+    value: function init() {
+      // Enable pusher logging - don't include this in production
+      // Pusher.logToConsole = true;
+      var pusher = new Pusher(this.pusher_key, {
+        cluster: 'eu',
+        forceTLS: true
+      });
+      return pusher;
+    }
+  }, {
+    key: "subscribe",
+    value: function subscribe() {
+      return this.pusher.subscribe(this.channelName);
+    }
+  }, {
+    key: "event",
+    value: function event(name, callback) {
+      this.channel.bind(name, callback);
+    }
+  }]);
+
+  return Channel;
+}();
+
+
+window.Channel = Channel;
 
 /***/ }),
 

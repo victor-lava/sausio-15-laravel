@@ -65,27 +65,20 @@
 <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function() {
-  var pusher = new Pusher('a4784a4451c0de4372ac', {
-    cluster: 'eu',
-    forceTLS: true
-  });
-  var channel = pusher.subscribe('Games');
 
-  channel.bind('created', function(response) {
+  let games = new Channel('GameList');
 
-    let table = document.querySelector('#games'),
-        tbody = table.querySelector('tbody');
-        // row = new DOMParser().parseFromString(response.html, 'text/html');
-        //
-        console.log(response);
-        // console.log(row);
-        //
-        // tbody.appendChild(row.innerHTML);
+      games.event('created', (response) => {
 
-        tbody.insertAdjacentHTML('afterbegin', response.html);
+        let table = document.querySelector('#games'),
+            tbody = table.querySelector('tbody');
 
+            console.log(response);
 
-  })
+            tbody.insertAdjacentHTML('afterbegin', response.html);
+
+      });
+
 });
 </script>
 @endsection
