@@ -4,8 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Checker;
 use App\Game;
+use App\Jobs\MoveChecker;
 use Illuminate\Support\Facades\Auth;
-use App\Events\CheckerMoved;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -136,8 +136,8 @@ class CheckerController extends Controller
                               'enemy' => $enemy > 0 ? $enemyLocation : false];
 
             // Tikrinti kiek saskiu liko pas priesininka, jei neliko tai siusti data jog laimejo
+            MoveChecker::dispatch(Auth::user()->id, $request->game_hash, $data['data']);
 
-            event(new CheckerMoved($request->game_hash, Auth::user()->id, $data));
           }
 
 

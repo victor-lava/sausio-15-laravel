@@ -16,7 +16,7 @@ class UsersTable extends Seeder
 
         $user = new User();
         $user->name = "Admin";
-        $user->email = "admin@admin.com";
+        $user->email = "admin";
         $user->password = bcrypt('admin');
         $user->location = $faker->country() . ', ' . $faker->city();
         $user->online = 1;
@@ -25,9 +25,9 @@ class UsersTable extends Seeder
         $user->save();
 
         $user = new User();
-        $user->name = "Neadmin";
-        $user->email = "admin1@admin.com";
-        $user->password = bcrypt('admin');
+        $user->name = "Simple";
+        $user->email = "simple";
+        $user->password = bcrypt('simple');
         $user->location = $faker->country() . ', ' . $faker->city();
         $user->online = 1;
         $user->gravatar_url = $this->createGravatarUrl($user->email);
