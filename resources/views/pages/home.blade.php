@@ -68,16 +68,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   let games = new Channel('GameList');
 
-      games.event('created', (response) => {
+      games.event('created', (response) => { GameList.add(response.html); });
 
-        let table = document.querySelector('#games'),
-            tbody = table.querySelector('tbody');
 
-            console.log(response);
-
-            tbody.insertAdjacentHTML('afterbegin', response.html);
-
-      });
+      // games.event('ongoing');
+      // games.event('completed');
+      //
+      games.event('joined', (response) => { GameList.joined(response); });
+      // games.event('left', (response) => { GameList.left(); });
 
 });
 </script>

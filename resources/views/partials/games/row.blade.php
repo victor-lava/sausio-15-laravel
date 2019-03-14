@@ -1,4 +1,6 @@
-<tr @if(isset($game->broadcasted)) class="flash animated" @endif>
+<tr class="game"
+    data-hash="{{ $game->hash }}"
+    @if(isset($game->broadcasted)) class="flash animated" @endif>
   <td>
       @if($game->firstPlayer)
       <a href="{{ route('user', $game->firstPlayer->id) }}">

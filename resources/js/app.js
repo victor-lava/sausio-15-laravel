@@ -11,6 +11,7 @@ import API from "./classes/Api.js";
 import Checker from "./classes/Checker.js";
 import Game from "./classes/Game.js";
 import Channel from "./classes/Channel.js";
+import GameList from "./classes/GameList.js";
 
 window.table = document.querySelector('#checkers');
 window.api = new API(window.table);
