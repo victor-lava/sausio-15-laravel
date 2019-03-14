@@ -7,6 +7,8 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+@import "checker";
+@import "animations";
 
 .navbar-laravel {
   background-color: #fff;

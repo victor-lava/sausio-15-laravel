@@ -11,6 +11,23 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script>
+
+     // // Enable pusher logging - don't include this in production
+     // Pusher.logToConsole = true;
+     //
+     // var pusher = new Pusher('87ca1bcc9f7c89ec8deb', {
+     //   cluster: 'eu',
+     //   forceTLS: true
+     // });
+     //
+     // var channel = pusher.subscribe('my-channel');
+     // channel.bind('my-event', function(data) {
+     //   alert(JSON.stringify(data));
+     // });
+     </script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -18,6 +35,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/checker.css') }}" rel="stylesheet">
+    @yield('scripts')
 </head>
 <body>
     <div id="app">
@@ -33,7 +52,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        @component('components/button', [
+                        'className' => 'success',
+                        'size' => 'lg',
+                        'href' => route('game.create')])
+                            Create Game
+                        @endcomponent
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -55,10 +79,19 @@
                                 </a>
                             </li>
                             <li class="nav-item dropdown">
-                                @component('components/button', ['size' => 'lg',
-                                                                 'text' => 'Logout',
+                                {{-- @component('components/button', ['size' => 'lg',
                                                                  'type' => 'logout'])
-                                @endcomponent
+                                                                 Logout
+                                @endcomponent --}}
+
+                                <a class="btn btn-primary btn-lg"
+                                    href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    Logout
+                                </a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
                             </li>
                         @endguest
                     </ul>
@@ -83,7 +116,7 @@
         </main>
 
         <footer>
-            <p>Mano footeris</p>
+
         </footer>
     </div>
 </body>

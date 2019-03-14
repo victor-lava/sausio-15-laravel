@@ -16,3 +16,11 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Route::middleware('auth:api')->group(function () {
+//   // Route::get('/checker/move', 'API\CheckerController@move')->name('api.checker.move');
+//   //
+//   // Route::get('/checker/moves', 'API\CheckerController@moves')->name('api.checker.moves');
+//   //
+//   // Route::get('/game/join', 'API\GameController@join')->name('api.game.join');
+// });
