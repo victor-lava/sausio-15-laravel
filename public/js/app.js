@@ -36645,7 +36645,7 @@ function () {
     key: "init",
     value: function init() {
       // Enable pusher logging - don't include this in production
-      Pusher.logToConsole = true;
+      // Pusher.logToConsole = true;
       var pusher = new Pusher(this.pusher_key, {
         cluster: 'eu',
         forceTLS: true
@@ -36657,12 +36657,18 @@ function () {
     value: function subscribe() {
       return this.pusher.subscribe(this.channelName);
     }
+  }, {
+    key: "event",
+    value: function event(name, callback) {
+      this.channel.bind(name, callback);
+    }
   }]);
 
   return Channel;
 }();
 
 
+window.Channel = Channel;
 
 /***/ }),
 

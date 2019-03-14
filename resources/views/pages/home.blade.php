@@ -66,46 +66,19 @@
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function() {
 
+  let games = new Channel('GameList');
 
-
-  let games = new Channel('Games');
-
-      games.bind('created', (response) => {
+      games.event('created', (response) => {
 
         let table = document.querySelector('#games'),
             tbody = table.querySelector('tbody');
-            // row = new DOMParser().parseFromString(response.html, 'text/html');
-            //
+
             console.log(response);
-            // console.log(row);
-            //
-            // tbody.appendChild(row.innerHTML);
 
             tbody.insertAdjacentHTML('afterbegin', response.html);
 
       });
 
-  // var pusher = new Pusher('a4784a4451c0de4372ac', {
-  //   cluster: 'eu',
-  //   forceTLS: true
-  // });
-  // var channel = pusher.subscribe('Games');
-  //
-  // channel.bind('created', function(response) {
-  //
-  //   let table = document.querySelector('#games'),
-  //       tbody = table.querySelector('tbody');
-  //       // row = new DOMParser().parseFromString(response.html, 'text/html');
-  //       //
-  //       console.log(response);
-  //       // console.log(row);
-  //       //
-  //       // tbody.appendChild(row.innerHTML);
-  //
-  //       tbody.insertAdjacentHTML('afterbegin', response.html);
-  //
-  //
-  // })
 });
 </script>
 @endsection

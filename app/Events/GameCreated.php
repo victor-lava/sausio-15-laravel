@@ -42,7 +42,7 @@ class GameCreated implements ShouldBroadcast
      */
      public function broadcastOn()
      {
-         return new Channel('Games');
+         return new Channel('GameList');
      }
 
      public function broadCastAs() {

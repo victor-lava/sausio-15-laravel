@@ -7,11 +7,12 @@ export default class Channel {
          this.channelName = channelName;
          this.pusher = this.init();
          this.channel = this.subscribe();
+  
       }
 
       init() {
         // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true;
+        // Pusher.logToConsole = true;
 
         var pusher = new Pusher(this.pusher_key, {
           cluster: 'eu',
@@ -25,4 +26,9 @@ export default class Channel {
         return this.pusher.subscribe(this.channelName);
       }
 
+      event(name, callback) {
+        this.channel.bind(name, callback);
+      }
+
 }
+window.Channel = Channel;
