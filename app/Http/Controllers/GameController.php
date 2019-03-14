@@ -93,6 +93,7 @@ class GameController extends Controller
             $game->save();
             $gameHash = $game->hash;
 
+    
             $checker = new Checker();
 
             for ($y = 7; $y >= 5; $y--) { // white

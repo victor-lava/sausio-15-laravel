@@ -16,6 +16,7 @@ class GameCreated implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $data;
+    public $html;
 
     /**
      * Create a new event instance.
@@ -25,6 +26,13 @@ class GameCreated implements ShouldBroadcast
     public function __construct($game)
     {
         $this->data = $game;
+        $this->html = $this->createHTML($game);
+    }
+    // dd($this->data->firstPlayer);
+
+    private function createHTML($game) {
+      $game->broadcasted = true;
+      return view('partials/games/row', compact('game'))->render();
     }
 
     /**
