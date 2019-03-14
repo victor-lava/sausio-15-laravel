@@ -58,6 +58,9 @@ class Game extends Model
 
     public function badgeStatus() {
 
+        // dd($this->status);
+        $this->status = ($this->status === null) ? 0 : $this->status; // broadcasting fix?
+
         $this->className = $this->status === 0 ? 'warning' : 'success';
         $this->name = $this->status === 0 ? 'Waiting' : 'Ongoing';
 

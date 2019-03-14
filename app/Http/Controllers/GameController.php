@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Events\GameCreated;
 use App\Game;
 use App\User;
 use App\Checker;
@@ -92,6 +93,7 @@ class GameController extends Controller
             $game->save();
             $gameHash = $game->hash;
 
+    
             $checker = new Checker();
 
             for ($y = 7; $y >= 5; $y--) { // white
@@ -106,8 +108,11 @@ class GameController extends Controller
                 }
             }
 
+            event(new GameCreated($game));
+            // dd($game);
 
-        // } else {
+
+        // } else { doesnt let to create game again, redirects to the current game
             // $gameHash = $gameFound->hash;
         // }
 

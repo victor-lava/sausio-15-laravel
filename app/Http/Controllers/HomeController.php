@@ -32,6 +32,8 @@ class HomeController extends Controller
                                 // get() grazina collection, kas yra masyvas, del to naudojamas gauti daug duomenų
         $games = Game::where('status', 0)
                         ->orWhere('status', 1)
+                        ->orderBy('status', 'ASC')
+                        ->orderBy('created_at', 'DESC')
                         ->get();
         // dd($games);
         // dd($users); // Graziai atvaizduoja, bet ir nukilina procesus kurie eina po juo

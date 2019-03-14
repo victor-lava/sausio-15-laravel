@@ -36512,14 +36512,18 @@ function () {
   function API(table) {
     _classCallCheck(this, API);
 
-    this.table = table;
-    this.game_hash = table.dataset.hash;
-    this.auth_hash = table.dataset.auth;
-    this.url = table.dataset.api;
-    this.pusher_key = 'a4784a4451c0de4372ac';
-    this.pusher = this.initPusher();
-    this.channel = this.createChannel('my-event', function (data) {// alert(data);
-    }); // console.log(this.pusher);
+    if (table !== null) {
+      this.table = table;
+      this.game_hash = table.dataset.hash;
+      this.auth_hash = table.dataset.auth;
+    }
+
+    this.url = "http://talents.test/api";
+    this.pusher_key = "a4784a4451c0de4372ac"; // this.pusher = this.initPusher();
+    // this.channel = this.createChannel('my-event', function(data) {
+    //   // alert(data);
+    // });
+    // console.log(this.pusher);
   }
 
   _createClass(API, [{

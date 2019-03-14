@@ -1,16 +1,18 @@
 export default class API {
 
       constructor(table) {
-         this.table = table;
-         this.game_hash = table.dataset.hash;
-         this.auth_hash = table.dataset.auth;
-         this.url = table.dataset.api;
-         this.pusher_key = 'a4784a4451c0de4372ac';
-         this.pusher = this.initPusher();
+         if(table !== null) {
+           this.table = table;
+           this.game_hash = table.dataset.hash;
+           this.auth_hash = table.dataset.auth;
+         }
+         this.url = process.env.MIX_API_URL;
+         this.pusher_key = process.env.MIX_PUSHER_APP_KEY;
+         // this.pusher = this.initPusher();
 
-         this.channel = this.createChannel('my-event', function(data) {
-           // alert(data);
-         });
+         // this.channel = this.createChannel('my-event', function(data) {
+         //   // alert(data);
+         // });
          // console.log(this.pusher);
       }
 

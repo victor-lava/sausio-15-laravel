@@ -19,11 +19,10 @@
                 <div class="card-body">
 
                     <div class="row">
-                        <div class="col-md-8">
-                            <table class="table">
+                        <div class="col-md-12 col-lg-8">
+                            <table id="games" class="table table-hover">
                                 <thead>
                                 <tr>
-                                  <th scope="col">#</th>
                                   <th scope="col">Players</th>
                                   <th scope="col">Duration</th>
                                   <th scope="col">Status</th>
@@ -32,48 +31,8 @@
                                 </thead>
                                 <tbody>
                                 @foreach($games as $game)
-                                <tr>
-                                  <th scope="row">{{ $loop->iteration }}</th>
-                                  <td>
-                                      @if($game->firstPlayer)
-                                      <a href="{{ route('user', $game->firstPlayer->id) }}">
-                                          {{ $game->firstPlayer->name }}
-                                      </a>
-                                      @component('components/badge',
-                                                ['className' => 'light' ])
-                                            {{ $game->firstPlayer->statistic->getPlayed() }}
-                                      @endcomponent
-                                      @endif
-                                     </br>
-                                     @if($game->secondPlayer)
-                                         <a href="{{ route('user', $game->secondPlayer->id) }}">
-                                             {{ $game->secondPlayer->name }}
-                                         </a>
-                                         @component('components/badge',
-                                                   ['className' => 'light' ])
-                                                   {{ $game->secondPlayer->statistic->getPlayed() }}
-                                         @endcomponent
-                                     @else
-                                     --------------------
-                                     @endif
-                                  </td>
-                                  <td>{{ $game->getDuration() }}</td>
-                                  <td>
-
-                                      @component('components/badge',
-                                                ['className' => $game->badgeStatus()->className ])
-                                                {{ $game->badgeStatus()->name }}
-                                      @endcomponent
-                                  </td>
-                                  <td>
-                                      @component('components/button',
-                                                ['size' => 'lg',
-                                                 'href' => route('game.show', $game->hash),
-                                                'className' => $game->buttonStatus()->className])
-                                                {{ $game->buttonStatus()->name }}
-                                      @endcomponent
-                                  </td>
-                                </tr>
+                                  @component('partials/games/row', ['game' => $game])
+                                  @endcomponent
                                 @endforeach
                                 </tbody>
                             </table>
@@ -100,4 +59,33 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script src="https://js.pusher.com/4.4/pusher.min.js"></script>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+  var pusher = new Pusher('a4784a4451c0de4372ac', {
+    cluster: 'eu',
+    forceTLS: true
+  });
+  var channel = pusher.subscribe('Games');
+
+  channel.bind('created', function(response) {
+
+    let table = document.querySelector('#games'),
+        tbody = table.querySelector('tbody');
+        // row = new DOMParser().parseFromString(response.html, 'text/html');
+        //
+        console.log(response);
+        // console.log(row);
+        //
+        // tbody.appendChild(row.innerHTML);
+
+        tbody.insertAdjacentHTML('afterbegin', response.html);
+
+
+  })
+});
+</script>
 @endsection
