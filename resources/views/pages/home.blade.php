@@ -19,11 +19,10 @@
                 <div class="card-body">
 
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-12 col-lg-8">
                             <table class="table">
                                 <thead>
                                 <tr>
-                                  <th scope="col">#</th>
                                   <th scope="col">Players</th>
                                   <th scope="col">Duration</th>
                                   <th scope="col">Status</th>
@@ -33,7 +32,6 @@
                                 <tbody>
                                 @foreach($games as $game)
                                 <tr>
-                                  <th scope="row">{{ $loop->iteration }}</th>
                                   <td>
                                       @if($game->firstPlayer)
                                       <a href="{{ route('user', $game->firstPlayer->id) }}">
