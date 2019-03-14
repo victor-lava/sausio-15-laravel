@@ -101,3 +101,21 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
+<script src="https://js.pusher.com/4.4/pusher.min.js"></script>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+  var pusher = new Pusher('a4784a4451c0de4372ac', {
+    cluster: 'eu',
+    forceTLS: true
+  });
+  var channel = pusher.subscribe('Games');
+
+  channel.bind('created', function(response) {
+
+  console.log(response);
+  })
+});
+</script>
+@endsection
