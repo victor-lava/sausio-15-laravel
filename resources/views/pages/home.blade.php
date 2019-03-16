@@ -66,7 +66,7 @@
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function() {
 
-  let games = new Channel('GameList');
+  let games = new Channel('Games');
 
       games.event('created', (response) => { GameList.add(response.html); });
 

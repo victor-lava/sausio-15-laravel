@@ -36,9 +36,9 @@ class GameJoin implements ShouldBroadcast
         $this->seat = $response['seat'];
     }
 
-    public function broadcastOn()
+    public function broadcastOn($channelName)
     {
-        return new Channel($this->game_hash);
+        return new Channel($channelName);
     }
 
     public function broadCastAs() {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners\GameList;
+namespace App\Listeners\Games;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,6 +25,6 @@ class Join
      */
     public function handle($event)
     {
-        //
+        $event->broadCastOn('games')
     }
 }

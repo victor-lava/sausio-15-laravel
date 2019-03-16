@@ -2,10 +2,11 @@
 
 namespace App\Listeners\Game;
 
+use App\Events\GameJoin;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-/* ref https://laracasts.com/discuss/channels/laravel/single-event-with-different-information-and-broadcast-channels */
+  /* ref https://laracasts.com/discuss/channels/laravel/single-event-with-different-information-and-broadcast-channels */
 
 class Join
 {
@@ -25,8 +26,8 @@ class Join
      * @param  object  $event
      * @return void
      */
-    public function handle($event)
+    public function handle(GameJoin $event)
     {
-        //
+        $event->broadCastOn('game')
     }
 }

@@ -19,7 +19,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         GameJoin::class => [
-            App\Listeners\GameList\Join::class,
+            App\Listeners\Games\Join::class,
             App\Listeners\Game\Join::class
         ]
     ];
